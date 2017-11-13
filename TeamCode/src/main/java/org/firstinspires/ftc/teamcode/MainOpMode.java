@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-
+import org.firstinspires.ftc.robotcore.internal.ui.GamepadUser;
 
 
 @TeleOp(name="Main Teleop", group="Robot")
@@ -14,22 +14,10 @@ public class MainOpMode extends LinearOpMode {
     //creates an instance variable fo the robot
     MainRobot robot = new MainRobot();
 
-    //initiate all "last tick" variable for controller
-    public static boolean prev_x = false;
-    public static boolean prev_y = false;
-    public static boolean prev_a = false;
-    public static boolean prev_b = false;
-    public static boolean prev_dpad_down = false;
-    public static boolean prev_dpad_up = false;
-    public static boolean prev_dpad_left = false;
-    public static boolean prev_dpad_right = false;
-    public static boolean prev_lbumper = false;
-    public static boolean prev_rbumper = false;
-    public static float prev_ltrigger = (float) 0;
-    public static float prev_rtrigger = (float) 0;
+
 
     public static double enginePower = 1.0;
-    public static double turnCoefficient = 2.0;
+    public static double turnCoefficient = .4;
     public static double leftx = 0.0;
     public static double righty = 0.0;
     public static double rightx = 0.0;
@@ -37,8 +25,8 @@ public class MainOpMode extends LinearOpMode {
 
     public static double precision = 1.0;
 
-    public static double servoClosed = 0.3;
-    public static double servoOpen = 1.0;
+    public static double servoClosed = 1.0;
+    public static double servoOpen = 0.1;
     @Override
     public void runOpMode() throws InterruptedException  {
         //initiate robot
@@ -48,54 +36,71 @@ public class MainOpMode extends LinearOpMode {
         DcMotor west = MainRobot.west;
         DcMotor east = MainRobot.east;
         DcMotor south = MainRobot.south;
-        //DcMotor pulley = MainRobot.pulley;
+        DcMotor arm = MainRobot.arm;
         Servo grab1 = MainRobot.grab1;
+        Servo colorSensorServo = MainRobot.colorSensorServo;
+        boolean targetSet = false;
+        int target = 0;
+
 
         telemetry.addData("say", "before opmode");
         telemetry.update();
         waitForStart();
         while (opModeIsActive()) {
-            righty = gamepad1.right_stick_y;
-            rightx = gamepad1.right_stick_x;
+            if (GamepadUser.ONE != gamepad1.getUser()) {
+                stop();
+            }
+            righty = gamepad1.right_trigger * 2 - 1;
+            // temporary fix for bad controller
+            // remap from 0 - 1 to -1 to 1
+            rightx = (gamepad1.left_trigger * 2 - 1);
             leftx = gamepad1.left_stick_x;
             lefty = gamepad1.left_stick_y;
             telemetry.clear();
-
+            colorSensorServo.setPosition(0);
             //hold y for precision
             if (gamepad1.y) {
                 precision = 0.5;
             } else {
                 precision = 1.0;
             }
-
+            if (righty > .15) {
+                arm.setPower(righty*.25);
+                targetSet = false;
+            } else if (righty < -.15){
+                arm.setPower(righty*.45);
+                targetSet = false;
+            } else if (targetSet) {
+                arm.setTargetPosition(target);
+            } else {
+                arm.setPower(0);
+                target = arm.getCurrentPosition();
+                targetSet = true;
+            }
             //use only protocol for the currently used joystick
             if (((Math.abs(leftx) + Math.abs(lefty))/2) >= (Math.abs(rightx) + Math.abs(righty))/2) {
                 //set motor powers for transposing
-                west.setPower(lefty*precision);
-                east.setPower(-lefty*precision);
-                north.setPower(leftx*precision);
-                south.setPower(-leftx*precision);
+                west.setPower(lefty*precision*.7);
+                east.setPower(-lefty*precision*.7);
+                north.setPower(leftx*precision*.7);
+                south.setPower(-leftx*precision*.7);
+
             } else {
                 //set motor powers for turning
-                west.setPower(rightx*precision);
-                east.setPower(rightx*precision);
-                north.setPower(rightx*precision);
-                south.setPower(rightx*precision);
+                west.setPower(rightx*precision*turnCoefficient);
+                east.setPower(rightx*precision*turnCoefficient);
+                north.setPower(rightx*precision*turnCoefficient);
+                south.setPower(rightx*precision*turnCoefficient);
             }
 
-            if (gamepad1.right_bumper == true) {
+
+            if (gamepad1.right_bumper) {
                 grab1.setPosition(servoClosed);
             }
-            if (gamepad1.left_bumper == true) {
+            if (gamepad1.left_bumper) {
                 grab1.setPosition(servoOpen);
             }
-            if (gamepad1.dpad_up) {
-                //pulley.setPower(.2);
-            } else if (gamepad1.dpad_down){
-                //pulley.setPower(-.2);
-            } else {
-                //pulley.setPower(.2);
-            }
+
 
             //update telemetry
             telemetry.addData("R vertical", righty);
@@ -104,28 +109,14 @@ public class MainOpMode extends LinearOpMode {
             telemetry.addData("L horizontal", leftx);
             telemetry.addData("Engine power", enginePower);
             telemetry.addData("Servo position", grab1.getPosition());
+            telemetry.addData("Arm power", arm.getPower());
             telemetry.addData("Precision coefficient", precision);
+            telemetry.addData("Gamepad status",  GamepadUser.ONE == gamepad1.getUser());
             telemetry.update();
 
-
-            setValues();
         }
     }
-    //sets 'prev values' variables to distinguish button presses tick-to-tick
-    public void setValues() {
-        prev_a = gamepad1.a;
-        prev_b = gamepad1.b;
-        prev_dpad_down = gamepad1.dpad_down;
-        prev_dpad_left = gamepad1.dpad_left;
-        prev_dpad_right = gamepad1.dpad_right;
-        prev_dpad_up = gamepad1.dpad_up;
-        prev_x = gamepad1.x;
-        prev_lbumper = gamepad1.left_bumper;
-        prev_rbumper = gamepad1.right_bumper;
-        prev_ltrigger = gamepad1.left_trigger;
-        prev_rtrigger = gamepad1.right_trigger;
-        prev_y = gamepad1.y;
-    }
+
 
 
     //a function that returns a modified value, checking if it falls within logical boundaries first

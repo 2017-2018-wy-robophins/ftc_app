@@ -1,3 +1,4 @@
+package org.firstinspires.ftc.teamcode;
 /* Copyright (c) 2014, 2015 Qualcomm Technologies Inc
 
 All rights reserved.
@@ -29,12 +30,22 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package org.firstinspires.ftc.robotcontroller.internal;
-
+import com.google.blocks.ftcrobotcontroller.runtime.BlocksOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.AnnotatedOpModeRegistrar;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
+import com.qualcomm.robotcore.eventloop.opmode.OpModeRegistrar;
+//if you are reading this you are twenty gay
 
 import org.firstinspires.ftc.robotcontroller.external.samples.ConceptNullOp;
+
+
+import com.google.blocks.ftcrobotcontroller.runtime.BlocksOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
+import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
+import com.qualcomm.robotcore.eventloop.opmode.AnnotatedOpModeRegistrar;
+import org.firstinspires.ftc.robotcontroller.external.samples.ConceptNullOp;
+import com.qualcomm.robotcore.eventloop.opmode.OpModeRegistrar;
 
 /**
  * {@link FtcOpModeRegister} is responsible for registering opmodes for use in an FTC game.
@@ -49,7 +60,7 @@ public class FtcOpModeRegister implements OpModeRegister {
      * There are two mechanisms by which an OpMode may be registered.
      *
      *  1) The preferred method is by means of class annotations in the OpMode itself.
-     *  See, for example the class annotations in {@link ConceptNullOp}.
+     *  See, for example the class annotations in {@link ConceptNullOp}DcMotor.RunMode.RUN_WITHOUT_ENCODER.
      *
      *  2) The other, retired,  method is to modify this {@link #register(OpModeManager)}
      *  method to include explicit calls to OpModeManager.register().
@@ -61,7 +72,22 @@ public class FtcOpModeRegister implements OpModeRegister {
      * @see com.qualcomm.robotcore.eventloop.opmode.TeleOp
      * @see com.qualcomm.robotcore.eventloop.opmode.Autonomous
      */
+    @OpModeRegistrar
     public void register(OpModeManager manager) {
 
+        /**
+         * Register OpModes implemented in the Blocks visual programming language.
+         */
+        BlocksOpMode.registerAll(manager);
+
+        /**
+         * Register OpModes that use the annotation-based registration mechanism.
+         */
+        AnnotatedOpModeRegistrar.register(manager);
+
+        manager.register("Main", MainOpMode.class);
+        /**
+         * Any manual OpMode class registrations should go here.
+         */
     }
 }
