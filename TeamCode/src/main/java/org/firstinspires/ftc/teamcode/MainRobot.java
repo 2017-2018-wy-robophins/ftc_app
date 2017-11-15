@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.configuration.DeviceConfiguration;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
+
 
 public class MainRobot {
     //define all variables used
@@ -21,7 +23,7 @@ public class MainRobot {
     public static DcMotor arm;
     public static Servo grab1;
     public static Servo colorSensorServo;
-    public static OpticalDistanceSensor colorDistanceSensor;
+    public static DistanceSensor colorDistanceSensor;
     public static ColorSensor colorSensor;
 
 
@@ -35,8 +37,8 @@ public class MainRobot {
         arm = HM.dcMotor.get("arm");
         grab1 =  HM.servo.get("grab1");
         colorSensorServo = HM.servo.get("colorSensorServo");
-        colorDistanceSensor = HM.opticalDistanceSensor.get("colorDistanceSensor");
-        //colorSensor = HM.colorSensor.get("colorSensor");
+        colorDistanceSensor = HM.get(DistanceSensor.class, "colorDistanceSensor");
+        colorSensor = HM.get(ColorSensor.class, "colorSensor");
 
         north.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         west.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
