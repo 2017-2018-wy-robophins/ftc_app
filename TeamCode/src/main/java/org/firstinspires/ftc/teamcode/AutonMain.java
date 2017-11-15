@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 import java.util.Locale;
@@ -19,120 +20,84 @@ import java.util.Locale;
  * Created by nico on 11/14/17.
  */
 
-public class AutonMain {
-    public static void move(double xvector, double yvector,int ms, MainRobot r) throws InterruptedException{
-        r.west.setPower(yvector);
-        r.east.setPower(-yvector);
-        r.north.setPower(xvector);
-        r.south.setPower(-xvector);
-        Thread.sleep(ms);
-        stop(r);
-    }
-    public static void turn(double v, int ms, MainRobot r) throws InterruptedException {
-        r.west.setPower(v);
-        r.east.setPower(v);
-        r.north.setPower(v);
-        r.south.setPower(v);
-        Thread.sleep(ms);
-        stop(r);
-    }
+class AutonMain {
+    private Telemetry telemetry;
+    private TeamColor teamColor;
+    // hardware components
+    private DcMotor north;
+    private DcMotor west;
+    private DcMotor east;
+    private DcMotor south;
+    private DcMotor arm;
+    private Servo grab1;
+    private Servo colorSensorServo;
+    private ColorSensor sensorColor;
+    private DistanceSensor sensorDistance;
 
-    public static void knock_jewel_left(MainRobot robot, Servo colorSensorServo) throws InterruptedException {
-        turn(1, 150, robot); // turn right
-        Thread.sleep(500);
-        colorSensorServo.setPosition(0);
-        turn(-1, 150, robot); // turn left
-    }
+    private static final double servoClosed = 1.0;
+    private static final double servoOpen = 0.1;
+    // hsvValues is an array that will hold the hue, saturation, and value information.
+    private float hsvValues[] = {0F, 0F, 0F};
+    // values is a reference to the hsvValues array.
+    private final float values[] = hsvValues;
+    // sometimes it helps to multiply the raw RGB values with a scale factor
+    // to amplify/attentuate the measured values.
+    private final double SCALE_FACTOR = 255;
+    private final View relativeLayout;
+    private long stopTime;
 
-    public static void knock_jewel_right(MainRobot robot, Servo colorSensorServo) throws InterruptedException {
-        turn(-1, 150, robot); // turn left
-        Thread.sleep(500);
-        colorSensorServo.setPosition(0);
-        turn(1, 150, robot); // turn right
-    }
-
-    public static void stop(MainRobot r) {
-        r.west.setPower(0);
-        r.east.setPower(0);
-        r.north.setPower(0);
-        r.south.setPower(0);
-    }
-
-    MainRobot robot;
-    HardwareMap hardwareMap;
-    DcMotor north;
-    DcMotor west;
-    DcMotor east;
-    DcMotor south;
-    DcMotor arm;
-    Servo grab1;
-    Servo colorSensorServo;
-    ColorSensor sensorColor;
-    DistanceSensor sensorDistance;
-    public static final double servoClosed = 1.0;
-    public static final double servoOpen = 0.1;
-
-
-    public AutonMain(MainRobot robot, HardwareMap hardwareMap, teleme) throws InterruptedException {
-        this.robot = robot;
-        this.hardwareMap = hardwareMap;
-
+    // initializer
+    AutonMain(MainRobot robot, HardwareMap hardwareMap, Telemetry telemetry, TeamColor teamColor) throws InterruptedException {
+        this.telemetry = telemetry;
+        this.teamColor = teamColor;
         robot.init(hardwareMap);
         //initiate hardware variables
-        north = robot.north;
-        west = robot.west;
-        east = robot.east;
-        south =robot.south;
-        arm = robot.arm;
-        grab1 = robot.grab1;
-        colorSensorServo = robot.colorSensorServo;
+        north = MainRobot.north;
+        west = MainRobot.west;
+        east = MainRobot.east;
+        south =MainRobot.south;
+        arm = MainRobot.arm;
+        grab1 = MainRobot.grab1;
+        colorSensorServo = MainRobot.colorSensorServo;
+
         // never gets used???
         // cs = robot.colorSensor;
+
         // get a reference to the color sensor.
         sensorColor = hardwareMap.get(ColorSensor.class, "colorDistanceSensor");
-
         // get a reference to the distance sensor that shares the same name.
         sensorDistance = hardwareMap.get(DistanceSensor.class, "colorDistanceSensor");
-
-        // hsvValues is an array that will hold the hue, saturation, and value information.
-        float hsvValues[] = {0F, 0F, 0F};
-
-        // values is a reference to the hsvValues array.
-        final float values[] = hsvValues;
-
-        // sometimes it helps to multiply the raw RGB values with a scale factor
-        // to amplify/attentuate the measured values.
-        final double SCALE_FACTOR = 255;
-
         // get a reference to the RelativeLayout so we can change the background
         // color of the Robot Controller app to match the hue detected by the RGB sensor.
         int relativeLayoutId = hardwareMap.appContext.getResources().getIdentifier("RelativeLayout", "id", hardwareMap.appContext.getPackageName());
-        final View relativeLayout = ((Activity) hardwareMap.appContext).findViewById(relativeLayoutId);
-
-
+        relativeLayout = ((Activity) hardwareMap.appContext).findViewById(relativeLayoutId);
     }
 
-    public void first
-
-    public void mainLoop() throws InterruptedException {
-
-    }
-
-    public void runOpMode() throws InterruptedException {
-
-
-        long stopTime = SystemClock.currentThreadTimeMillis() + 30000;
+    // run this once
+    void runOnce() throws InterruptedException {
+        stopTime = SystemClock.currentThreadTimeMillis() + 30000;
         grab1.setPosition(servoClosed);
         colorSensorServo.setPosition(1);
 
         Thread.sleep(1000);
         // note that the color sensor is on the left side of the arm
-        if (sensorColor.red() < sensorColor.blue()) {
-            // if left is blue
-            AutonMain.knock_jewel_left(robot, colorSensorServo);
-        } else {
-            // if left is red
-            AutonMain.knock_jewel_right(robot, colorSensorServo);
+        switch (teamColor) {
+            case BLUE:
+                if (sensorColor.red() < sensorColor.blue()) {
+                    // if left is blue
+                    AutonMain.knock_left_jewel(colorSensorServo);
+                } else {
+                    // if left is red
+                    AutonMain.knock_right_jewel(colorSensorServo);
+                }
+            case RED:
+                if (sensorColor.red() > sensorColor.blue()) {
+                    // if left is red
+                    AutonMain.knock_left_jewel(colorSensorServo);
+                } else {
+                    // if left is blue
+                    AutonMain.knock_right_jewel(colorSensorServo);
+                }
         }
 
         // TODO: put block in - theoretically
@@ -148,51 +113,88 @@ public class AutonMain {
         move(0, -1, 500, robot);
         stop();
         */
+    }
 
-        // loop and read the RGB and distance data.
-        // Note we use opModeIsActive() as our loop condition because it is an interruptable method.
-        while (opModeIsActive()) {
-            // convert the RGB values to HSV values.
-            // multiply by the SCALE_FACTOR.
-            // then cast it back to int (SCALE_FACTOR is a double)
-            Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
-                    (int) (sensorColor.green() * SCALE_FACTOR),
-                    (int) (sensorColor.blue() * SCALE_FACTOR),
-                    hsvValues);
+    void mainLoop() throws InterruptedException {
+        // convert the RGB values to HSV values.
+        // multiply by the SCALE_FACTOR.
+        // then cast it back to int (SCALE_FACTOR is a double)
+        Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
+                (int) (sensorColor.green() * SCALE_FACTOR),
+                (int) (sensorColor.blue() * SCALE_FACTOR),
+                hsvValues);
 
-            // send the info back to driver station using telemetry function.
-            telemetry.addData("Distance (cm)",
-                    String.format(Locale.US, "%.02f", sensorDistance.getDistance(DistanceUnit.CM)));
-            telemetry.addData("Alpha", sensorColor.alpha());
-            telemetry.addData("Red  ", sensorColor.red());
-            telemetry.addData("Green", sensorColor.green());
-            telemetry.addData("Blue ", sensorColor.blue());
-            telemetry.addData("Runtime ", stopTime - SystemClock.currentThreadTimeMillis());
-            telemetry.addData("Hue", hsvValues[0]);
+        // send the info back to driver station using telemetry function.
+        telemetry.addData("Distance (cm)",
+                String.format(Locale.US, "%.02f", sensorDistance.getDistance(DistanceUnit.CM)));
+        telemetry.addData("Alpha", sensorColor.alpha());
+        telemetry.addData("Red  ", sensorColor.red());
+        telemetry.addData("Green", sensorColor.green());
+        telemetry.addData("Blue ", sensorColor.blue());
+        telemetry.addData("Runtime ", stopTime - SystemClock.currentThreadTimeMillis());
+        telemetry.addData("Hue", hsvValues[0]);
 
-            // change the background color to match the color detected by the RGB sensor.
-            // pass a reference to the hue, saturation, and value array as an argument
-            // to the HSVToColor method.
-            relativeLayout.post(new Runnable() {
-                public void run() {
-                    relativeLayout.setBackgroundColor(Color.HSVToColor(0xff, values));
-                }
-            });
-
-            telemetry.update();
-            if ((stopTime - SystemClock.currentThreadTimeMillis()) < 5000) {
-
+        // change the background color to match the color detected by the RGB sensor.
+        // pass a reference to the hue, saturation, and value array as an argument
+        // to the HSVToColor method.
+        relativeLayout.post(new Runnable() {
+            public void run() {
+                relativeLayout.setBackgroundColor(Color.HSVToColor(0xff, values));
             }
-        }
+        });
 
+        telemetry.update();
+        if ((stopTime - SystemClock.currentThreadTimeMillis()) < 5000) {
+
+        }
+    }
+
+
+    void finish() throws InterruptedException {
         // Set the panel back to the default color
         relativeLayout.post(new Runnable() {
             public void run() {
                 relativeLayout.setBackgroundColor(Color.WHITE);
             }
         });
-
-
     }
 
+    private static void move(double xvector, double yvector, int ms) throws InterruptedException{
+        MainRobot.west.setPower(yvector);
+        MainRobot.east.setPower(-yvector);
+        MainRobot.north.setPower(xvector);
+        MainRobot.south.setPower(-xvector);
+        Thread.sleep(ms);
+        stop();
+    }
+
+    private static void turn(double v, int ms) throws InterruptedException {
+        MainRobot.west.setPower(v);
+        MainRobot.east.setPower(v);
+        MainRobot.north.setPower(v);
+        MainRobot.south.setPower(v);
+        Thread.sleep(ms);
+        stop();
+    }
+
+    private static void knock_right_jewel(Servo colorSensorServo) throws InterruptedException {
+        turn(1, 150); // turn right
+        Thread.sleep(500);
+        colorSensorServo.setPosition(0);
+        turn(-1, 150); // turn left
+    }
+
+    private static void knock_left_jewel(Servo colorSensorServo) throws InterruptedException {
+        turn(-1, 150); // turn left
+        Thread.sleep(500);
+        colorSensorServo.setPosition(0);
+        turn(1, 150); // turn right
+    }
+
+    private static void stop() {
+        MainRobot.west.setPower(0);
+        MainRobot.east.setPower(0);
+        MainRobot.north.setPower(0);
+        MainRobot.south.setPower(0);
+    }
 }

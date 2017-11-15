@@ -99,10 +99,19 @@ public class AutonBlue2 extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        AutonMain runner = new AutonMain(robot, hardwareMap);
+        AutonMain runner = new AutonMain(robot, hardwareMap, telemetry, TeamColor.BLUE);
         // wait for the start button to be pressed.
         waitForStart();
-        runner.runOpMode();
+        // run the stuff that we only want to run once
+        runner.runOnce();
+
+        // run stuff that we want to run repeatedly
+        while (opModeIsActive()) {
+            runner.mainLoop();
+        }
+
+        // clean up
+        runner.finish();
     }
 
 }
