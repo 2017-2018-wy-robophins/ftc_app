@@ -177,18 +177,18 @@ class AutonMain {
         stop();
     }
 
-    private static void knock_right_jewel(Servo colorSensorServo) throws InterruptedException {
-        turn(1, 150); // turn right
+    private static void knock_left_jewel(Servo colorSensorServo) throws InterruptedException {
+        turn(1, 150); // turn left
         Thread.sleep(500);
         colorSensorServo.setPosition(0);
-        turn(-1, 150); // turn left
+        turn(-1, 150); // turn right
     }
 
-    private static void knock_left_jewel(Servo colorSensorServo) throws InterruptedException {
-        turn(-1, 150); // turn left
+    private static void knock_right_jewel(Servo colorSensorServo) throws InterruptedException {
+        turn(-1, 150); // turn right
         Thread.sleep(500);
         colorSensorServo.setPosition(0);
-        turn(1, 150); // turn right
+        turn(1, 150); // turn left
     }
 
     private static void stop() {
