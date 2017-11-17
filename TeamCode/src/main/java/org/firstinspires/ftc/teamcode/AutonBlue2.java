@@ -94,11 +94,12 @@ public class AutonBlue2 extends LinearOpMode {
      * to the target object.  Note that the distance sensor saturates at around 2" (5 cm).
      *
      */
-    MainRobot robot = new MainRobot();
+    private MainRobot robot = new MainRobot();
 
 
     @Override
     public void runOpMode() throws InterruptedException {
+        // initialize the more generic AutonMain container class
         AutonMain runner = new AutonMain(robot, hardwareMap, telemetry, TeamColor.BLUE);
         // wait for the start button to be pressed.
         waitForStart();

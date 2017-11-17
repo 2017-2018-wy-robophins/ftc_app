@@ -33,37 +33,8 @@ package org.firstinspires.ftc.teamcode;
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import android.app.Activity;
-import android.graphics.Color;
-import android.os.SystemClock;
-import android.view.View;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
-
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-
-import java.sql.Time;
-import java.util.Locale;
-
-import android.app.Activity;
-import android.graphics.Color;
-import android.view.View;
-
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
-import com.qualcomm.robotcore.hardware.Servo;
-
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-
-import java.util.Locale;
 
 /*
  * This is an example LinearOpMode that shows how to use
@@ -94,145 +65,25 @@ public class AutonRed2 extends LinearOpMode {
      * to the target object.  Note that the distance sensor saturates at around 2" (5 cm).
      *
      */
-    MainRobot robot = new MainRobot();
-    ColorSensor sensorColor;
-    DistanceSensor sensorDistance;
-    public static double servoClosed = 1.0;
-    public static double servoOpen = 0.1;
-    public void move(double xvector, double yvector,int ms, MainRobot r) throws InterruptedException{
-        MainRobot.west.setPower(yvector);
-        MainRobot.east.setPower(-yvector);
-        MainRobot.north.setPower(xvector);
-        MainRobot.south.setPower(-xvector);
-        Thread.sleep(ms);
-        stop(r);
-    }
-    public void turn(double v, int ms, MainRobot r) throws InterruptedException {
-        MainRobot.west.setPower(v);
-        MainRobot.east.setPower(v);
-        MainRobot.north.setPower(v);
-        MainRobot.south.setPower(v);
-        Thread.sleep(ms);
-        stop(r);
-    }
-    public void stop(MainRobot r) {
-        MainRobot.west.setPower(0);
-        MainRobot.east.setPower(0);
-        MainRobot.north.setPower(0);
-        MainRobot.south.setPower(0);
-    }
+    private MainRobot robot = new MainRobot();
+
 
     @Override
     public void runOpMode() throws InterruptedException {
-        robot.init(hardwareMap);
-        //initiate hardware variables
-        DcMotor north = MainRobot.north;
-        DcMotor west = MainRobot.west;
-        DcMotor east = MainRobot.east;
-        DcMotor south = MainRobot.south;
-        DcMotor arm = MainRobot.arm;
-        Servo grab1 = MainRobot.grab1;
-        Servo colorSensorServo = MainRobot.colorSensorServo;
-        ColorSensor cs = MainRobot.colorSensor;
-        // get a reference to the color sensor.
-        sensorColor = hardwareMap.get(ColorSensor.class, "colorDistanceSensor");
-
-        // get a reference to the distance sensor that shares the same name.
-        sensorDistance = hardwareMap.get(DistanceSensor.class, "colorDistanceSensor");
-
-        // hsvValues is an array that will hold the hue, saturation, and value information.
-        float hsvValues[] = {0F, 0F, 0F};
-
-        // values is a reference to the hsvValues array.
-        final float values[] = hsvValues;
-
-        // sometimes it helps to multiply the raw RGB values with a scale factor
-        // to amplify/attentuate the measured values.
-        final double SCALE_FACTOR = 255;
-
-        // get a reference to the RelativeLayout so we can change the background
-        // color of the Robot Controller app to match the hue detected by the RGB sensor.
-        int relativeLayoutId = hardwareMap.appContext.getResources().getIdentifier("RelativeLayout", "id", hardwareMap.appContext.getPackageName());
-        final View relativeLayout = ((Activity) hardwareMap.appContext).findViewById(relativeLayoutId);
-
-
+        // initialize the more generic AutonMain container class
+        AutonMain runner = new AutonMain(robot, hardwareMap, telemetry, TeamColor.RED);
         // wait for the start button to be pressed.
         waitForStart();
-        long stopTime = SystemClock.currentThreadTimeMillis() + 30000;
-        grab1.setPosition(servoClosed);
-        colorSensorServo.setPosition(1);
-        Thread.sleep(1000);
-        if (sensorColor.red() > sensorColor.blue()) {
-            turn(1, 150, robot);
-            Thread.sleep(500);
-            colorSensorServo.setPosition(0);
-            turn(-1, 150, robot);
-        } else {
-            turn(-1, 150, robot);
-            Thread.sleep(500);
-            colorSensorServo.setPosition(0);
-            turn(1, 150, robot);
-        }
-        move(0, 1, 400, robot);
-        turn(1, 700, robot);
-        move(0, -1, 400, robot);
-        arm.setPower(-.45);
-        Thread.sleep(500);
-        arm.setPower(0);
-        grab1.setPosition(servoOpen);
-        move(0, 1, 500, robot);
-        move(0, -1, 500, robot);
-        stop();
-        // loop and read the RGB and distance data.
-        // Note we use opModeIsActive() as our loop condition because it is an interruptable method.
+        // run the stuff that we only want to run once
+        runner.runOnce();
+
+        // run stuff that we want to run repeatedly
         while (opModeIsActive()) {
-
-
-
-
-
-
-            // convert the RGB values to HSV values.
-            // multiply by the SCALE_FACTOR.
-            // then cast it back to int (SCALE_FACTOR is a double)
-            Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
-                    (int) (sensorColor.green() * SCALE_FACTOR),
-                    (int) (sensorColor.blue() * SCALE_FACTOR),
-                    hsvValues);
-
-            // send the info back to driver station using telemetry function.
-            telemetry.addData("Distance (cm)",
-                    String.format(Locale.US, "%.02f", sensorDistance.getDistance(DistanceUnit.CM)));
-            telemetry.addData("Alpha", sensorColor.alpha());
-            telemetry.addData("Red  ", sensorColor.red());
-            telemetry.addData("Green", sensorColor.green());
-            telemetry.addData("Blue ", sensorColor.blue());
-            telemetry.addData("Runtime ", stopTime - SystemClock.currentThreadTimeMillis());
-            telemetry.addData("Hue", hsvValues[0]);
-
-            // change the background color to match the color detected by the RGB sensor.
-            // pass a reference to the hue, saturation, and value array as an argument
-            // to the HSVToColor method.
-            relativeLayout.post(new Runnable() {
-                public void run() {
-                    relativeLayout.setBackgroundColor(Color.HSVToColor(0xff, values));
-                }
-            });
-
-            telemetry.update();
-            if ((stopTime - SystemClock.currentThreadTimeMillis()) < 5000) {
-
-            }
+            runner.mainLoop();
         }
 
-        // Set the panel back to the default color
-        relativeLayout.post(new Runnable() {
-            public void run() {
-                relativeLayout.setBackgroundColor(Color.WHITE);
-            }
-        });
-
-
+        // clean up
+        runner.finish();
     }
 
 }

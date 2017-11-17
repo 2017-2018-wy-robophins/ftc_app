@@ -12,24 +12,23 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 
-public class MainRobot {
+class MainRobot {
     //define all variables used
 
 
-    public static DcMotor north;
-    public static DcMotor west;
-    public static DcMotor east;
-    public static DcMotor south;
-    public static DcMotor arm;
-    public static Servo grab1;
-    public static Servo colorSensorServo;
-    public static DistanceSensor colorDistanceSensor;
-    public static ColorSensor colorSensor;
+    DcMotor north;
+    DcMotor west;
+    DcMotor east;
+    DcMotor south;
+    DcMotor arm;
+    Servo grab1;
+    Servo colorSensorServo;
+    DistanceSensor colorDistanceSensor;
+    ColorSensor colorSensor;
 
 
     //runs on press of the "init" button. Maps engines from the robot to variables,
-    public void init(HardwareMap HwMap) {
-        HardwareMap HM = HwMap;
+    public void init(HardwareMap HM) {
         north = HM.dcMotor.get("N");
         west = HM.dcMotor.get("W");
         east = HM.dcMotor.get("E");

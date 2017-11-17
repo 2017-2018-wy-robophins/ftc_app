@@ -16,29 +16,29 @@ public class MainOpMode extends LinearOpMode {
 
 
 
-    public static double enginePower = 1.0;
-    public static double turnCoefficient = .4;
-    public static double leftx = 0.0;
-    public static double righty = 0.0;
-    public static double rightx = 0.0;
-    public static double lefty = 0.0;
+    private static double enginePower = 1.0;
+    private static double turnCoefficient = .4;
+    private static double leftx = 0.0;
+    private static double righty = 0.0;
+    private static double rightx = 0.0;
+    private static double lefty = 0.0;
 
-    public static double precision = 1.0;
+    private static double precision = 1.0;
 
-    public static double servoClosed = 1.0;
-    public static double servoOpen = 0.1;
+    private static double servoClosed = 1.0;
+    private static double servoOpen = 0.1;
     @Override
     public void runOpMode() throws InterruptedException  {
         //initiate robot
         robot.init(hardwareMap);
         //initiate hardware variables
-        DcMotor north = MainRobot.north;
-        DcMotor west = MainRobot.west;
-        DcMotor east = MainRobot.east;
-        DcMotor south = MainRobot.south;
-        DcMotor arm = MainRobot.arm;
-        Servo grab1 = MainRobot.grab1;
-        Servo colorSensorServo = MainRobot.colorSensorServo;
+        DcMotor north = robot.north;
+        DcMotor west = robot.west;
+        DcMotor east = robot.east;
+        DcMotor south = robot.south;
+        DcMotor arm = robot.arm;
+        Servo grab1 = robot.grab1;
+        Servo colorSensorServo = robot.colorSensorServo;
         boolean targetSet = false;
         int target = 0;
 

@@ -36,6 +36,8 @@ class AutonMain {
 
     private static final double servoClosed = 1.0;
     private static final double servoOpen = 0.1;
+
+    // COLOR SENSOR STUFF----
     // hsvValues is an array that will hold the hue, saturation, and value information.
     private float hsvValues[] = {0F, 0F, 0F};
     // values is a reference to the hsvValues array.
@@ -52,13 +54,13 @@ class AutonMain {
         this.teamColor = teamColor;
         robot.init(hardwareMap);
         //initiate hardware variables
-        north = MainRobot.north;
-        west = MainRobot.west;
-        east = MainRobot.east;
-        south =MainRobot.south;
-        arm = MainRobot.arm;
-        grab1 = MainRobot.grab1;
-        colorSensorServo = MainRobot.colorSensorServo;
+        north = robot.north;
+        west = robot.west;
+        east = robot.east;
+        south = robot.south;
+        arm = robot.arm;
+        grab1 = robot.grab1;
+        colorSensorServo = robot.colorSensorServo;
 
         // never gets used???
         // cs = robot.colorSensor;
@@ -85,18 +87,18 @@ class AutonMain {
             case BLUE:
                 if (sensorColor.red() < sensorColor.blue()) {
                     // if left is blue
-                    AutonMain.knock_left_jewel(colorSensorServo);
+                    knock_left_jewel(colorSensorServo);
                 } else {
                     // if left is red
-                    AutonMain.knock_right_jewel(colorSensorServo);
+                    knock_right_jewel(colorSensorServo);
                 }
             case RED:
                 if (sensorColor.red() > sensorColor.blue()) {
                     // if left is red
-                    AutonMain.knock_left_jewel(colorSensorServo);
+                    knock_left_jewel(colorSensorServo);
                 } else {
                     // if left is blue
-                    AutonMain.knock_right_jewel(colorSensorServo);
+                    knock_right_jewel(colorSensorServo);
                 }
         }
 
@@ -159,42 +161,42 @@ class AutonMain {
         });
     }
 
-    private static void move(double xvector, double yvector, int ms) throws InterruptedException{
-        MainRobot.west.setPower(yvector);
-        MainRobot.east.setPower(-yvector);
-        MainRobot.north.setPower(xvector);
-        MainRobot.south.setPower(-xvector);
+    private void move(double xvector, double yvector, int ms) throws InterruptedException{
+        west.setPower(yvector);
+        east.setPower(-yvector);
+        north.setPower(xvector);
+        south.setPower(-xvector);
         Thread.sleep(ms);
         stop();
     }
 
-    private static void turn(double v, int ms) throws InterruptedException {
-        MainRobot.west.setPower(v);
-        MainRobot.east.setPower(v);
-        MainRobot.north.setPower(v);
-        MainRobot.south.setPower(v);
+    private void turn(double v, int ms) throws InterruptedException {
+        west.setPower(v);
+        east.setPower(v);
+        north.setPower(v);
+        south.setPower(v);
         Thread.sleep(ms);
         stop();
     }
 
-    private static void knock_left_jewel(Servo colorSensorServo) throws InterruptedException {
+    private void knock_left_jewel(Servo colorSensorServo) throws InterruptedException {
         turn(1, 150); // turn left
         Thread.sleep(500);
         colorSensorServo.setPosition(0);
         turn(-1, 150); // turn right
     }
 
-    private static void knock_right_jewel(Servo colorSensorServo) throws InterruptedException {
+    private void knock_right_jewel(Servo colorSensorServo) throws InterruptedException {
         turn(-1, 150); // turn right
         Thread.sleep(500);
         colorSensorServo.setPosition(0);
         turn(1, 150); // turn left
     }
 
-    private static void stop() {
-        MainRobot.west.setPower(0);
-        MainRobot.east.setPower(0);
-        MainRobot.north.setPower(0);
-        MainRobot.south.setPower(0);
+    private void stop() {
+        west.setPower(0);
+        east.setPower(0);
+        north.setPower(0);
+        south.setPower(0);
     }
 }
