@@ -14,14 +14,12 @@ public class MainOpMode extends LinearOpMode {
     //creates an instance variable fo the robot
     MainRobot robot = new MainRobot();
 
-
-
-    public static double enginePower = 1.0;
-    public static double turnCoefficient = .4;
-    public static double leftx = 0.0;
-    public static double righty = 0.0;
-    public static double rightx = 0.0;
-    public static double lefty = 0.0;
+    private static double enginePower = 1.0;
+    private static double turnCoefficient = .4;
+    private static double leftx = 0.0;
+    private static double righty = 0.0;
+    private static double rightx = 0.0;
+    private static double lefty = 0.0;
 
     public static double precision = 1.0;
 
@@ -29,6 +27,10 @@ public class MainOpMode extends LinearOpMode {
     public static double servoOpen = 0.1;
     @Override
     public void runOpMode() throws InterruptedException  {
+        // setup constants
+        // TODO: use telemetry data to actually set this correctly
+        final int ARM_POSITION_THRESHOLD = 30;
+        final double ARM_JOYSTICK_MOVEMENT_THRESHOLD = 0.15;
         //initiate robot
         robot.init(hardwareMap);
         //initiate hardware variables
@@ -64,11 +66,17 @@ public class MainOpMode extends LinearOpMode {
             } else {
                 precision = 1.0;
             }
-            if (righty > .15) {
+            if (righty > ARM_JOYSTICK_MOVEMENT_THRESHOLD) {
                 arm.setPower(righty*.25);
                 targetSet = false;
-            } else if (righty < -.15){
-                arm.setPower(righty*.45);
+            } else if (righty < -ARM_JOYSTICK_MOVEMENT_THRESHOLD){
+                // when the arm is getting moved "up"
+                if (arm.getCurrentPosition() > ARM_POSITION_THRESHOLD) {
+                    // once past the threshold, gravity is helping
+                    arm.setPower(righty * 0.25);
+                } else {
+                    arm.setPower(righty * .45);
+                }
                 targetSet = false;
             } else if (targetSet) {
                 arm.setTargetPosition(target);
@@ -80,8 +88,8 @@ public class MainOpMode extends LinearOpMode {
             //use only protocol for the currently used joystick
             if (((Math.abs(leftx) + Math.abs(lefty))/2) >= (Math.abs(rightx) + Math.abs(righty))/2) {
                 //set motor powers for transposing
-                west.setPower(lefty*precision*.7);
-                east.setPower(-lefty*precision*.7);
+                west.setPower(-lefty*precision*.7); // in commit - fix reversal
+                east.setPower(lefty*precision*.7);
                 north.setPower(leftx*precision*.7);
                 south.setPower(-leftx*precision*.7);
 
@@ -110,6 +118,7 @@ public class MainOpMode extends LinearOpMode {
             telemetry.addData("Engine power", enginePower);
             telemetry.addData("Servo position", grab1.getPosition());
             telemetry.addData("Arm power", arm.getPower());
+            telemetry.addData("Arm position", arm.getCurrentPosition()); // NICO - use this info to determine what ARM_POSITION_THRESHOLD is
             telemetry.addData("Precision coefficient", precision);
             telemetry.addData("Gamepad status",  GamepadUser.ONE == gamepad1.getUser());
             telemetry.update();
