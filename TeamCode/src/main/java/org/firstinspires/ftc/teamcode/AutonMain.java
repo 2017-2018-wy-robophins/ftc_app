@@ -103,18 +103,19 @@ class AutonMain {
         }
 
         // TODO: put block in - theoretically
-        /*
-        move(0, 1, 400, robot);
-        turn(1, 350, robot);
-        move(0, -1, 400, robot);
+
+        // move(0, 1, 400);
+        /*turn(1, 350);
+        move(0, -1, 400);
         arm.setPower(-.45);
         Thread.sleep(500);
         arm.setPower(0);
         grab1.setPosition(servoOpen);
-        move(0, 1, 500, robot);
-        move(0, -1, 500, robot);
-        stop();
-        */
+        move(0, 1, 500);
+        move(0, -1, 500);*/
+        //stop();
+        grab1.setPosition(servoOpen);
+
     }
 
     void mainLoop() throws InterruptedException {
@@ -161,16 +162,16 @@ class AutonMain {
         });
     }
 
-    private void move(double xvector, double yvector, int ms) throws InterruptedException{
-        west.setPower(yvector);
-        east.setPower(-yvector);
+    public void move(double xvector, double yvector, int ms) throws InterruptedException{
+        west.setPower(-yvector);
+        east.setPower(yvector);
         north.setPower(xvector);
         south.setPower(-xvector);
         Thread.sleep(ms);
         stop();
     }
 
-    private void turn(double v, int ms) throws InterruptedException {
+    public void turn(double v, int ms) throws InterruptedException {
         west.setPower(v);
         east.setPower(v);
         north.setPower(v);
@@ -193,7 +194,7 @@ class AutonMain {
         turn(1, 150); // turn left
     }
 
-    private void stop() {
+    public void stop() {
         west.setPower(0);
         east.setPower(0);
         north.setPower(0);

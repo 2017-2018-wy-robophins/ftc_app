@@ -106,6 +106,10 @@ public class AutonBlue2 extends LinearOpMode {
         // run the stuff that we only want to run once
         runner.runOnce();
 
+        runner.move(0, -1, 500);
+        runner.move(-1, 0, 1000);
+        runner.stop();
+
         // run stuff that we want to run repeatedly
         while (opModeIsActive()) {
             runner.mainLoop();

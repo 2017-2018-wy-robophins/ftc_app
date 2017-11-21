@@ -24,7 +24,7 @@ class MainRobot {
     Servo grab1;
     Servo colorSensorServo;
     DistanceSensor colorDistanceSensor;
-    ColorSensor colorSensor;
+    // ColorSensor colorSensor;
 
 
     //runs on press of the "init" button. Maps engines from the robot to variables,
@@ -37,7 +37,7 @@ class MainRobot {
         grab1 =  HM.servo.get("grab1");
         colorSensorServo = HM.servo.get("colorSensorServo");
         colorDistanceSensor = HM.get(DistanceSensor.class, "colorDistanceSensor");
-        colorSensor = HM.get(ColorSensor.class, "colorSensor");
+        // colorSensor = HM.get(ColorSensor.class, "colorSensor");
 
         north.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         west.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

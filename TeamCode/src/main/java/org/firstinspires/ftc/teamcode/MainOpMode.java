@@ -89,8 +89,8 @@ public class MainOpMode extends LinearOpMode {
             //use only protocol for the currently used joystick
             if (((Math.abs(leftx) + Math.abs(lefty))/2) >= (Math.abs(rightx) + Math.abs(righty))/2) {
                 //set motor powers for transposing
-                west.setPower(-lefty*precision*.7); // in commit - fix reversal
-                east.setPower(lefty*precision*.7);
+                west.setPower(lefty*precision*.7); // in commit - fix reversal
+                east.setPower(-lefty*precision*.7);
                 north.setPower(leftx*precision*.7);
                 south.setPower(-leftx*precision*.7);
 
