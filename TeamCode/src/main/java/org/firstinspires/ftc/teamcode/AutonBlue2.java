@@ -104,10 +104,19 @@ public class AutonBlue2 extends LinearOpMode {
         // wait for the start button to be pressed.
         waitForStart();
         // run the stuff that we only want to run once
-        runner.runOnce();
 
-        runner.move(0, -1, 500);
-        runner.move(-1, 0, 1000);
+        runner.runOnce();
+        runner.turn(1, 50);
+        runner.move(0, -1, 800);
+        runner.turn(-1, 500);
+        runner.moveArm(.42, 1000);
+        runner.move(0, -1, 700);
+        runner.openServo();
+        Thread.sleep(1000);
+        runner.moveArm(-.25, 200);
+        runner.move(0, 1, 500);
+        runner.move (0, -1, 700);
+
         runner.stop();
 
         // run stuff that we want to run repeatedly

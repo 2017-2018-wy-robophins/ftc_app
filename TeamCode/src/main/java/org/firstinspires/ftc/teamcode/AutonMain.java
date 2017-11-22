@@ -114,7 +114,7 @@ class AutonMain {
         move(0, 1, 500);
         move(0, -1, 500);*/
         //stop();
-        grab1.setPosition(servoOpen);
+
 
     }
 
@@ -179,19 +179,32 @@ class AutonMain {
         Thread.sleep(ms);
         stop();
     }
+    public void closeServo() {
+        grab1.setPosition(servoClosed);
+    }
+    public void openServo() {
+        grab1.setPosition(servoOpen);
+    }
+
+    //up is positive
+    public void moveArm(double v, int ms) throws InterruptedException {
+        arm.setPower(-v);
+        Thread.sleep(ms);
+        arm.setPower(0);
+    }
 
     private void knock_left_jewel(Servo colorSensorServo) throws InterruptedException {
-        turn(1, 150); // turn left
-        Thread.sleep(500);
+        turn(1, 120); // turn left
         colorSensorServo.setPosition(0);
-        turn(-1, 150); // turn right
+        Thread.sleep(500);
+        turn(-1, 120); // turn right
     }
 
     private void knock_right_jewel(Servo colorSensorServo) throws InterruptedException {
-        turn(-1, 150); // turn right
-        Thread.sleep(500);
+        turn(-1, 120); // turn right
         colorSensorServo.setPosition(0);
-        turn(1, 150); // turn left
+        Thread.sleep(500);
+        turn(1, 120); // turn left
     }
 
     public void stop() {
