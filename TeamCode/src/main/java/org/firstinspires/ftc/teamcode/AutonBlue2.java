@@ -107,15 +107,16 @@ public class AutonBlue2 extends LinearOpMode {
 
         runner.runOnce();
         runner.turn(1, 50);
-        runner.move(0, -1, 800);
-        runner.turn(-1, 500);
-        runner.moveArm(.42, 1000);
         runner.move(0, -1, 700);
+        runner.turn(-1, 370);
+        runner.moveArm(.38, 1300);
+        Thread.sleep(500);
+        runner.move(0, -.5, 1000);
         runner.openServo();
         Thread.sleep(1000);
-        runner.moveArm(-.25, 200);
-        runner.move(0, 1, 500);
-        runner.move (0, -1, 700);
+        runner.moveArm(-.25, 500);
+        runner.move(0, .5, 600);
+        runner.move (0, -.5, 1100);
 
         runner.stop();
 
