@@ -41,6 +41,7 @@ public class MainOpMode extends LinearOpMode {
         DcMotor south = robot.south;
         DcMotor arm = robot.arm;
         Servo grab1 = robot.grab1;
+        Servo grab2 = robot.grab2;
         Servo colorSensorServo = robot.colorSensorServo;
         boolean targetSet = false;
         int target = 0;
@@ -108,6 +109,8 @@ public class MainOpMode extends LinearOpMode {
             }
             if (gamepad1.left_bumper) {
                 grab1.setPosition(servoOpen);
+                Thread.sleep(200);
+                grab2.setPosition(servoOpen);
             }
 
 

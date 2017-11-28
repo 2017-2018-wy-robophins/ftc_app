@@ -31,6 +31,7 @@ class AutonMain {
     private DcMotor south;
     private DcMotor arm;
     private Servo grab1;
+    private Servo grab2;
     private Servo colorSensorServo;
     private ColorSensor sensorColor;
     private DistanceSensor sensorDistance;
@@ -62,6 +63,7 @@ class AutonMain {
         south = robot.south;
         arm = robot.arm;
         grab1 = robot.grab1;
+        grab2 = robot.grab2;
         colorSensorServo = robot.colorSensorServo;
 
         // never gets used???
@@ -178,9 +180,12 @@ class AutonMain {
     }
     public void closeServo() {
         grab1.setPosition(servoClosed);
+        grab2.setPosition(servoClosed);
     }
-    public void openServo() {
+    public void openServo() throws InterruptedException {
         grab1.setPosition(servoOpen);
+        Thread.sleep(200);
+        grab2.setPosition(servoOpen);
     }
 
     //up is positive

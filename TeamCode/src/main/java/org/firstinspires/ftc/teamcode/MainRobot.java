@@ -22,6 +22,7 @@ class MainRobot {
     DcMotor south;
     DcMotor arm;
     Servo grab1;
+    Servo grab2;
     Servo colorSensorServo;
     DistanceSensor colorDistanceSensor;
     // ColorSensor colorSensor;
@@ -35,6 +36,7 @@ class MainRobot {
         south = HM.dcMotor.get("S");
         arm = HM.dcMotor.get("arm");
         grab1 =  HM.servo.get("grab1");
+        grab2 =  HM.servo.get("grab2");
         colorSensorServo = HM.servo.get("colorSensorServo");
         colorDistanceSensor = HM.get(DistanceSensor.class, "colorDistanceSensor");
         // colorSensor = HM.get(ColorSensor.class, "colorSensor");
@@ -43,6 +45,7 @@ class MainRobot {
         west.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         east.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         south.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 

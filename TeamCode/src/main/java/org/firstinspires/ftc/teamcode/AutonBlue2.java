@@ -99,14 +99,18 @@ public class AutonBlue2 extends LinearOpMode {
     private MainRobot robot = new MainRobot();
     private double armPower = 0.37;
     private double armPowerWithGravity = 0.2;
+    private boolean DEV_ARM_ADJUST = true;
 
     @Override
     public void runOpMode() throws InterruptedException {
         // initialize the more generic AutonMain container class
         AutonMain runner = new AutonMain(robot, hardwareMap, telemetry, TeamColor.BLUE, StartLocation.RIGHT_PLATFORM);
         // wait for the start button to be pressed.
-        // waitForStart();
-        waitForStart_tuneArmPowerWithGamepad(telemetry);
+        if (DEV_ARM_ADJUST) {
+            waitForStart_tuneArmPowerWithGamepad(telemetry);
+        } else {
+            waitForStart();
+        }
         // run the stuff that we only want to run once
         runner.runOnce();
 
