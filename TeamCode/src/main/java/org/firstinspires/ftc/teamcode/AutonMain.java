@@ -35,7 +35,7 @@ class AutonMain {
     private DistanceSensor sensorDistance;
 
     private static final double servoClosed = 1.0;
-    private static final double servoOpen = 0.1;
+    private static final double servoOpen = 0;
 
     // COLOR SENSOR STUFF----
     // hsvValues is an array that will hold the hue, saturation, and value information.

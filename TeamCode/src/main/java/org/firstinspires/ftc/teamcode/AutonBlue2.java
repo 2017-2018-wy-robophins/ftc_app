@@ -45,6 +45,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 import java.sql.Time;
@@ -62,6 +63,7 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.internal.ui.GamepadUser;
 
 import java.util.Locale;
 
@@ -95,28 +97,48 @@ public class AutonBlue2 extends LinearOpMode {
      *
      */
     private MainRobot robot = new MainRobot();
-
+    private double armPower = 0.37;
+    private double armPowerWithGravity = 0.2;
 
     @Override
     public void runOpMode() throws InterruptedException {
         // initialize the more generic AutonMain container class
         AutonMain runner = new AutonMain(robot, hardwareMap, telemetry, TeamColor.BLUE);
         // wait for the start button to be pressed.
-        waitForStart();
+        // waitForStart();
+        waitForStart_tuneArmPowerWithGamepad(telemetry);
         // run the stuff that we only want to run once
-
         runner.runOnce();
-        runner.turn(1, 50);
-        runner.move(0, -1, 700);
-        runner.turn(-1, 370);
-        runner.moveArm(.38, 1300);
+
+
+
+        // move the arm up slightly so that it doesn't drag
+        runner.moveArm(armPower, 800);
         Thread.sleep(500);
+        // blue2 same as red2 (symmetrical)
+        // get off platform, move to intersection of center line and first dotted line in diagram
+        // runner.turn(1, 50);
+        runner.move(0, -1, 700);
+        runner.turn(-1, 410);
+        // "throw" block by bringing arm over
+        runner.moveArm(armPower, 1100);
+        // * after the arm has reached the point where gravity helps - don't throw it
+        runner.moveArm(armPowerWithGravity, 500);
+        Thread.sleep(1500);
+        // drop glyph
+        // move towards cryptobox (but backwards facing)
         runner.move(0, -.5, 1000);
+        Thread.sleep(100);
         runner.openServo();
         Thread.sleep(1000);
+        // get arm back down
         runner.moveArm(-.25, 500);
-        runner.move(0, .5, 600);
-        runner.move (0, -.5, 1100);
+        // make sure that glyph is off the robot by driving forward
+        runner.move(0, .5, 700);
+        // ram it in the cryptobox
+        runner.move (0, -.3, 3000);
+
+
 
         runner.stop();
 
@@ -129,5 +151,37 @@ public class AutonBlue2 extends LinearOpMode {
         runner.finish();
     }
 
+    private void waitForStart_tuneArmPowerWithGamepad(Telemetry telemetry) throws InterruptedException {
+        double righty, lefty;
+        final double joystick_threshold = 0.5;
+        final double increase_value = 0.01;
+
+        while (!isStarted()) {
+            if (GamepadUser.ONE != gamepad1.getUser()) {
+                stop();
+            }
+            righty = gamepad1.right_trigger * 2 - 1;
+            lefty = gamepad1.left_stick_y;
+            telemetry.clear();
+            telemetry.addData("R vertical", righty);
+            telemetry.addData("L vertical", lefty);
+            telemetry.addData("Arm power", robot.arm.getPower());
+            telemetry.addData("armPower", armPower);
+            telemetry.addData("armPowerWithGravity", armPowerWithGravity);
+            telemetry.update();
+            // increase if above appropriate thresholds
+            // righty increases and decreases armPower, while lefty increases and decreases armPowerWithGravity
+            armPower += ((Math.abs(righty) > joystick_threshold) ? 1:0) * Math.signum(righty) * increase_value;
+            armPowerWithGravity += ((Math.abs(lefty) > joystick_threshold) ? 1:0) * Math.signum(lefty) * increase_value;
+            Thread.sleep(100);
+        }
+    }
+
+    // acceleration in power per 100ms chunk -- change power every 100 ms
+    private void acceleratingMoveArm(AutonMain runner, double power, double acceleration, int ms) throws InterruptedException {
+        for (int i = 0; i < ms/100; ms++) {
+            runner.moveArm(power + (double)i * acceleration, 100);
+        }
+    }
 }
 

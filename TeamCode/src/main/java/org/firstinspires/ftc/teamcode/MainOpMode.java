@@ -25,7 +25,7 @@ public class MainOpMode extends LinearOpMode {
     private static double precision = 1.0;
 
     private static double servoClosed = 1.0;
-    private static double servoOpen = 0.1;
+    private static double servoOpen = 0;
     @Override
     public void runOpMode() throws InterruptedException  {
         // setup constants
