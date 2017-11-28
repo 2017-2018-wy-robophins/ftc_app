@@ -71,7 +71,7 @@ public class AutonBlue1 extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         // initialize the more generic AutonMain container class
-        AutonMain runner = new AutonMain(robot, hardwareMap, telemetry, TeamColor.BLUE);
+        AutonMain runner = new AutonMain(robot, hardwareMap, telemetry, TeamColor.BLUE, StartLocation.LEFT_PLATFORM);
         // wait for the start button to be pressed.
         waitForStart();
         // run the stuff that we only want to run once

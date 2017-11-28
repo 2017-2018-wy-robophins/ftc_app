@@ -23,6 +23,7 @@ import java.util.Locale;
 class AutonMain {
     private Telemetry telemetry;
     private TeamColor teamColor;
+    private StartLocation startLocation;
     // hardware components
     private DcMotor north;
     private DcMotor west;
@@ -49,9 +50,10 @@ class AutonMain {
     private long stopTime;
 
     // initializer
-    AutonMain(MainRobot robot, HardwareMap hardwareMap, Telemetry telemetry, TeamColor teamColor) throws InterruptedException {
+    AutonMain(MainRobot robot, HardwareMap hardwareMap, Telemetry telemetry, TeamColor teamColor, StartLocation startLocation) throws InterruptedException {
         this.telemetry = telemetry;
         this.teamColor = teamColor;
+        this.startLocation = startLocation;
         robot.init(hardwareMap);
         //initiate hardware variables
         north = robot.north;
@@ -104,17 +106,12 @@ class AutonMain {
 
         // TODO: put block in - theoretically
 
-        // move(0, 1, 400);
-        /*turn(1, 350);
-        move(0, -1, 400);
-        arm.setPower(-.45);
-        Thread.sleep(500);
-        arm.setPower(0);
-        grab1.setPosition(servoOpen);
-        move(0, 1, 500);
-        move(0, -1, 500);*/
-        //stop();
+        switch (startLocation) {
+            case LEFT_PLATFORM:
 
+            case RIGHT_PLATFORM:
+
+        }
 
     }
 
