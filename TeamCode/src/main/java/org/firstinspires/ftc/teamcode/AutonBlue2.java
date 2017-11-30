@@ -161,9 +161,7 @@ public class AutonBlue2 extends LinearOpMode {
         final double increase_value = 0.01;
 
         while (!isStarted()) {
-            if (GamepadUser.ONE != gamepad1.getUser()) {
-                stop();
-            }
+
             righty = gamepad1.right_trigger * 2 - 1;
             lefty = gamepad1.left_stick_y;
             telemetry.clear();

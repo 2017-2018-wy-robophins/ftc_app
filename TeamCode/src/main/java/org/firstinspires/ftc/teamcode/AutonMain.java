@@ -180,12 +180,13 @@ class AutonMain {
     }
     public void closeServo() {
         grab1.setPosition(servoClosed);
-        grab2.setPosition(servoClosed);
+        //apparently grab2 is upside-down physically
+        grab2.setPosition(servoOpen);
     }
     public void openServo() throws InterruptedException {
         grab1.setPosition(servoOpen);
-        Thread.sleep(200);
-        grab2.setPosition(servoOpen);
+        Thread.sleep(250);
+        grab2.setPosition(servoClosed);
     }
 
     //up is positive
