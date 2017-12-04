@@ -97,9 +97,11 @@ public class AutonBlue2 extends LinearOpMode {
      *
      */
     private MainRobot robot = new MainRobot();
-    private double armPower = 0.37;
-    private double armPowerWithGravity = 0.2;
-    private boolean DEV_ARM_ADJUST = true;
+    private double armPower = 0.47;
+    private double armPowerWithGravity = 0.23;
+    private boolean DEV_ARM_ADJUST = false;
+    private Servo grab2 = robot.grab2;
+    double servoClosed = 1;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -133,7 +135,7 @@ public class AutonBlue2 extends LinearOpMode {
         // move towards cryptobox (but backwards facing)
         runner.move(0, -.5, 1000);
         Thread.sleep(100);
-        runner.openServo();
+        grab2.setPosition(servoClosed);
         Thread.sleep(1000);
         // get arm back down
         runner.moveArm(-.25, 500);

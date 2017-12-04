@@ -37,7 +37,7 @@ public class MainOpMode extends LinearOpMode {
         //initiate hardware variables
         DcMotor north = robot.north;
         DcMotor west = robot.west;
-        DcMotor east = robot.east;
+        DcMotor east = robot.east;//gey u r an be a gey boiii
         DcMotor south = robot.south;
         DcMotor arm = robot.arm;
         Servo grab1 = robot.grab1;
@@ -69,15 +69,15 @@ public class MainOpMode extends LinearOpMode {
                 precision = 1.0;
             }
             if (righty > ARM_JOYSTICK_MOVEMENT_THRESHOLD) {
-                arm.setPower(righty*.25);
+                arm.setPower(righty*.30);
                 targetSet = false;
             } else if (righty < -ARM_JOYSTICK_MOVEMENT_THRESHOLD){
                 // when the arm is getting moved "up"
                 if (arm.getCurrentPosition() > ARM_POSITION_THRESHOLD) {
                     // once past the threshold, gravity is helping
-                    arm.setPower(righty * 0.25);
+                    arm.setPower(righty * 0.30);
                 } else {
-                    arm.setPower(righty * .45);
+                    arm.setPower(righty * .6);
                 }
                 targetSet = false;
             } else if (targetSet) {
@@ -106,11 +106,13 @@ public class MainOpMode extends LinearOpMode {
 
             if (gamepad1.right_bumper) {
                 grab1.setPosition(servoClosed);
+                Thread.sleep(200);
+                grab2.setPosition(servoOpen);
             }
             if (gamepad1.left_bumper) {
                 grab1.setPosition(servoOpen);
                 Thread.sleep(200);
-                grab2.setPosition(servoOpen);
+                grab2.setPosition(servoClosed);
             }
 
 

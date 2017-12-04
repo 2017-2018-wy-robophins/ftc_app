@@ -82,7 +82,7 @@ class AutonMain {
     // run this once
     void runOnce() throws InterruptedException {
         stopTime = SystemClock.currentThreadTimeMillis() + 30000;
-        grab1.setPosition(servoClosed);
+        grab2.setPosition(servoOpen);
         colorSensorServo.setPosition(1);
 
         Thread.sleep(1000);
