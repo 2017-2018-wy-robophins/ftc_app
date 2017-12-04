@@ -24,6 +24,7 @@ class AutonMain {
     private Telemetry telemetry;
     private TeamColor teamColor;
     private StartLocation startLocation;
+    private MainRobot robot;
     // hardware components
     private DcMotor north;
     private DcMotor west;
@@ -36,8 +37,6 @@ class AutonMain {
     private ColorSensor sensorColor;
     private DistanceSensor sensorDistance;
 
-    private static final double servoClosed = 1.0;
-    private static final double servoOpen = 0;
 
     // COLOR SENSOR STUFF----
     // hsvValues is an array that will hold the hue, saturation, and value information.
@@ -55,6 +54,7 @@ class AutonMain {
         this.telemetry = telemetry;
         this.teamColor = teamColor;
         this.startLocation = startLocation;
+        this.robot = robot;
         robot.init(hardwareMap);
         //initiate hardware variables
         north = robot.north;
@@ -62,8 +62,6 @@ class AutonMain {
         east = robot.east;
         south = robot.south;
         arm = robot.arm;
-        grab1 = robot.grab1;
-        grab2 = robot.grab2;
         colorSensorServo = robot.colorSensorServo;
 
         // never gets used???
@@ -82,7 +80,7 @@ class AutonMain {
     // run this once
     void runOnce() throws InterruptedException {
         stopTime = SystemClock.currentThreadTimeMillis() + 30000;
-        grab2.setPosition(servoOpen);
+        robot.openServo();
         colorSensorServo.setPosition(1);
 
         Thread.sleep(1000);
@@ -178,16 +176,7 @@ class AutonMain {
         Thread.sleep(ms);
         stop();
     }
-    public void closeServo() {
-        grab1.setPosition(servoClosed);
-        //apparently grab2 is upside-down physically
-        grab2.setPosition(servoOpen);
-    }
-    public void openServo() throws InterruptedException {
-        grab1.setPosition(servoOpen);
-        Thread.sleep(250);
-        grab2.setPosition(servoClosed);
-    }
+
 
     //up is positive
     public void moveArm(double v, int ms) throws InterruptedException {

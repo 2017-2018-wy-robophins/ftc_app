@@ -56,6 +56,17 @@ class MainRobot {
         //pulley.setDirection(DcMotor.Direction.REVERSE);
 
     }
+    private static final double servoClosed = 1.0;
+    private static final double servoOpen = 0;
 
-
+    public void closeServo() {
+        grab1.setPosition(servoClosed);
+        //apparently grab2 is upside-down physically
+        grab2.setPosition(servoOpen);
+    }
+    public void openServo() throws InterruptedException {
+        grab1.setPosition(servoOpen);
+        Thread.sleep(300);
+        grab2.setPosition(servoClosed);
+    }
 }

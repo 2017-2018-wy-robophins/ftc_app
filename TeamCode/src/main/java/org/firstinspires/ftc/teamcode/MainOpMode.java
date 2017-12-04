@@ -24,8 +24,6 @@ public class MainOpMode extends LinearOpMode {
 
     private static double precision = 1.0;
 
-    private static double servoClosed = 1.0;
-    private static double servoOpen = 0;
     @Override
     public void runOpMode() throws InterruptedException  {
         // setup constants
@@ -105,13 +103,10 @@ public class MainOpMode extends LinearOpMode {
 
 
             if (gamepad1.right_bumper) {
-                grab1.setPosition(servoClosed);
-                grab2.setPosition(servoOpen);
+                robot.closeServo();
             }
             if (gamepad1.left_bumper) {
-                grab1.setPosition(servoOpen);
-                Thread.sleep(200);
-                grab2.setPosition(servoClosed);
+                robot.openServo();
             }
 
 
