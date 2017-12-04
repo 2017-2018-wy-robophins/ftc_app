@@ -106,7 +106,6 @@ public class MainOpMode extends LinearOpMode {
 
             if (gamepad1.right_bumper) {
                 grab1.setPosition(servoClosed);
-                Thread.sleep(200);
                 grab2.setPosition(servoOpen);
             }
             if (gamepad1.left_bumper) {
