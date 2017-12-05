@@ -124,25 +124,26 @@ public class AutonBlue2 extends LinearOpMode {
         // blue2 same as red2 (symmetrical)
         // get off platform, move to intersection of center line and first dotted line in diagram
         // runner.turn(1, 50);
-        runner.move(0, -1, 700);
-        runner.turn(-1, 410);
+        runner.move(0, -.8, 850);
+        runner.turn(-1, 430);
         // "throw" block by bringing arm over
-        runner.moveArm(armPower, 1100);
+        runner.move(0, -.5, 500);
+        runner.moveArm(armPower, 1700);
         // * after the arm has reached the point where gravity helps - don't throw it
         runner.moveArm(armPowerWithGravity, 500);
         Thread.sleep(1500);
         // drop glyph
         // move towards cryptobox (but backwards facing)
-        runner.move(0, -.5, 1000);
+        runner.move(0, -.5, 500);
         Thread.sleep(100);
-        grab2.setPosition(servoClosed);
+        robot.openServo();
         Thread.sleep(1000);
         // get arm back down
         runner.moveArm(-.25, 500);
         // make sure that glyph is off the robot by driving forward
-        runner.move(0, .5, 700);
+        runner.move(0, .6, 700);
         // ram it in the cryptobox
-        runner.move (0, -.3, 3000);
+        runner.move (0, -.4, 3000);
 
 
 

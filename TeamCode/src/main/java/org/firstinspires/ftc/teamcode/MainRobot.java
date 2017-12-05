@@ -54,7 +54,6 @@ class MainRobot {
         //east.setDirection(DcMotor.Direction.REVERSE);
         //south.setDirection(DcMotor.Direction.REVERSE);
         //pulley.setDirection(DcMotor.Direction.REVERSE);
-
     }
     private static final double servoClosed = 1.0;
     private static final double servoOpen = 0;
@@ -66,7 +65,7 @@ class MainRobot {
     }
     public void openServo() throws InterruptedException {
         grab1.setPosition(servoOpen);
-        Thread.sleep(300);
+        Thread.sleep(500);
         grab2.setPosition(servoClosed);
     }
 }

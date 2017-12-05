@@ -35,15 +35,16 @@ public class MainOpMode extends LinearOpMode {
         //initiate hardware variables
         DcMotor north = robot.north;
         DcMotor west = robot.west;
-        DcMotor east = robot.east;//gey u r an be a gey boiii
+        DcMotor east = robot.east;
         DcMotor south = robot.south;
         DcMotor arm = robot.arm;
         Servo grab1 = robot.grab1;
         Servo grab2 = robot.grab2;
+        robot.openServo();
         Servo colorSensorServo = robot.colorSensorServo;
         boolean targetSet = false;
         int target = 0;
-
+        double previous_righty = 0;
 
         telemetry.addData("say", "before opmode");
         telemetry.update();
@@ -66,24 +67,40 @@ public class MainOpMode extends LinearOpMode {
             } else {
                 precision = 1.0;
             }
+            // TODO: REFACTOR
             if (righty > ARM_JOYSTICK_MOVEMENT_THRESHOLD) {
+                arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 arm.setPower(righty*.30);
-                targetSet = false;
-            } else if (righty < -ARM_JOYSTICK_MOVEMENT_THRESHOLD){
-                // when the arm is getting moved "up"
-                if (arm.getCurrentPosition() > ARM_POSITION_THRESHOLD) {
-                    // once past the threshold, gravity is helping
-                    arm.setPower(righty * 0.30);
-                } else {
-                    arm.setPower(righty * .6);
-                }
-                targetSet = false;
-            } else if (targetSet) {
-                arm.setTargetPosition(target);
+                previous_righty = righty;
+            } else if (righty < -ARM_JOYSTICK_MOVEMENT_THRESHOLD) {
+                arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                arm.setPower(righty * .6);
+                previous_righty = righty;
             } else {
+                /*
+               if (arm.getCurrentPosition() > -700) {
+                    if (targetSet) {
+                        if (previous_righty < ARM_JOYSTICK_MOVEMENT_THRESHOLD) {
+                            telemetry.addLine("Active braking in effect");
+                            arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                            arm.setPower(-0.3);
+                            arm.setTargetPosition(target);
+                        } else {
+                            telemetry.addLine("Passive braking in effect");
+                            arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                            arm.setPower(0);
+                        }
+                    } else {
+                        telemetry.addLine("Active braking in effect");
+                        target = arm.getCurrentPosition();
+                    }
+                } else {
+                    telemetry.addLine("Passive braking in effect");
+                    arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                    arm.setPower(0);
+                }*/
+                arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 arm.setPower(0);
-                target = arm.getCurrentPosition();
-                targetSet = true;
             }
             //use only protocol for the currently used joystick
             if (((Math.abs(leftx) + Math.abs(lefty))/2) >= (Math.abs(rightx) + Math.abs(righty))/2) {
