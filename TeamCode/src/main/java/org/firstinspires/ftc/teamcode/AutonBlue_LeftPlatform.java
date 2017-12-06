@@ -45,8 +45,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list.
  */
-@Autonomous(name = "AutonRed2", group = "Sensor")
-public class AutonRed2 extends LinearOpMode {
+@Autonomous(name = "AutonBlue_LeftPlatform", group = "Sensor")
+public class AutonBlue_LeftPlatform extends LinearOpMode {
 
     /**
      * Note that the REV Robotics Color-Distance incorporates two sensors into one device.
@@ -71,7 +71,7 @@ public class AutonRed2 extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         // initialize the more generic AutonMain container class
-        AutonMain runner = new AutonMain(robot, hardwareMap, telemetry, TeamColor.RED, StartLocation.RIGHT_PLATFORM);
+        AutonMain runner = new AutonMain(robot, hardwareMap, telemetry, TeamColor.BLUE, StartLocation.LEFT_PLATFORM);
         // wait for the start button to be pressed.
         waitForStart();
         // run the stuff that we only want to run once

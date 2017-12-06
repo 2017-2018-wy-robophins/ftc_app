@@ -31,8 +31,6 @@ class AutonMain {
     private DcMotor east;
     private DcMotor south;
     private DcMotor arm;
-    private Servo grab1;
-    private Servo grab2;
     private Servo colorSensorServo;
     private ColorSensor sensorColor;
     private DistanceSensor sensorDistance;
@@ -76,7 +74,8 @@ class AutonMain {
         int relativeLayoutId = hardwareMap.appContext.getResources().getIdentifier("RelativeLayout", "id", hardwareMap.appContext.getPackageName());
         relativeLayout = ((Activity) hardwareMap.appContext).findViewById(relativeLayoutId);
     }
-
+    private double armPower = 0.47;
+    private double armPowerWithGravity = 0.23;
     // run this once
     void runOnce() throws InterruptedException {
         stopTime = SystemClock.currentThreadTimeMillis() + 30000;
@@ -108,11 +107,59 @@ class AutonMain {
 
         switch (startLocation) {
             case LEFT_PLATFORM:
-
+                // move the arm up slightly so that it doesn't drag
+                moveArm(armPower, 800);
+                Thread.sleep(500);
+                // get off platform, move to intersection of center line and first dotted line in diagram
+                move(0, -.8, 850);
+                turn(1,50);
+                // move forward a tiny bit to leave space for arm
+                move(0, 0.5, 400);
+                 // "throw" block by bringing arm over
+                moveArm(armPower, 1700);
+                // * after the arm has reached the point where gravity helps - don't throw it
+                moveArm(armPowerWithGravity, 500);
+                Thread.sleep(1500);
+                // drop glyph
+                // move towards cryptobox (but backwards facing)
+                move(0, -.5, 500);
+                Thread.sleep(100);
+                robot.openServo();
+                Thread.sleep(1000);
+                // get arm back down
+                moveArm(-.25, 500);
+                // make sure that glyph is off the robot by driving forward
+                move(0, .6, 700);
+                // ram it in the cryptobox
+                move (0, -.4, 3000);
             case RIGHT_PLATFORM:
-
+                // move the arm up slightly so that it doesn't drag
+                moveArm(armPower, 800);
+                Thread.sleep(500);
+                // blue2 same as red2 (symmetrical)
+                // get off platform, move to intersection of center line and first dotted line in diagram
+                move(0, -.8, 850);
+                turn(-1, 430);
+                // "throw" block by bringing arm over
+                move(0, -.5, 500);
+                moveArm(armPower, 1700);
+                // * after the arm has reached the point where gravity helps - don't throw it
+                moveArm(armPowerWithGravity, 500);
+                Thread.sleep(1500);
+                // drop glyph
+                // move towards cryptobox (but backwards facing)
+                move(0, -.5, 500);
+                Thread.sleep(100);
+                robot.openServo();
+                Thread.sleep(1000);
+                // get arm back down
+                moveArm(-.25, 500);
+                // make sure that glyph is off the robot by driving forward
+                move(0, .6, 700);
+                // ram it in the cryptobox
+                move (0, -.4, 3000);
         }
-
+        stop();
     }
 
     void mainLoop() throws InterruptedException {

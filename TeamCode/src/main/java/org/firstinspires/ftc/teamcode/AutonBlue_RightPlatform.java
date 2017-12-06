@@ -76,8 +76,8 @@ import java.util.Locale;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list.
  */
-@Autonomous(name = "AutonBlue2", group = "Sensor")
-public class AutonBlue2 extends LinearOpMode {
+@Autonomous(name = "AutonBlue_RightPlatform", group = "Sensor")
+public class AutonBlue_RightPlatform extends LinearOpMode {
 
     /**
      * Note that the REV Robotics Color-Distance incorporates two sensors into one device.
@@ -97,57 +97,16 @@ public class AutonBlue2 extends LinearOpMode {
      *
      */
     private MainRobot robot = new MainRobot();
-    private double armPower = 0.47;
-    private double armPowerWithGravity = 0.23;
-    private boolean DEV_ARM_ADJUST = false;
-    private Servo grab2 = robot.grab2;
-    double servoClosed = 1;
+
 
     @Override
     public void runOpMode() throws InterruptedException {
         // initialize the more generic AutonMain container class
         AutonMain runner = new AutonMain(robot, hardwareMap, telemetry, TeamColor.BLUE, StartLocation.RIGHT_PLATFORM);
         // wait for the start button to be pressed.
-        if (DEV_ARM_ADJUST) {
-            waitForStart_tuneArmPowerWithGamepad(telemetry);
-        } else {
-            waitForStart();
-        }
+        waitForStart();
         // run the stuff that we only want to run once
         runner.runOnce();
-
-
-
-        // move the arm up slightly so that it doesn't drag
-        runner.moveArm(armPower, 800);
-        Thread.sleep(500);
-        // blue2 same as red2 (symmetrical)
-        // get off platform, move to intersection of center line and first dotted line in diagram
-        // runner.turn(1, 50);
-        runner.move(0, -.8, 850);
-        runner.turn(-1, 430);
-        // "throw" block by bringing arm over
-        runner.move(0, -.5, 500);
-        runner.moveArm(armPower, 1700);
-        // * after the arm has reached the point where gravity helps - don't throw it
-        runner.moveArm(armPowerWithGravity, 500);
-        Thread.sleep(1500);
-        // drop glyph
-        // move towards cryptobox (but backwards facing)
-        runner.move(0, -.5, 500);
-        Thread.sleep(100);
-        robot.openServo();
-        Thread.sleep(1000);
-        // get arm back down
-        runner.moveArm(-.25, 500);
-        // make sure that glyph is off the robot by driving forward
-        runner.move(0, .6, 700);
-        // ram it in the cryptobox
-        runner.move (0, -.4, 3000);
-
-
-
-        runner.stop();
 
         // run stuff that we want to run repeatedly
         while (opModeIsActive()) {
@@ -158,7 +117,7 @@ public class AutonBlue2 extends LinearOpMode {
         runner.finish();
     }
 
-    private void waitForStart_tuneArmPowerWithGamepad(Telemetry telemetry) throws InterruptedException {
+    /*private void waitForStart_tuneArmPowerWithGamepad(Telemetry telemetry) throws InterruptedException {
         double righty, lefty;
         final double joystick_threshold = 0.5;
         final double increase_value = 0.01;
@@ -187,6 +146,6 @@ public class AutonBlue2 extends LinearOpMode {
         for (int i = 0; i < ms/100; ms++) {
             runner.moveArm(power + (double)i * acceleration, 100);
         }
-    }
+    }*/
 }
 
