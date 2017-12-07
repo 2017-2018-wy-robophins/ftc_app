@@ -122,16 +122,18 @@ class AutonMain {
                 Thread.sleep(1500);
                 // drop glyph
                 // move towards cryptobox (but backwards facing)
-                move(0, -.5, 500);
+                move(0, -.5, 900);
                 Thread.sleep(100);
                 robot.openServo();
                 Thread.sleep(1000);
                 // get arm back down
-                moveArm(-.25, 500);
+
                 // make sure that glyph is off the robot by driving forward
                 move(0, .6, 700);
                 // ram it in the cryptobox
                 move (0, -.4, 3000);
+
+                moveArm(-.25, 500);
             case RIGHT_PLATFORM:
                 // move the arm up slightly so that it doesn't drag
                 moveArm(armPower, 800);
@@ -139,25 +141,27 @@ class AutonMain {
                 // blue2 same as red2 (symmetrical)
                 // get off platform, move to intersection of center line and first dotted line in diagram
                 move(0, -.8, 850);
-                turn(-1, 430);
+                turn(-1, 470);
                 // "throw" block by bringing arm over
                 move(0, -.5, 500);
-                moveArm(armPower, 1700);
+                moveArm(armPower, 1900);
                 // * after the arm has reached the point where gravity helps - don't throw it
                 moveArm(armPowerWithGravity, 500);
                 Thread.sleep(1500);
                 // drop glyph
                 // move towards cryptobox (but backwards facing)
-                move(0, -.5, 500);
+                move(0, -.5, 900);
                 Thread.sleep(100);
                 robot.openServo();
                 Thread.sleep(1000);
                 // get arm back down
-                moveArm(-.25, 500);
+
                 // make sure that glyph is off the robot by driving forward
                 move(0, .6, 700);
                 // ram it in the cryptobox
                 move (0, -.4, 3000);
+
+                moveArm(-.25, 500);
         }
         stop();
     }
