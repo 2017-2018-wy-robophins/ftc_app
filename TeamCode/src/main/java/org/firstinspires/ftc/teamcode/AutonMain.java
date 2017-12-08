@@ -148,7 +148,7 @@ class AutonMain {
                 Thread.sleep(1500);
                 // drop glyph
                 // move towards cryptobox (but backwards facing)
-                move(0, -.5, 500);
+                move(0, -.5, 800);
                 Thread.sleep(100);
                 robot.openServo();
                 Thread.sleep(1000);
