@@ -160,6 +160,8 @@ class AutonMain {
                 move(0, .6, 700);
                 // ram it in the cryptobox
                 move (0, -.4, 3000);
+                // move slightly forward so that we don't touch the glyph anymore
+                move(0, 0.6, 100);
 
                 moveArm(-.25, 500);
         }
