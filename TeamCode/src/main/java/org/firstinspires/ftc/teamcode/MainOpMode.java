@@ -53,10 +53,10 @@ public class MainOpMode extends LinearOpMode {
             if (GamepadUser.ONE != gamepad1.getUser()) {
                 stop();
             }
-            righty = gamepad1.right_trigger * 2 - 1;
+            righty = gamepad1.right_stick_y;
             // temporary fix for bad controller
             // remap from 0 - 1 to -1 to 1
-            rightx = (gamepad1.left_trigger * 2 - 1);
+            rightx = gamepad1.right_stick_x;
             leftx = gamepad1.left_stick_x;
             lefty = gamepad1.left_stick_y;
             telemetry.clear();
