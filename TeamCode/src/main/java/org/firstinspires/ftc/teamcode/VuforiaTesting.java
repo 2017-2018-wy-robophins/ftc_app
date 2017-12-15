@@ -117,16 +117,28 @@ public class VuforiaTesting extends LinearOpMode {
         float mmFTCFieldWidth  = (24*6 - 2) * mmPerInch;   // the FTC field is ~11'10" center-to-center of the glass panels
         float mmPictographHeight = 2 * mmPerInch;
 
-        OpenGLMatrix blueRightTargetLocationOnField = OpenGLMatrix.translation(mmFTCFieldWidth, (float)(24 * 5 + 3 + 11./2) * mmPerInch, mmPictographHeight);
+        OpenGLMatrix blueRightTargetLocationOnField = OpenGLMatrix
+                .translation(mmFTCFieldWidth, (float)(24 * 5 + 3 + 11./2) * mmPerInch, mmPictographHeight)
+                .multiplied(Orientation.getRotationMatrix(AxesReference.EXTRINSIC, AxesOrder.XZX,
+                        AngleUnit.DEGREES, 90, -90, 0));
         RobotLog.ii(TAG, "Blue Right Target=%s", format(blueRightTargetLocationOnField));
 
-        OpenGLMatrix blueLeftTargetLocationOnField = OpenGLMatrix.translation(mmFTCFieldWidth, (float)(24 * 2 + 3 + 11./2) * mmPerInch, mmPictographHeight);
+        OpenGLMatrix blueLeftTargetLocationOnField = OpenGLMatrix
+                .translation(mmFTCFieldWidth, (float)(24 * 2 + 3 + 11./2) * mmPerInch, mmPictographHeight)
+                .multiplied(Orientation.getRotationMatrix(AxesReference.EXTRINSIC, AxesOrder.XZX,
+                        AngleUnit.DEGREES, 90, -90, 0));
         RobotLog.ii(TAG, "Blue Left Target=%s", format(blueLeftTargetLocationOnField));
 
-        OpenGLMatrix redRightTargetLocationOnField = OpenGLMatrix.translation(mmFTCFieldWidth, (float)(24 * 2 - 3 - 11./2) * mmPerInch, mmPictographHeight);
+        OpenGLMatrix redRightTargetLocationOnField = OpenGLMatrix
+                .translation(mmFTCFieldWidth, (float)(24 * 2 - 3 - 11./2) * mmPerInch, mmPictographHeight)
+                .multiplied(Orientation.getRotationMatrix(AxesReference.EXTRINSIC, AxesOrder.XZX,
+                        AngleUnit.DEGREES, 90, 90, 0));
         RobotLog.ii(TAG, "Red Right Target=%s", format(redRightTargetLocationOnField));
 
-        OpenGLMatrix redLeftTargetLocationOnField = OpenGLMatrix.translation(mmFTCFieldWidth, (float)(24 * 5 - 3 - 11./2) * mmPerInch, mmPictographHeight);
+        OpenGLMatrix redLeftTargetLocationOnField = OpenGLMatrix
+                .translation(mmFTCFieldWidth, (float)(24 * 5 - 3 - 11./2) * mmPerInch, mmPictographHeight)
+                .multiplied(Orientation.getRotationMatrix(AxesReference.EXTRINSIC, AxesOrder.XZX,
+                        AngleUnit.DEGREES, 90, 90, 0));
         RobotLog.ii(TAG, "Red Left Target=%s", format(redLeftTargetLocationOnField));
 
         OpenGLMatrix phoneLocationOnRobot = OpenGLMatrix.translation((float)7.5 * mmPerInch,(float)-1.5 * mmPerInch,8 * mmPerInch);
@@ -160,19 +172,12 @@ public class VuforiaTesting extends LinearOpMode {
             RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
             if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
 
-                /* Found an instance of the template. In the actual game, you will probably
-                 * loop until this condition occurs, then move on to act accordingly depending
-                 * on which VuMark was visible. */
+                // Found an instance of the template
                 telemetry.addData("VuMark", "%s visible", vuMark);
 
-                /* For fun, we also exhibit the navigational pose. In the Relic Recovery game,
-                 * it is perhaps unlikely that you will actually need to act on this pose information, but
-                 * we illustrate it nevertheless, for completeness. */
                 OpenGLMatrix pose = ((VuforiaTrackableDefaultListener)relicTemplate.getListener()).getPose();
                 telemetry.addData("Pose", format(pose));
 
-                /* We further illustrate how to decompose the pose into useful rotational and
-                 * translational components */
                 if (pose != null) {
                     OpenGLMatrix robotLocationTransform = blueRightTargetLocationOnField
                             .multiplied(pose.inverted())
@@ -204,6 +209,4 @@ public class VuforiaTesting extends LinearOpMode {
     String format(OpenGLMatrix transformationMatrix) {
         return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
     }
-
-    // OpenGLMatrix getLocationFrom
 }
