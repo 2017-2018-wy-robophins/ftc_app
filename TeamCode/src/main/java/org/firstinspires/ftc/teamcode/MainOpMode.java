@@ -21,10 +21,8 @@ public class MainOpMode extends LinearOpMode {
     private static double rightx = 0.0;
     private static double lefty = 0.0;
 
-    public static double precision = 1.0;
+    private static double precision = 1.0;
 
-    public static double servoClosed = 1.0;
-    public static double servoOpen = 0.1;
     @Override
     public void runOpMode() throws InterruptedException  {
         // setup constants
@@ -34,16 +32,18 @@ public class MainOpMode extends LinearOpMode {
         //initiate robot
         robot.init(hardwareMap);
         //initiate hardware variables
-        DcMotor north = MainRobot.north;
-        DcMotor west = MainRobot.west;
-        DcMotor east = MainRobot.east;
-        DcMotor south = MainRobot.south;
-        DcMotor arm = MainRobot.arm;
-        Servo grab1 = MainRobot.grab1;
-        Servo colorSensorServo = MainRobot.colorSensorServo;
+        DcMotor north = robot.north;
+        DcMotor west = robot.west;
+        DcMotor east = robot.east;
+        DcMotor south = robot.south;
+        DcMotor arm = robot.arm;
+        Servo grab1 = robot.grab1;
+        Servo grab2 = robot.grab2;
+        robot.openServo();
+        Servo colorSensorServo = robot.colorSensorServo;
         boolean targetSet = false;
         int target = 0;
-
+        double previous_righty = 0;
 
         telemetry.addData("say", "before opmode");
         telemetry.update();
@@ -52,10 +52,10 @@ public class MainOpMode extends LinearOpMode {
             if (GamepadUser.ONE != gamepad1.getUser()) {
                 stop();
             }
-            righty = gamepad1.right_trigger * 2 - 1;
+            righty = gamepad1.right_stick_y;
             // temporary fix for bad controller
             // remap from 0 - 1 to -1 to 1
-            rightx = (gamepad1.left_trigger * 2 - 1);
+            rightx = gamepad1.right_stick_x;
             leftx = gamepad1.left_stick_x;
             lefty = gamepad1.left_stick_y;
             telemetry.clear();
@@ -66,30 +66,46 @@ public class MainOpMode extends LinearOpMode {
             } else {
                 precision = 1.0;
             }
+            // TODO: REFACTOR
             if (righty > ARM_JOYSTICK_MOVEMENT_THRESHOLD) {
-                arm.setPower(righty*.25);
-                targetSet = false;
-            } else if (righty < -ARM_JOYSTICK_MOVEMENT_THRESHOLD){
-                // when the arm is getting moved "up"
-                if (arm.getCurrentPosition() > ARM_POSITION_THRESHOLD) {
-                    // once past the threshold, gravity is helping
-                    arm.setPower(righty * 0.25);
-                } else {
-                    arm.setPower(righty * .45);
-                }
-                targetSet = false;
-            } else if (targetSet) {
-                arm.setTargetPosition(target);
+                arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                arm.setPower(-righty*.30);
+                previous_righty = righty;
+            } else if (righty < -ARM_JOYSTICK_MOVEMENT_THRESHOLD) {
+                arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                arm.setPower(-righty * .65);
+                previous_righty = righty;
             } else {
+                /*
+               if (arm.getCurrentPosition() > -700) {
+                    if (targetSet) {
+                        if (previous_righty < ARM_JOYSTICK_MOVEMENT_THRESHOLD) {
+                            telemetry.addLine("Active braking in effect");
+                            arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                            arm.setPower(-0.3);
+                            arm.setTargetPosition(target);
+                        } else {
+                            telemetry.addLine("Passive braking in effect");
+                            arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                            arm.setPower(0);
+                        }
+                    } else {
+                        telemetry.addLine("Active braking in effect");
+                        target = arm.getCurrentPosition();
+                    }
+                } else {
+                    telemetry.addLine("Passive braking in effect");
+                    arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                    arm.setPower(0);
+                }*/
+                arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 arm.setPower(0);
-                target = arm.getCurrentPosition();
-                targetSet = true;
             }
             //use only protocol for the currently used joystick
             if (((Math.abs(leftx) + Math.abs(lefty))/2) >= (Math.abs(rightx) + Math.abs(righty))/2) {
                 //set motor powers for transposing
-                west.setPower(-lefty*precision*.7); // in commit - fix reversal
-                east.setPower(lefty*precision*.7);
+                west.setPower(lefty*precision*.7); // in commit - fix reversal
+                east.setPower(-lefty*precision*.7);
                 north.setPower(leftx*precision*.7);
                 south.setPower(-leftx*precision*.7);
 
@@ -103,10 +119,10 @@ public class MainOpMode extends LinearOpMode {
 
 
             if (gamepad1.right_bumper) {
-                grab1.setPosition(servoClosed);
+                robot.closeServo();
             }
             if (gamepad1.left_bumper) {
-                grab1.setPosition(servoOpen);
+                robot.openServo();
             }
 
 

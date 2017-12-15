@@ -82,6 +82,9 @@ android {
                 abiFilters "armeabi-v7a"
             }
         }
+        applicationVariants.all { variant ->
+            variant.buildConfigField "String", "VUFORIA_API_KEY", "\"" + VUFORIA_API_KEY +"\""
+        }
     }
 
     compileOptions {

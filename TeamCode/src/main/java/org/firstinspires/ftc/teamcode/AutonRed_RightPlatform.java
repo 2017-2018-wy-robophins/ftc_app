@@ -33,37 +33,8 @@ package org.firstinspires.ftc.teamcode;
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import android.app.Activity;
-import android.graphics.Color;
-import android.os.SystemClock;
-import android.view.View;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
-
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-
-import java.sql.Time;
-import java.util.Locale;
-
-import android.app.Activity;
-import android.graphics.Color;
-import android.view.View;
-
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
-import com.qualcomm.robotcore.hardware.Servo;
-
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-
-import java.util.Locale;
 
 /*
  * This is an example LinearOpMode that shows how to use
@@ -74,8 +45,8 @@ import java.util.Locale;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list.
  */
-@Autonomous(name = "AutonBlueZoneOnly", group = "Sensor")
-public class AutonZoneBlue extends LinearOpMode {
+@Autonomous(name = "AutonRed_RightPlatform", group = "Sensor")
+public class AutonRed_RightPlatform extends LinearOpMode {
 
     /**
      * Note that the REV Robotics Color-Distance incorporates two sensors into one device.
@@ -94,57 +65,25 @@ public class AutonZoneBlue extends LinearOpMode {
      * to the target object.  Note that the distance sensor saturates at around 2" (5 cm).
      *
      */
-    MainRobot robot = new MainRobot();
-    ColorSensor sensorColor;
-    DistanceSensor sensorDistance;
-    public void move(double xvector, double yvector, MainRobot r) {
-        MainRobot.west.setPower(yvector);
-        MainRobot.east.setPower(-yvector);
-        MainRobot.north.setPower(xvector);
-        MainRobot.south.setPower(-xvector);
-    }
-    public void stop(MainRobot r) {
-        MainRobot.west.setPower(0);
-        MainRobot.east.setPower(0);
-        MainRobot.north.setPower(0);
-        MainRobot.south.setPower(0);
-    }
+    private MainRobot robot = new MainRobot();
+
 
     @Override
     public void runOpMode() throws InterruptedException {
-        robot.init(hardwareMap);
-        //initiate hardware variables
-        DcMotor north = MainRobot.north;
-        DcMotor west = MainRobot.west;
-        DcMotor east = MainRobot.east;
-        DcMotor south = MainRobot.south;
-        DcMotor arm = MainRobot.arm;
-        Servo grab1 = MainRobot.grab1;
-
-        // hsvValues is an array that will hold the hue, saturation, and value information.
-        float hsvValues[] = {0F, 0F, 0F};
-
-        // values is a reference to the hsvValues array.
-        final float values[] = hsvValues;
-
-        // sometimes it helps to multiply the raw RGB values with a scale factor
-        // to amplify/attentuate the measured values.
-        final double SCALE_FACTOR = 255;
-
-        // get a reference to the RelativeLayout so we can change the background
-        // color of the Robot Controller app to match the hue detected by the RGB sensor.
-        int relativeLayoutId = hardwareMap.appContext.getResources().getIdentifier("RelativeLayout", "id", hardwareMap.appContext.getPackageName());
-        final View relativeLayout = ((Activity) hardwareMap.appContext).findViewById(relativeLayoutId);
-
-
+        // initialize the more generic AutonMain container class
+        AutonMain runner = new AutonMain(robot, hardwareMap, telemetry, TeamColor.RED, StartLocation.RIGHT_PLATFORM);
         // wait for the start button to be pressed.
         waitForStart();
-        move(0, -.1, robot);
-        Thread.sleep(300);
-        stop(robot);
-        stop();
+        // run the stuff that we only want to run once
+        runner.runOnce();
 
+        // run stuff that we want to run repeatedly
+        while (opModeIsActive()) {
+            runner.mainLoop();
+        }
 
+        // clean up
+        runner.finish();
     }
 
 }
