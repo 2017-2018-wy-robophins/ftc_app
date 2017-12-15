@@ -70,11 +70,11 @@ public class MainOpMode extends LinearOpMode {
             // TODO: REFACTOR
             if (righty > ARM_JOYSTICK_MOVEMENT_THRESHOLD) {
                 arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                arm.setPower(righty*.30);
+                arm.setPower(-righty*.30);
                 previous_righty = righty;
             } else if (righty < -ARM_JOYSTICK_MOVEMENT_THRESHOLD) {
                 arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                arm.setPower(righty * .6);
+                arm.setPower(-righty * .65);
                 previous_righty = righty;
             } else {
                 /*
