@@ -119,29 +119,37 @@ public class VuforiaTesting extends LinearOpMode {
 
         OpenGLMatrix blueRightTargetLocationOnField = OpenGLMatrix
                 .translation(mmFTCFieldWidth, (float)(24 * 5 + 3 + 11./2) * mmPerInch, mmPictographHeight)
-                .multiplied(Orientation.getRotationMatrix(AxesReference.EXTRINSIC, AxesOrder.XZX,
+                .multiplied(Orientation.getRotationMatrix(
+                        AxesReference.EXTRINSIC, AxesOrder.XZX,
                         AngleUnit.DEGREES, 90, -90, 0));
         RobotLog.ii(TAG, "Blue Right Target=%s", format(blueRightTargetLocationOnField));
 
         OpenGLMatrix blueLeftTargetLocationOnField = OpenGLMatrix
                 .translation(mmFTCFieldWidth, (float)(24 * 2 + 3 + 11./2) * mmPerInch, mmPictographHeight)
-                .multiplied(Orientation.getRotationMatrix(AxesReference.EXTRINSIC, AxesOrder.XZX,
+                .multiplied(Orientation.getRotationMatrix(
+                        AxesReference.EXTRINSIC, AxesOrder.XZX,
                         AngleUnit.DEGREES, 90, -90, 0));
         RobotLog.ii(TAG, "Blue Left Target=%s", format(blueLeftTargetLocationOnField));
 
         OpenGLMatrix redRightTargetLocationOnField = OpenGLMatrix
                 .translation(mmFTCFieldWidth, (float)(24 * 2 - 3 - 11./2) * mmPerInch, mmPictographHeight)
-                .multiplied(Orientation.getRotationMatrix(AxesReference.EXTRINSIC, AxesOrder.XZX,
+                .multiplied(Orientation.getRotationMatrix(
+                        AxesReference.EXTRINSIC, AxesOrder.XZX,
                         AngleUnit.DEGREES, 90, 90, 0));
         RobotLog.ii(TAG, "Red Right Target=%s", format(redRightTargetLocationOnField));
 
         OpenGLMatrix redLeftTargetLocationOnField = OpenGLMatrix
                 .translation(mmFTCFieldWidth, (float)(24 * 5 - 3 - 11./2) * mmPerInch, mmPictographHeight)
-                .multiplied(Orientation.getRotationMatrix(AxesReference.EXTRINSIC, AxesOrder.XZX,
+                .multiplied(Orientation.getRotationMatrix(
+                        AxesReference.EXTRINSIC, AxesOrder.XZX,
                         AngleUnit.DEGREES, 90, 90, 0));
         RobotLog.ii(TAG, "Red Left Target=%s", format(redLeftTargetLocationOnField));
 
-        OpenGLMatrix phoneLocationOnRobot = OpenGLMatrix.translation((float)7.5 * mmPerInch,(float)-1.5 * mmPerInch,8 * mmPerInch);
+        OpenGLMatrix phoneLocationOnRobot = OpenGLMatrix
+                .translation((float)7.5 * mmPerInch,(float)-1.5 * mmPerInch,8 * mmPerInch)
+                .multiplied(Orientation.getRotationMatrix(
+                        AxesReference.EXTRINSIC, AxesOrder.YZY,
+                        AngleUnit.DEGREES, -90, 45, 0));
         RobotLog.ii(TAG, "phone=%s", format(phoneLocationOnRobot));
 
         /**
