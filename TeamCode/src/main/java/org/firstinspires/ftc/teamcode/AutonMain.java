@@ -22,7 +22,6 @@ import java.util.Locale;
 
 class AutonMain {
     private Telemetry telemetry;
-    private TeamColor teamColor;
     private StartLocation startLocation;
     private MainRobot robot;
     // hardware components
@@ -48,9 +47,8 @@ class AutonMain {
     private long stopTime;
 
     // initializer
-    AutonMain(MainRobot robot, HardwareMap hardwareMap, Telemetry telemetry, TeamColor teamColor, StartLocation startLocation) throws InterruptedException {
+    AutonMain(MainRobot robot, HardwareMap hardwareMap, Telemetry telemetry, StartLocation startLocation) throws InterruptedException {
         this.telemetry = telemetry;
-        this.teamColor = teamColor;
         this.startLocation = startLocation;
         this.robot = robot;
         robot.init(hardwareMap);
@@ -84,8 +82,9 @@ class AutonMain {
 
         Thread.sleep(1000);
         // note that the color sensor is on the left side of the arm
-        switch (teamColor) {
-            case BLUE:
+        switch (startLocation) {
+            case BLUE_LEFT:
+            case BLUE_RIGHT:
                 if (sensorColor.red() < sensorColor.blue()) {
                     // if left is blue
                     knock_left_jewel(colorSensorServo);
@@ -93,7 +92,8 @@ class AutonMain {
                     // if left is red
                     knock_right_jewel(colorSensorServo);
                 }
-            case RED:
+            case RED_LEFT:
+            case RED_RIGHT:
                 if (sensorColor.red() > sensorColor.blue()) {
                     // if left is red
                     knock_left_jewel(colorSensorServo);
@@ -106,7 +106,8 @@ class AutonMain {
         // TODO: put block in - theoretically
 
         switch (startLocation) {
-            case LEFT_PLATFORM:
+            case RED_LEFT:
+            case BLUE_LEFT:
                 // move the arm up slightly so that it doesn't drag
                 moveArm(armPower, 800);
                 Thread.sleep(500);
@@ -134,7 +135,8 @@ class AutonMain {
                 move (0, -.4, 3000);
 
                 moveArm(-.25, 500);
-            case RIGHT_PLATFORM:
+            case RED_RIGHT:
+            case BLUE_RIGHT:
                 // move the arm up slightly so that it doesn't drag
                 moveArm(armPower, 800);
                 Thread.sleep(500);
