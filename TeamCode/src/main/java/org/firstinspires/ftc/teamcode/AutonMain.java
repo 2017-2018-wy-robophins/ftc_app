@@ -72,8 +72,8 @@ class AutonMain {
         int relativeLayoutId = hardwareMap.appContext.getResources().getIdentifier("RelativeLayout", "id", hardwareMap.appContext.getPackageName());
         relativeLayout = ((Activity) hardwareMap.appContext).findViewById(relativeLayoutId);
     }
-    private double armPower = 0.47;
-    private double armPowerWithGravity = 0.23;
+    private double armPower = -0.65;
+    private double armPowerWithGravity = -0.3;
     // run this once
     void runOnce() throws InterruptedException {
         stopTime = SystemClock.currentThreadTimeMillis() + 30000;
