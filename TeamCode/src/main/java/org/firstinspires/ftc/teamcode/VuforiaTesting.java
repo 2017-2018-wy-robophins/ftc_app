@@ -28,23 +28,15 @@
  */
 package org.firstinspires.ftc.teamcode;
 
+import android.util.Pair;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.util.RobotLog;
 
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 /**
  * This OpMode illustrates the basics of using the Vuforia engine to determine
@@ -67,150 +59,24 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 @Autonomous(name="Concept: Vuforia Testing", group ="Concept")
 public class VuforiaTesting extends LinearOpMode {
-
-    public static final String TAG = "Vuforia Testing";
-
     OpenGLMatrix lastLocation = null;
 
     /**
      * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
      * localization engine.
      */
-    VuforiaLocalizer vuforia;
 
-    @Override public void runOpMode() {
-
-        /*
-         * To start up Vuforia, tell it the view that we wish to use for camera monitor (on the RC phone);
-         * If no camera monitor is desired, use the parameterless constructor instead (commented out below).
-         */
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-
-        // OR...  Do Not Activate the Camera Monitor View, to save power
-        // VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
-
-        /*
-         * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
-         * 'parameters.vuforiaLicenseKey' is initialized is for illustration only, and will not function.
-         * A Vuforia 'Development' license key, can be obtained free of charge from the Vuforia developer
-         * web site at https://developer.vuforia.com/license-manager.
-         *
-         * Vuforia license keys are always 380 characters long, and look as if they contain mostly
-         * random data. As an example, here is a example of a fragment of a valid key:
-         *      ... yIgIzTqZ4mWjk9wd3cZO9T1axEqzuhxoGlfOOI2dRzKS4T0hQ8kT ...
-         * Once you've obtained a license key, copy the string from the Vuforia web site
-         * and paste it in to your code onthe next line, between the double quotes.
-         */
-        parameters.vuforiaLicenseKey = BuildConfig.VUFORIA_API_KEY;
-
-        /*
-         * We also indicate which camera on the RC that we wish to use.
-         * Here we chose the back (HiRes) camera (for greater range), but
-         * for a competition robot, the front camera might be more convenient.
-         */
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
-        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
-
-
-        float mmPerInch        = 25.4f;
-        float mmFTCFieldWidth  = (24*6 - 2) * mmPerInch;   // the FTC field is ~11'10" center-to-center of the glass panels
-        float mmPictographHeight = 2 * mmPerInch;
-
-        OpenGLMatrix blueRightTargetLocationOnField = OpenGLMatrix
-                .translation(mmFTCFieldWidth, (float)(24 * 5 + 3 + 11./2) * mmPerInch, mmPictographHeight)
-                .multiplied(Orientation.getRotationMatrix(
-                        AxesReference.EXTRINSIC, AxesOrder.XZX,
-                        AngleUnit.DEGREES, 90, -90, 0));
-        RobotLog.ii(TAG, "Blue Right Target=%s", format(blueRightTargetLocationOnField));
-
-        OpenGLMatrix blueLeftTargetLocationOnField = OpenGLMatrix
-                .translation(mmFTCFieldWidth, (float)(24 * 2 + 3 + 11./2) * mmPerInch, mmPictographHeight)
-                .multiplied(Orientation.getRotationMatrix(
-                        AxesReference.EXTRINSIC, AxesOrder.XZX,
-                        AngleUnit.DEGREES, 90, -90, 0));
-        RobotLog.ii(TAG, "Blue Left Target=%s", format(blueLeftTargetLocationOnField));
-
-        OpenGLMatrix redRightTargetLocationOnField = OpenGLMatrix
-                .translation(mmFTCFieldWidth, (float)(24 * 2 - 3 - 11./2) * mmPerInch, mmPictographHeight)
-                .multiplied(Orientation.getRotationMatrix(
-                        AxesReference.EXTRINSIC, AxesOrder.XZX,
-                        AngleUnit.DEGREES, 90, 90, 0));
-        RobotLog.ii(TAG, "Red Right Target=%s", format(redRightTargetLocationOnField));
-
-        OpenGLMatrix redLeftTargetLocationOnField = OpenGLMatrix
-                .translation(mmFTCFieldWidth, (float)(24 * 5 - 3 - 11./2) * mmPerInch, mmPictographHeight)
-                .multiplied(Orientation.getRotationMatrix(
-                        AxesReference.EXTRINSIC, AxesOrder.XZX,
-                        AngleUnit.DEGREES, 90, 90, 0));
-        RobotLog.ii(TAG, "Red Left Target=%s", format(redLeftTargetLocationOnField));
-
-        OpenGLMatrix phoneLocationOnRobot = OpenGLMatrix
-                .translation((float)7.5 * mmPerInch,(float)-1.5 * mmPerInch,8 * mmPerInch)
-                .multiplied(Orientation.getRotationMatrix(
-                        AxesReference.EXTRINSIC, AxesOrder.YZY,
-                        AngleUnit.DEGREES, -90, 45, 0));
-        RobotLog.ii(TAG, "phone=%s", format(phoneLocationOnRobot));
-
-        /**
-         * Load the data set containing the VuMarks for Relic Recovery. There's only one trackable
-         * in this data set: all three of the VuMarks in the game were created from this one template,
-         * but differ in their instance id information.
-         * @see VuMarkInstanceId
-         */
-        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
-        VuforiaTrackable relicTemplate = relicTrackables.get(0);
-        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
-
-        telemetry.addData(">", "Press Play to start");
-        telemetry.update();
+    @Override public void runOpMode() throws InterruptedException {
+        VuforiaPositionFinder positioner = new VuforiaPositionFinder(StartLocation.BLUE_LEFT, hardwareMap);
         waitForStart();
-
-        relicTrackables.activate();
-
-
         while (opModeIsActive()) {
-
-            /**
-             * See if any of the instances of {@link relicTemplate} are currently visible.
-             * {@link RelicRecoveryVuMark} is an enum which can have the following values:
-             * UNKNOWN, LEFT, CENTER, and RIGHT. When a VuMark is visible, something other than
-             * UNKNOWN will be returned by {@link RelicRecoveryVuMark#from(VuforiaTrackable)}.
-             */
-            RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-            if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
-
-                // Found an instance of the template
-                telemetry.addData("VuMark", "%s visible", vuMark);
-
-                OpenGLMatrix pose = ((VuforiaTrackableDefaultListener)relicTemplate.getListener()).getPose();
-                telemetry.addData("Pose", format(pose));
-
-                if (pose != null) {
-                    OpenGLMatrix robotLocationTransform = blueRightTargetLocationOnField
-                            .multiplied(pose.inverted())
-                            .multiplied(phoneLocationOnRobot.inverted());
-                    if (robotLocationTransform != null) {
-                        lastLocation = robotLocationTransform;
-                    }
-                }
-
+            Pair<OpenGLMatrix, RelicRecoveryVuMark> position = positioner.getCurrentPosition();
+            if (position != null) {
+                telemetry.clearAll();
+                telemetry.addData("Transform", format(position.first));
+                telemetry.addData("Type", position.second);
+                telemetry.update();
             }
-            else {
-                telemetry.addData("VuMark", "not visible");
-            }
-
-            /**
-             * Provide feedback as to where the robot was last located (if we know).
-             */
-            if (lastLocation != null) {
-                //  RobotLog.vv(TAG, "robot=%s", format(lastLocation));
-                telemetry.addData("Pos", format(lastLocation));
-            } else {
-                telemetry.addData("Pos", "Unknown");
-            }
-            telemetry.update();
-            telemetry.update();
         }
     }
 
