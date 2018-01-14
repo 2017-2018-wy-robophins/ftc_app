@@ -2,7 +2,9 @@ package org.firstinspires.ftc.teamcode;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.graphics.Path;
 import android.os.SystemClock;
+import android.util.Pair;
 import android.view.View;
 
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -12,9 +14,13 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
 import java.util.Locale;
+import java.util.Vector;
 
 /**
  * Created by nico on 11/14/17.
@@ -33,6 +39,10 @@ class AutonMain {
     private Servo colorSensorServo;
     private ColorSensor sensorColor;
     private DistanceSensor sensorDistance;
+    private NavigationalState navinfo;
+    private AutonInstructions instructions;
+    private VuforiaPositionFinder vuforiaPositionFinder;
+    private RelicRecoveryVuMark vumark;
 
 
     // COLOR SENSOR STUFF----
@@ -43,7 +53,6 @@ class AutonMain {
     // sometimes it helps to multiply the raw RGB values with a scale factor
     // to amplify/attentuate the measured values.
     private final double SCALE_FACTOR = 255;
-    private final View relativeLayout;
     private long stopTime;
 
     // initializer
@@ -67,16 +76,24 @@ class AutonMain {
         sensorColor = hardwareMap.get(ColorSensor.class, "colorDistanceSensor");
         // get a reference to the distance sensor that shares the same name.
         sensorDistance = hardwareMap.get(DistanceSensor.class, "colorDistanceSensor");
+
+        navinfo = new NavigationalState();
+        instructions = new AutonInstructions(startLocation);
+        vuforiaPositionFinder = new VuforiaPositionFinder(startLocation, hardwareMap);
+        vumark = RelicRecoveryVuMark.CENTER;
+        /*
         // get a reference to the RelativeLayout so we can change the background
         // color of the Robot Controller app to match the hue detected by the RGB sensor.
         int relativeLayoutId = hardwareMap.appContext.getResources().getIdentifier("RelativeLayout", "id", hardwareMap.appContext.getPackageName());
         relativeLayout = ((Activity) hardwareMap.appContext).findViewById(relativeLayoutId);
+        */
     }
     private double armPower = -0.65;
     private double armPowerWithGravity = -0.3;
+    private float motorPower = 0.5f;
     // run this once
     void runOnce() throws InterruptedException {
-        stopTime = SystemClock.currentThreadTimeMillis() + 30000;
+        // stopTime = SystemClock.currentThreadTimeMillis() + 30000;
         robot.closeServo();
         colorSensorServo.setPosition(1);
 
@@ -103,8 +120,44 @@ class AutonMain {
                 }
         }
 
-        // TODO: put block in - theoretically
+        // move the arm up slightly so that it doesn't drag
+        moveArm(armPower, 800);
+        Thread.sleep(500);
+        // get off the blocks
+        switch (startLocation) {
+            case RED_LEFT:
+                move(-0.8, 0, 400);
+            case RED_RIGHT:
+                move(-0.8, 0, 400);
+            case BLUE_LEFT:
+                move(-0.8, 0, 400);
+            case BLUE_RIGHT:
+                move(-0.8, 0, 400);
+        }
 
+        // get vuforia position
+        Pair<OpenGLMatrix, RelicRecoveryVuMark> position = vuforiaPositionFinder.getCurrentPosition();
+        // remove the vuforia finder when we're done
+        vuforiaPositionFinder = null;
+        if (position != null) {
+            navinfo = new NavigationalState(position.first);
+            vumark = position.second;
+            telemetry.addLine("Found position with vuforia: " + navinfo);
+            telemetry.addData("Target", vumark);
+            telemetry.update();
+
+            while (instructions.has_instructions()) {
+                Pair<VectorF, Float> instruction = instructions.next_instruction();
+                move_to_position_with_heading(instruction.first, instruction.second, motorPower);
+            }
+        } else {
+            // fallback
+            telemetry.addLine("Could not get vuforia positions, running fallback");
+            telemetry.update();
+        }
+
+        /*
+        // TODO: put block in - theoretically
         switch (startLocation) {
             case RED_LEFT:
             case BLUE_LEFT:
@@ -167,13 +220,15 @@ class AutonMain {
 
                 moveArm(-.25, 500);
         }
+        */
         stop();
     }
 
     void mainLoop() throws InterruptedException {
         // convert the RGB values to HSV values.
         // multiply by the SCALE_FACTOR.
-        // then cast it back to int (SCALE_FACTOR is a double)
+        // then cast it back to int (SCALE_FACTOR is a double
+        /*
         Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
                 (int) (sensorColor.green() * SCALE_FACTOR),
                 (int) (sensorColor.blue() * SCALE_FACTOR),
@@ -202,16 +257,100 @@ class AutonMain {
         if ((stopTime - SystemClock.currentThreadTimeMillis()) < 5000) {
 
         }
+        */
     }
 
 
     void finish() throws InterruptedException {
+        /*
         // Set the panel back to the default color
         relativeLayout.post(new Runnable() {
             public void run() {
                 relativeLayout.setBackgroundColor(Color.WHITE);
             }
         });
+        */
+    }
+
+    // TODO: set these
+    private final float TICKS_PER_MM = 2;
+    private final float TICKS_PER_DEGREE = 2;
+    // TODO: make version without both vectors at the same time
+    // target in mm
+    private void move_to_position(VectorF target, float power) throws InterruptedException {
+        north.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        south.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        east.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        west.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        VectorF robotVector = navinfo.get_robot_movement_vector(target);
+        VectorF robotTickVector = robotVector.multiplied(TICKS_PER_MM);
+        int x_vector = (int)robotTickVector.get(0);
+        int y_vector = (int)robotTickVector.get(1);
+
+        north.setTargetPosition(north.getCurrentPosition() + x_vector);
+        south.setTargetPosition(south.getCurrentPosition() - x_vector);
+        east.setTargetPosition(east.getCurrentPosition() + y_vector);
+        west.setTargetPosition(west.getCurrentPosition() - y_vector);
+
+        north.setPower(power);
+        south.setPower(power);
+        east.setPower(power);
+        west.setPower(power);
+
+        telemetry.addLine(String.format("Moving %s to target position %s", robotVector, target));
+
+        while (north.isBusy() || south.isBusy() || east.isBusy() || west.isBusy()) {
+            Thread.sleep(20);
+        }
+
+        north.setPower(0);
+        south.setPower(0);
+        east.setPower(0);
+        west.setPower(0);
+
+        navinfo.set_position(target);
+    }
+
+    private void turn_to_heading(float target, float power) throws InterruptedException {
+         north.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+         south.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+         east.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+         west.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        float robotVector = navinfo.get_robot_rotation(target);
+        float robotTickVector = robotVector * TICKS_PER_DEGREE;
+        int rotation_vector = (int)robotTickVector;
+
+        north.setTargetPosition(north.getCurrentPosition() + rotation_vector);
+        south.setTargetPosition(south.getCurrentPosition() + rotation_vector);
+        east.setTargetPosition(east.getCurrentPosition() + rotation_vector);
+        west.setTargetPosition(west.getCurrentPosition() + rotation_vector);
+
+        north.setPower(power);
+        south.setPower(power);
+        east.setPower(power);
+        west.setPower(power);
+
+        telemetry.addLine(String.format("Moving %s to target heading %s", robotVector, target));
+
+        while (north.isBusy() || south.isBusy() || east.isBusy() || west.isBusy()) {
+            Thread.sleep(20);
+        }
+
+        north.setPower(0);
+        south.setPower(0);
+        east.setPower(0);
+        west.setPower(0);
+
+        navinfo.set_heading(target);
+    }
+
+    private void move_to_position_with_heading(VectorF pos, float heading, float power) throws InterruptedException {
+        move_to_position(pos, power);
+        Thread.sleep(500);
+        turn_to_heading(heading, power);
+        Thread.sleep(500);
     }
 
     public void move(double xvector, double yvector, int ms) throws InterruptedException{

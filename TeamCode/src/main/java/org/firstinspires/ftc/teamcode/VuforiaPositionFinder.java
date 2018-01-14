@@ -91,7 +91,6 @@ class VuforiaPositionFinder {
     public Pair<OpenGLMatrix, RelicRecoveryVuMark> getCurrentPosition() throws InterruptedException {
         // we want to wait a second before finding a vumark so that we have a good read of it
         Thread.sleep(1000);
-        // ATTENTION: NOT DONE YET
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
             if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
                 OpenGLMatrix pose = ((VuforiaTrackableDefaultListener)relicTemplate.getListener()).getPose();

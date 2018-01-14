@@ -14,7 +14,7 @@ import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 
 class ExtendedMath {
     // ONLY WORKS FOR 3D VECTORS
-    public static VectorF cross_product(VectorF a, VectorF b) {
+    static VectorF cross_product(VectorF a, VectorF b) {
         float[] k = a.getData();
         float[] w = b.getData();
         return new VectorF(
@@ -24,7 +24,7 @@ class ExtendedMath {
         );
     }
 
-    public static Pair<VectorF, MatrixF> decompose_opengl_matrix(OpenGLMatrix m) {
+    static Pair<VectorF, MatrixF> decompose_opengl_matrix(OpenGLMatrix m) {
         // takes a 4x4 opengl transformation matrix and decomposes
         // it into its vector and matrix components
         VectorF k = new VectorF(
@@ -42,7 +42,7 @@ class ExtendedMath {
     }
 
     static final float ALPHA = 0.7f;
-    public static VectorF lowPass( VectorF in, VectorF out ) {
+    static VectorF lowPass( VectorF in, VectorF out ) {
         float[] input = in.getData();
         float[] output = out.getData();
         if ( output == null ) return new VectorF(output);
@@ -50,5 +50,58 @@ class ExtendedMath {
             output[i] = output[i] + ALPHA * (input[i] - output[i]);
         }
         return new VectorF(output);
+    }
+
+    static MatrixF get_rotation_matrix(float radians) {
+        return new GeneralMatrixF(2, 2, new float[] {
+                (float)Math.cos(radians), -(float)Math.sin(radians),
+                (float)Math.sin(radians), (float)Math.cos(radians)
+        });
+    }
+
+    static final MatrixF X_REFLECT_TRANSFORM_MATRIX = new GeneralMatrixF(2, 2, new float[] {
+            1, 0,
+            0, -1
+    });
+
+    static VectorF convert_3d_to_2d(VectorF v) {
+        return new VectorF(new float[] {
+                v.getData()[0],
+                v.getData()[1]
+        });
+    }
+
+    // z-rotation is the same as normal rotation in x-y plane
+    static float extract_z_rot(MatrixF m) {
+        return (float)Math.atan2(
+                m.get(2,1),
+                m.get(1, 1)
+        );
+    }
+
+    static float positive_min_degrees(float degrees) {
+        degrees = degrees % 360;
+        if (degrees < 0) {
+            degrees += 360;
+        }
+
+        return degrees;
+    }
+
+    static float get_min_rotation(float current, float target) {
+        float pos_distance = positive_min_degrees(target - current);
+        float neg_distance = pos_distance - 360;
+        float dtheta;
+        if (Math.abs(pos_distance) <= Math.abs(neg_distance)) {
+            dtheta = pos_distance;
+        } else {
+            dtheta = neg_distance;
+        }
+        return dtheta;
+    }
+
+    // will only be necessary if diagonal movement is too much of a problem
+    static VectorF[] vector_components(VectorF v) {
+        return null;
     }
 }
