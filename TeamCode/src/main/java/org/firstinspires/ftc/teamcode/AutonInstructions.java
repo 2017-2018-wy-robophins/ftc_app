@@ -15,6 +15,8 @@ class AutonInstructions {
     private final float[][] BLUE_RIGHT_INSTRUCTIONS = new float[][] {
             // target x, y, heading
             {50, 70, 45},
+            // if single value then match to instruction enum
+            {InstructionType.DROP_BLOCK}
     };
     private final float[][] BLUE_LEFT_INSTRUCTIONS = new float[][] {
             {50, 70, 45},
@@ -45,9 +47,27 @@ class AutonInstructions {
         return ptr > instructions.length - 1;
     }
 
-    Pair<VectorF, Float> next_instruction() {
+    Pair<InstructionType, Pair<VectorF, Float>> next_instruction() {
         float[] instruction = instructions[ptr];
         ptr += 1;
-        return Pair.create(new VectorF(instruction[0], instruction[1]), instruction[2]);
+        if (instruction.length == 3) {
+            return Pair.create(InstructionType.Move,
+                    Pair.create(new VectorF(instruction[0], instruction[1]),
+                            instruction[2]));
+        } else {
+            InstructionType instType = null;
+            switch ((int)instruction[0]) {
+                case InstructionType.ARM_DOWN:
+                    instType = InstructionType.ArmDown;
+                case InstructionType.ARM_UP:
+                    instType = InstructionType.ArmUp;
+                case InstructionType.DROP_BLOCK:
+                    instType = InstructionType.DropBlock;
+                case InstructionType.GRAB_BLOCK:
+                    instType = InstructionType.GrabBlock;
+            }
+
+            return Pair.create(instType, null);
+        }
     }
 }

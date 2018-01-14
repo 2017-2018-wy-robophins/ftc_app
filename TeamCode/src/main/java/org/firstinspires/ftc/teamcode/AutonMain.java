@@ -88,8 +88,7 @@ class AutonMain {
         relativeLayout = ((Activity) hardwareMap.appContext).findViewById(relativeLayoutId);
         */
     }
-    private double armPower = 0.65;
-    private double armPowerWithGravity = 0.3;
+    private float armPower = 0.65f;
     private float motorPower = 0.5f;
     // run this once
     void runOnce() throws InterruptedException {
@@ -147,8 +146,21 @@ class AutonMain {
             telemetry.update();
 
             while (instructions.has_instructions()) {
-                Pair<VectorF, Float> instruction = instructions.next_instruction();
-                move_to_position_with_heading(instruction.first, instruction.second, motorPower);
+                Pair<InstructionType, Pair<VectorF, Float>> instruction = instructions.next_instruction();
+                Pair<VectorF, Float> instructionValues = instruction.second;
+                switch (instruction.first) {
+                    case Move:
+                        move_to_position_with_heading(instructionValues.first, instructionValues.second, motorPower);
+                    case ArmUp:
+                        move_arm_up(armPower);
+                    case ArmDown:
+                        move_arm_down(armPower);
+                    case DropBlock:
+                        robot.openServo();
+                    case GrabBlock:
+                        robot.openServo();
+                        robot.closeServo();
+                }
             }
         } else {
             // fallback
@@ -373,7 +385,7 @@ class AutonMain {
 
 
     //up is positive
-    public void moveArm(double v, int ms) throws InterruptedException {
+    private void moveArm(double v, int ms) throws InterruptedException {
         arm.setPower(v);
         Thread.sleep(ms);
         arm.setPower(0);
@@ -393,10 +405,30 @@ class AutonMain {
         turn(1, 120); // turn left
     }
 
-    public void stop() {
+    private void stop() {
         west.setPower(0);
         east.setPower(0);
         north.setPower(0);
         south.setPower(0);
+    }
+
+    private int ARM_MOVEMENT_TICKS = 700;
+    private void move_arm_ticks(int ticks, float power) throws InterruptedException {
+        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        arm.setTargetPosition(arm.getCurrentPosition() + ticks);
+        arm.setPower(power);
+        while (arm.isBusy()) {
+            Thread.sleep(20);
+        }
+        arm.setPower(0);
+        arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+
+    private void move_arm_up(float power) throws InterruptedException {
+        move_arm_ticks(ARM_MOVEMENT_TICKS, power);
+    }
+
+    private void move_arm_down(float power) throws InterruptedException {
+        move_arm_ticks(-ARM_MOVEMENT_TICKS, power);
     }
 }
