@@ -65,7 +65,7 @@ public class MainOpMode extends LinearOpMode {
             }
             // TODO: REFACTOR
             if (Math.abs(righty) > ARM_JOYSTICK_MOVEMENT_THRESHOLD) {
-                arm.setPower(-righty*.40);
+                arm.setPower(righty*.40);
             } else {
                 /*
                if (arm.getCurrentPosition() > -700) {

@@ -88,8 +88,8 @@ class AutonMain {
         relativeLayout = ((Activity) hardwareMap.appContext).findViewById(relativeLayoutId);
         */
     }
-    private double armPower = -0.65;
-    private double armPowerWithGravity = -0.3;
+    private double armPower = 0.65;
+    private double armPowerWithGravity = 0.3;
     private float motorPower = 0.5f;
     // run this once
     void runOnce() throws InterruptedException {
@@ -374,7 +374,7 @@ class AutonMain {
 
     //up is positive
     public void moveArm(double v, int ms) throws InterruptedException {
-        arm.setPower(-v);
+        arm.setPower(v);
         Thread.sleep(ms);
         arm.setPower(0);
     }

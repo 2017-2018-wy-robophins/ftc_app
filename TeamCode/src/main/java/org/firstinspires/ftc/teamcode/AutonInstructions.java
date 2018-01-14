@@ -13,19 +13,16 @@ import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 class AutonInstructions {
     // currently placeholder values
     private final float[][] BLUE_RIGHT_INSTRUCTIONS = new float[][] {
-            //
+            // target x, y, heading
             {50, 70, 45},
     };
     private final float[][] BLUE_LEFT_INSTRUCTIONS = new float[][] {
-            //
             {50, 70, 45},
     };
     private final float[][] RED_RIGHT_INSTRUCTIONS = new float[][] {
-            //
             {50, 70, 45},
     };
     private final float[][] RED_LEFT_INSTRUCTIONS = new float[][] {
-            //
             {50, 70, 45},
     };
 

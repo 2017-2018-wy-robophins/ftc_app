@@ -53,6 +53,7 @@ class MainRobot {
         arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         // arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        arm.setDirection(DcMotor.Direction.REVERSE);
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //north.setDirection(DcMotor.Direction.REVERSE);
