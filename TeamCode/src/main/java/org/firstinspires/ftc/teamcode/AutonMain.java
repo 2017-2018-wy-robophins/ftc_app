@@ -88,8 +88,8 @@ class AutonMain {
         relativeLayout = ((Activity) hardwareMap.appContext).findViewById(relativeLayoutId);
         */
     }
-    private float armPower = 0.65f;
-    private float motorPower = 0.5f;
+    private float armPower = 0.4f;
+    private float motorPower = 0.6f;
     // run this once
     void runOnce() throws InterruptedException {
         // stopTime = SystemClock.currentThreadTimeMillis() + 30000;
@@ -166,6 +166,17 @@ class AutonMain {
             // fallback
             telemetry.addLine("Could not get vuforia positions, running fallback");
             telemetry.update();
+            navinfo.set_heading(0);
+            navinfo.set_position(0,0);
+            robot.openServo();
+            robot.closeServo();
+            move_arm_up(armPower);
+            Thread.sleep(500);
+            robot.openServo();
+            move_arm_down(armPower);
+            Thread.sleep(500);
+            move_to_position_with_heading(new VectorF(1, 1), 90, motorPower);
+            Thread.sleep(500);
         }
 
         /*
@@ -285,8 +296,8 @@ class AutonMain {
     }
 
     // TODO: set these
-    private final float TICKS_PER_MM = 2;
-    private final float TICKS_PER_DEGREE = 2;
+    private final float TICKS_PER_MM = 1.5f;
+    private final float TICKS_PER_DEGREE = 4.5f;
     // TODO: make version without both vectors at the same time
     // target in mm
     private void move_to_position(VectorF target, float power) throws InterruptedException {
