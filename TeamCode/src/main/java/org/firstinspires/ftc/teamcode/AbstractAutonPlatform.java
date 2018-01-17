@@ -8,16 +8,12 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 abstract class AbstractAutonPlatform extends LinearOpMode {
     private MainRobot robot = new MainRobot();
-    final StartLocation startLocation;
 
-    AbstractAutonPlatform(StartLocation startLocation) {
-        this.startLocation = startLocation;
-    }
-
+    public abstract StartLocation getStartLocation();
     @Override
     public void runOpMode() throws InterruptedException {
         // initialize the more generic AutonMain container class
-        AutonMain runner = new AutonMain(robot, hardwareMap, telemetry, startLocation);
+        AutonMain runner = new AutonMain(robot, hardwareMap, telemetry, getStartLocation());
         // wait for the start button to be pressed.
         waitForStart();
         // run the stuff that we only want to run once

@@ -9,9 +9,11 @@ import android.view.View;
 
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
@@ -47,13 +49,9 @@ class AutonMain {
 
     // COLOR SENSOR STUFF----
     // hsvValues is an array that will hold the hue, saturation, and value information.
-    private float hsvValues[] = {0F, 0F, 0F};
     // values is a reference to the hsvValues array.
-    private final float values[] = hsvValues;
     // sometimes it helps to multiply the raw RGB values with a scale factor
     // to amplify/attentuate the measured values.
-    private final double SCALE_FACTOR = 255;
-    private long stopTime;
 
     // initializer
     AutonMain(MainRobot robot, HardwareMap hardwareMap, Telemetry telemetry, StartLocation startLocation) throws InterruptedException {
@@ -79,7 +77,11 @@ class AutonMain {
 
         navinfo = new NavigationalState();
         instructions = new AutonInstructions(startLocation);
+        telemetry.addLine("Initializing vuforia...");
+        telemetry.update();
         vuforiaPositionFinder = new VuforiaPositionFinder(startLocation, hardwareMap);
+        telemetry.addLine("Initialized vuforia.");
+        telemetry.update();
         vumark = RelicRecoveryVuMark.CENTER;
         /*
         // get a reference to the RelativeLayout so we can change the background
@@ -88,8 +90,10 @@ class AutonMain {
         relativeLayout = ((Activity) hardwareMap.appContext).findViewById(relativeLayoutId);
         */
     }
-    private float armPower = 0.4f;
-    private float motorPower = 0.6f;
+    private float armPower = 0.2f;
+    private float motorPower = 0.3f;
+    private float ENCODER_TICKS_TIMEOUT_THRESHOLD = 10;
+    private int TIMEOUT_MILLIS = 500;
     // run this once
     void runOnce() throws InterruptedException {
         // stopTime = SystemClock.currentThreadTimeMillis() + 30000;
@@ -123,61 +127,92 @@ class AutonMain {
         moveArm(armPower, 800);
         Thread.sleep(500);
         // get off the blocks
-        switch (startLocation) {
-            case RED_LEFT:
-                move(-0.8, 0, 400);
-            case RED_RIGHT:
-                move(-0.8, 0, 400);
-            case BLUE_LEFT:
-                move(-0.8, 0, 400);
-            case BLUE_RIGHT:
-                move(-0.8, 0, 400);
-        }
+        move(-0.8, 0, 400);
 
         // get vuforia position
         Pair<OpenGLMatrix, RelicRecoveryVuMark> position = vuforiaPositionFinder.getCurrentPosition();
-        // remove the vuforia finder when we're done
-        vuforiaPositionFinder = null;
         if (position != null) {
             navinfo = new NavigationalState(position.first);
             vumark = position.second;
             telemetry.addLine("Found position with vuforia: " + navinfo);
             telemetry.addData("Target", vumark);
             telemetry.update();
-
-            while (instructions.has_instructions()) {
-                Pair<InstructionType, Pair<VectorF, Float>> instruction = instructions.next_instruction();
-                Pair<VectorF, Float> instructionValues = instruction.second;
-                switch (instruction.first) {
-                    case Move:
-                        move_to_position_with_heading(instructionValues.first, instructionValues.second, motorPower);
-                    case ArmUp:
-                        move_arm_up(armPower);
-                    case ArmDown:
-                        move_arm_down(armPower);
-                    case DropBlock:
-                        robot.openServo();
-                    case GrabBlock:
-                        robot.openServo();
-                        robot.closeServo();
-                }
-            }
         } else {
             // fallback
+            // set to the assumed positions for each starting location
+            Pair<InstructionType, Pair<VectorF, Float>> first_instruction = instructions.next_instruction();
+            Pair<VectorF, Float> default_nav_state = first_instruction.second;
+            navinfo.set_position(default_nav_state.first);
+            navinfo.set_heading(default_nav_state.second);
             telemetry.addLine("Could not get vuforia positions, running fallback");
+            telemetry.addData("Using default position", navinfo);
+            telemetry.addData("Using default target", vumark);
             telemetry.update();
-            navinfo.set_heading(0);
-            navinfo.set_position(0,0);
-            robot.openServo();
-            robot.closeServo();
-            move_arm_up(armPower);
-            Thread.sleep(500);
-            robot.openServo();
-            move_arm_down(armPower);
-            Thread.sleep(500);
-            move_to_position_with_heading(new VectorF(1, 1), 90, motorPower);
-            Thread.sleep(500);
         }
+        // remove the vuforia finder when we're done
+        vuforiaPositionFinder = null;
+
+        while (instructions.has_instructions()) {
+            Pair<InstructionType, Pair<VectorF, Float>> instruction = instructions.next_instruction();
+            Pair<VectorF, Float> instructionValues = instruction.second;
+            float mmPerInch        = 25.4f;
+            float mmPerBlock = mmPerInch * 24;
+            switch (instruction.first) {
+                case Move:
+                    telemetry.addLine(String.format("Moving to target position %s and heading %s",
+                            instructionValues.first,
+                            String.valueOf(instructionValues.second)));
+                    move_to_position_with_heading(instructionValues.first, instructionValues.second, motorPower, TIMEOUT_MILLIS);
+                case ArmUp:
+                    telemetry.addLine("Moving arm up");
+                    telemetry.update();
+                    move_arm_up(armPower);
+                case ArmDown:
+                    telemetry.addLine("Moving arm down");
+                    telemetry.update();
+                    move_arm_down(armPower);
+                case DropBlock:
+                    telemetry.addLine("Dropping block");
+                    telemetry.update();
+                    robot.openServo();
+                    Thread.sleep(500);
+                case GrabBlock:
+                    telemetry.addLine("Grabbing block");
+                    telemetry.update();
+                    robot.openServo();
+                    Thread.sleep(500);
+                    robot.closeServo();
+                case MoveRelTarget:
+                    // assume that robot is facing away from center, 1 block away
+
+                    telemetry.addLine("Moving to relative target");
+                    telemetry.update();
+                    switch (vumark) {
+                        case LEFT:
+                            telemetry.addLine("Moving to LEFT");
+                            telemetry.update();
+                            move_by_vector_split(new VectorF(-0.25f * mmPerBlock,-0.5f * mmPerBlock), motorPower, TIMEOUT_MILLIS);
+                        case RIGHT:
+                            telemetry.addLine("Moving to RIGHT");
+                            telemetry.update();
+                            move_by_vector_split(new VectorF(0.25f * mmPerBlock,-0.5f * mmPerBlock), motorPower, TIMEOUT_MILLIS);
+                        case UNKNOWN:
+                        case CENTER:
+                            telemetry.addLine("Moving to CENTER");
+                            telemetry.update();
+                            move_by_vector_split(new VectorF(0,-0.5f * mmPerBlock), motorPower, TIMEOUT_MILLIS);
+                    }
+                case BashBlock:
+                    telemetry.addLine("Bashing block in");
+                    telemetry.update();
+                    move_by_vector_split(new VectorF(0, -0.5f * mmPerBlock), 0.5f, TIMEOUT_MILLIS);
+                    move_by_vector_split(new VectorF(0, 0.2f * mmPerBlock), 0.5f, TIMEOUT_MILLIS);
+                    move_by_vector_split(new VectorF(0, -0.5f * mmPerBlock), 0.5f, TIMEOUT_MILLIS);
+            }
+        }
+
+        telemetry.addLine("Finished");
+        stop();
 
         /*
         // TODO: put block in - theoretically
@@ -244,7 +279,6 @@ class AutonMain {
                 moveArm(-.25, 500);
         }
         */
-        stop();
     }
 
     void mainLoop() throws InterruptedException {
@@ -295,51 +329,199 @@ class AutonMain {
         */
     }
 
+    //https://ftcforum.usfirst.org/forum/ftc-technology/android-studio/6170-encodejavars-and-autonomous
+    private void move_to_position_with_heading(VectorF pos, float heading, float power, int timeout) throws InterruptedException {
+        move_to_position_split(pos, power, timeout);
+        Thread.sleep(500);
+        turn_to_heading(heading, power, timeout);
+        Thread.sleep(500);
+    }
+
     // TODO: set these
-    private final float TICKS_PER_MM = 1.5f;
+    private final float TICKS_PER_MM = 1.4f;
     private final float TICKS_PER_DEGREE = 4.5f;
     // TODO: make version without both vectors at the same time
     // target in mm
-    private void move_to_position(VectorF target, float power) throws InterruptedException {
+
+    private void move_by_vector(VectorF movement, float power, int timeout) throws InterruptedException {
         north.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         south.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         east.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         west.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        VectorF robotVector = navinfo.get_robot_movement_vector(target);
-        VectorF robotTickVector = robotVector.multiplied(TICKS_PER_MM);
+        VectorF robotTickVector = movement.multiplied(TICKS_PER_MM);
         int x_vector = (int)robotTickVector.get(0);
         int y_vector = (int)robotTickVector.get(1);
 
         north.setTargetPosition(north.getCurrentPosition() + x_vector);
         south.setTargetPosition(south.getCurrentPosition() - x_vector);
-        east.setTargetPosition(east.getCurrentPosition() + y_vector);
-        west.setTargetPosition(west.getCurrentPosition() - y_vector);
+        west.setTargetPosition(west.getCurrentPosition() + y_vector);
+        east.setTargetPosition(east.getCurrentPosition() - y_vector);
 
         north.setPower(power);
         south.setPower(power);
-        east.setPower(power);
         west.setPower(power);
+        east.setPower(power);
 
-        telemetry.addLine(String.format("Moving %s to target position %s", robotVector, target));
+        int last_north = north.getCurrentPosition();
+        int last_south = south.getCurrentPosition();
+        int last_west = west.getCurrentPosition();
+        int last_east = east.getCurrentPosition();
+        long next_check_timestamp = System.currentTimeMillis() + timeout;
 
         while (north.isBusy() || south.isBusy() || east.isBusy() || west.isBusy()) {
-            Thread.sleep(20);
+            if (System.currentTimeMillis() >= next_check_timestamp) {
+                if ((Math.abs(north.getCurrentPosition() - last_north) < ENCODER_TICKS_TIMEOUT_THRESHOLD) &&
+                        (Math.abs(south.getCurrentPosition() - last_south) < ENCODER_TICKS_TIMEOUT_THRESHOLD) &&
+                        (Math.abs(west.getCurrentPosition() - last_west) < ENCODER_TICKS_TIMEOUT_THRESHOLD) &&
+                        (Math.abs(east.getCurrentPosition() - last_east) < ENCODER_TICKS_TIMEOUT_THRESHOLD)) {
+                    telemetry.addLine(String.format("Move by vector %s interrupted: timed out.", movement));
+                    telemetry.update();
+                    break;
+                }
+            }
+
+            Thread.sleep(10);
         }
 
         north.setPower(0);
         south.setPower(0);
         east.setPower(0);
         west.setPower(0);
+    }
 
+    private void move_to_position(VectorF target, float power, int timeout) throws InterruptedException {
+        VectorF robotVector = navinfo.get_robot_movement_vector(target);
+        telemetry.addLine(String.format("Moving %s to target position %s", robotVector, target));
+        telemetry.update();
+        move_by_vector(robotVector, power, timeout);
         navinfo.set_position(target);
     }
 
-    private void turn_to_heading(float target, float power) throws InterruptedException {
-         north.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-         south.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-         east.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-         west.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    private void move_to_position_split(VectorF target, float power, int timeout) throws InterruptedException {
+        VectorF robotVector = navinfo.get_robot_movement_vector(target);
+        telemetry.addLine(String.format("Moving %s to target position %s", robotVector, target));
+        telemetry.update();
+        move_by_vector_split(robotVector, power, timeout);
+        navinfo.set_position(target);
+    }
+
+    private void move_by_vector_split(VectorF movement, float power, int timeout) throws InterruptedException {
+        VectorF[] components = ExtendedMath.vector_components(movement);
+        move_by_vector(components[0], power, timeout);
+        move_by_vector(components[1], power, timeout);
+    }
+
+    private void move_by_vector_ecc_split(VectorF movement, float power, int timeout) throws InterruptedException {
+        VectorF[] components = ExtendedMath.vector_components(movement);
+        move_by_vector_ecc(components[0], power, timeout);
+        move_by_vector_ecc(components[1], power, timeout);
+    }
+
+    private final double P_DRIVE_COEFF = 0.15;
+    private void move_by_vector_ecc(VectorF movement, float power, int timeout) throws InterruptedException {
+        north.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        south.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        east.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        west.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        VectorF robotTickVector = movement.multiplied(TICKS_PER_MM);
+        int x_vector = (int)robotTickVector.get(0);
+        int y_vector = (int)robotTickVector.get(1);
+
+        int north_start = north.getCurrentPosition();
+        int south_start = south.getCurrentPosition();
+        int west_start = west.getCurrentPosition();
+        int east_start = east.getCurrentPosition();
+
+        north.setTargetPosition(north_start + x_vector);
+        south.setTargetPosition(south_start - x_vector);
+        west.setTargetPosition(west_start + y_vector);
+        east.setTargetPosition(east_start - y_vector);
+
+        north.setPower(power);
+        south.setPower(power);
+        east.setPower(power);
+        west.setPower(power);
+
+        int last_north = north.getCurrentPosition();
+        int last_south = south.getCurrentPosition();
+        int last_west = west.getCurrentPosition();
+        int last_east = east.getCurrentPosition();
+        long next_check_timestamp = System.currentTimeMillis() + timeout;
+
+        while (north.isBusy() || south.isBusy() || east.isBusy() || west.isBusy()) {
+            if (System.currentTimeMillis() >= next_check_timestamp) {
+                if ((Math.abs(north.getCurrentPosition() - last_north) < ENCODER_TICKS_TIMEOUT_THRESHOLD) &&
+                        (Math.abs(south.getCurrentPosition() - last_south) < ENCODER_TICKS_TIMEOUT_THRESHOLD) &&
+                        (Math.abs(west.getCurrentPosition() - last_west) < ENCODER_TICKS_TIMEOUT_THRESHOLD) &&
+                        (Math.abs(east.getCurrentPosition() - last_east) < ENCODER_TICKS_TIMEOUT_THRESHOLD)) {
+                    telemetry.addLine(String.format("Move by vector %s interrupted: timed out.", movement));
+                    telemetry.update();
+                    break;
+                }
+            }
+
+            int x_error = (west.getCurrentPosition() - west_start) - (east_start - east.getCurrentPosition());
+            int y_error = (north.getCurrentPosition() - north_start) - (south_start - south.getCurrentPosition());
+            double x_steer = getSteer(x_error, P_DRIVE_COEFF);
+            double y_steer = getSteer(y_error, P_DRIVE_COEFF);
+
+            if (x_vector < 0) {
+                x_steer *= -1;
+            }
+            if (y_vector < 0) {
+                y_steer *= -1;
+            }
+
+            double northSpeed = power + x_steer;
+            double southSpeed = power - x_steer;
+            double westSpeed = power + y_steer;
+            double eastSpeed = power - y_steer;
+            double x_max = Math.max(Math.abs(northSpeed), Math.abs(southSpeed));
+            if (x_max > 1.0) {
+                northSpeed /= x_max;
+                southSpeed /= x_max;
+            }
+            double y_max = Math.max(Math.abs(westSpeed), Math.abs(eastSpeed));
+            if (y_max > 1.0) {
+                westSpeed /= y_max;
+                eastSpeed /= y_max;
+            }
+
+            north.setPower(northSpeed);
+            south.setPower(southSpeed);
+            west.setPower(westSpeed);
+            east.setPower(eastSpeed);
+
+            Thread.sleep(10);
+        }
+    }
+
+    private void move_to_position_ecc(VectorF target, float power, int timeout) throws InterruptedException {
+        VectorF robotVector = navinfo.get_robot_movement_vector(target);
+        telemetry.addLine(String.format("Moving %s to target position %s", robotVector, target));
+        move_by_vector_ecc(robotVector, power, timeout);
+        navinfo.set_position(target);
+    }
+
+    private void move_to_position_ecc_split(VectorF target, float power, int timeout) throws InterruptedException {
+        VectorF robotVector = navinfo.get_robot_movement_vector(target);
+        telemetry.addLine(String.format("Moving %s to target position %s", robotVector, target));
+        move_by_vector_ecc_split(robotVector, power, timeout);
+        navinfo.set_position(target);
+    }
+
+    public double getSteer(double error, double PCoeff) {
+        return Range.clip(error * PCoeff, -1, 1);
+    }
+
+
+    private void turn_to_heading(float target, float power, int timeout) throws InterruptedException {
+        north.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        south.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        east.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        west.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         float robotVector = navinfo.get_robot_rotation(target);
         float robotTickVector = robotVector * TICKS_PER_DEGREE;
@@ -347,18 +529,35 @@ class AutonMain {
 
         north.setTargetPosition(north.getCurrentPosition() + rotation_vector);
         south.setTargetPosition(south.getCurrentPosition() + rotation_vector);
-        east.setTargetPosition(east.getCurrentPosition() + rotation_vector);
         west.setTargetPosition(west.getCurrentPosition() + rotation_vector);
+        east.setTargetPosition(east.getCurrentPosition() + rotation_vector);
 
         north.setPower(power);
         south.setPower(power);
         east.setPower(power);
         west.setPower(power);
 
-        telemetry.addLine(String.format("Moving %s to target heading %s", robotVector, target));
+        telemetry.addLine(String.format("Turning %s to target heading %s", String.valueOf(robotVector), String.valueOf(target)));
+        telemetry.update();
+
+        int last_north = north.getCurrentPosition();
+        int last_south = south.getCurrentPosition();
+        int last_west = west.getCurrentPosition();
+        int last_east = east.getCurrentPosition();
+        long next_check_timestamp = System.currentTimeMillis() + timeout;
 
         while (north.isBusy() || south.isBusy() || east.isBusy() || west.isBusy()) {
-            Thread.sleep(20);
+            if (System.currentTimeMillis() >= next_check_timestamp) {
+                if ((Math.abs(north.getCurrentPosition() - last_north) < ENCODER_TICKS_TIMEOUT_THRESHOLD) &&
+                        (Math.abs(south.getCurrentPosition() - last_south) < ENCODER_TICKS_TIMEOUT_THRESHOLD) &&
+                        (Math.abs(west.getCurrentPosition() - last_west) < ENCODER_TICKS_TIMEOUT_THRESHOLD) &&
+                        (Math.abs(east.getCurrentPosition() - last_east) < ENCODER_TICKS_TIMEOUT_THRESHOLD)) {
+                    telemetry.addLine(String.format("Turn to target heading %s interrupted: timed out.", String.valueOf(target)));
+                    telemetry.update();
+                    break;
+                }
+            }
+            Thread.sleep(10);
         }
 
         north.setPower(0);
@@ -369,12 +568,6 @@ class AutonMain {
         navinfo.set_heading(target);
     }
 
-    private void move_to_position_with_heading(VectorF pos, float heading, float power) throws InterruptedException {
-        move_to_position(pos, power);
-        Thread.sleep(500);
-        turn_to_heading(heading, power);
-        Thread.sleep(500);
-    }
 
     public void move(double xvector, double yvector, int ms) throws InterruptedException{
         west.setPower(-yvector);
@@ -423,23 +616,35 @@ class AutonMain {
         south.setPower(0);
     }
 
-    private int ARM_MOVEMENT_TICKS = 700;
-    private void move_arm_ticks(int ticks, float power) throws InterruptedException {
+    private int ARM_MOVEMENT_TICKS = -771;
+    private void move_arm_ticks(int ticks, float power, int timeout) throws InterruptedException {
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         arm.setTargetPosition(arm.getCurrentPosition() + ticks);
         arm.setPower(power);
+        int last_arm = arm.getCurrentPosition();
+        long next_check_timestamp = System.currentTimeMillis() + timeout;
+
+
         while (arm.isBusy()) {
-            Thread.sleep(20);
+            if (System.currentTimeMillis() >= next_check_timestamp) {
+                if ((Math.abs(arm.getCurrentPosition() - last_arm) < ENCODER_TICKS_TIMEOUT_THRESHOLD)) {
+                    telemetry.addLine(String.format("Move arm to target %s interrupted: timed out.", String.valueOf(ticks)));
+                    telemetry.update();
+                    break;
+                }
+            }
+
+            Thread.sleep(10);
         }
         arm.setPower(0);
         arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     private void move_arm_up(float power) throws InterruptedException {
-        move_arm_ticks(ARM_MOVEMENT_TICKS, power);
+        move_arm_ticks(ARM_MOVEMENT_TICKS, power, TIMEOUT_MILLIS);
     }
 
     private void move_arm_down(float power) throws InterruptedException {
-        move_arm_ticks(-ARM_MOVEMENT_TICKS, power);
+        move_arm_ticks(-ARM_MOVEMENT_TICKS, power, TIMEOUT_MILLIS);
     }
 }

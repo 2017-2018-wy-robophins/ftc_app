@@ -102,6 +102,9 @@ class ExtendedMath {
 
     // will only be necessary if diagonal movement is too much of a problem
     static VectorF[] vector_components(VectorF v) {
-        return null;
+        return new VectorF[] {
+                new VectorF(v.get(0), 0),
+                new VectorF(0, v.get(1))
+        };
     }
 }

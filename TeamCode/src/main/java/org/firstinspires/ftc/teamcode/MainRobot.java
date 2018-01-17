@@ -40,12 +40,10 @@ class MainRobot {
         colorSensorServo = HM.servo.get("colorSensorServo");
         colorDistanceSensor = HM.get(DistanceSensor.class, "colorDistanceSensor");
         // colorSensor = HM.get(ColorSensor.class, "colorSensor");
-
         north.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         west.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         east.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         south.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
         north.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         west.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         east.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

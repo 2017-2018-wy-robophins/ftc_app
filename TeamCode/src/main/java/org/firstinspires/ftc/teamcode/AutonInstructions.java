@@ -11,21 +11,51 @@ import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
  */
 
 class AutonInstructions {
+    private final float mmPerInch        = 25.4f;
+    private final float mmPerBlock = mmPerInch * 24;
+    private final float mmFTCFieldWidth  = (24*6 - 2) * mmPerInch;
     // currently placeholder values
     private final float[][] BLUE_RIGHT_INSTRUCTIONS = new float[][] {
             // target x, y, heading
-            {50, 70, 45},
+            {4 * mmPerBlock, 5 * mmPerBlock, 90},
+            {4 * mmPerBlock, 3.5f * mmPerBlock, 90},
+            {5 * mmPerBlock, 3.5f * mmPerBlock, 180},
             // if single value then match to instruction enum
-            {InstructionType.DROP_BLOCK}
+            {InstructionType.MOVE_REL_TARGET},
+            {InstructionType.ARM_UP},
+            {InstructionType.DROP_BLOCK},
+            {InstructionType.ARM_DOWN},
+            {InstructionType.BASH_BLOCK},
     };
     private final float[][] BLUE_LEFT_INSTRUCTIONS = new float[][] {
-            {50, 70, 45},
+            {4 * mmPerBlock, 2 * mmPerBlock, 90},
+            {4 * mmPerBlock, 1 * mmPerBlock, 90},
+            {4.5f * mmPerBlock, 1 * mmPerBlock, 90},
+            {InstructionType.MOVE_REL_TARGET},
+            {InstructionType.ARM_UP},
+            {InstructionType.DROP_BLOCK},
+            {InstructionType.ARM_DOWN},
+            {InstructionType.BASH_BLOCK},
     };
     private final float[][] RED_RIGHT_INSTRUCTIONS = new float[][] {
-            {50, 70, 45},
+            {2 * mmPerBlock, 5 * mmPerBlock, -90},
+            {2 * mmPerBlock, 3.5f * mmPerBlock, 0},
+            {1 * mmPerBlock, 3.5f * mmPerBlock, 0},
+            {InstructionType.MOVE_REL_TARGET},
+            {InstructionType.ARM_UP},
+            {InstructionType.DROP_BLOCK},
+            {InstructionType.ARM_DOWN},
+            {InstructionType.BASH_BLOCK},
     };
     private final float[][] RED_LEFT_INSTRUCTIONS = new float[][] {
-            {50, 70, 45},
+            {2 * mmPerBlock, 2 * mmPerBlock, -90},
+            {2 * mmPerBlock, 1 * mmPerBlock, -90},
+            {1.5f * mmPerBlock, 1 * mmPerBlock, -90},
+            {InstructionType.MOVE_REL_TARGET},
+            {InstructionType.ARM_UP},
+            {InstructionType.DROP_BLOCK},
+            {InstructionType.ARM_DOWN},
+            {InstructionType.BASH_BLOCK},
     };
 
     private int ptr = 0;
@@ -65,6 +95,10 @@ class AutonInstructions {
                     instType = InstructionType.DropBlock;
                 case InstructionType.GRAB_BLOCK:
                     instType = InstructionType.GrabBlock;
+                case InstructionType.MOVE_REL_TARGET:
+                    instType = InstructionType.MoveRelTarget;
+                case InstructionType.BASH_BLOCK:
+                    instType = InstructionType.BashBlock;
             }
 
             return Pair.create(instType, null);
