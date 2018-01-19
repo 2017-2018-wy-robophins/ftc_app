@@ -28,7 +28,7 @@ class NavigationalState {
     VectorF get_robot_movement_vector(VectorF field_target) {
         return ExtendedMath.get_rotation_matrix((float)Math.toRadians(heading))
                 .multiplied(ExtendedMath.X_REFLECT_TRANSFORM_MATRIX)
-                .multiplied(field_target);
+                .multiplied(field_target.subtracted(position));
     }
 
     float get_robot_rotation(float field_target) {

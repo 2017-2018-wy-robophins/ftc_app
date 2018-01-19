@@ -54,7 +54,7 @@ class VuforiaPositionFinder {
             .translation((float)7.5 * mmPerInch,(float)-1.5 * mmPerInch,8 * mmPerInch)
             .multiplied(Orientation.getRotationMatrix(
                     AxesReference.EXTRINSIC, AxesOrder.YZY,
-                    AngleUnit.DEGREES, -90, 45, 0));
+                    AngleUnit.DEGREES, 90, 135, 0));
 
     private OpenGLMatrix markerTargetPositionOnField;
     private HardwareMap hardwareMap;
@@ -90,7 +90,7 @@ class VuforiaPositionFinder {
     // return the transformation matrix and the template type
     public Pair<OpenGLMatrix, RelicRecoveryVuMark> getCurrentPosition() throws InterruptedException {
         // we want to wait a second before finding a vumark so that we have a good read of it
-        Thread.sleep(1000);
+        Thread.sleep(5000);
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
             if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
                 OpenGLMatrix pose = ((VuforiaTrackableDefaultListener)relicTemplate.getListener()).getPose();

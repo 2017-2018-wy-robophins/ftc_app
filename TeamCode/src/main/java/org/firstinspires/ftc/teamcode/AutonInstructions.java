@@ -38,9 +38,9 @@ class AutonInstructions {
             {InstructionType.BASH_BLOCK},
     };
     private final float[][] RED_RIGHT_INSTRUCTIONS = new float[][] {
-            {2 * mmPerBlock, 5 * mmPerBlock, -90},
-            {2 * mmPerBlock, 3.5f * mmPerBlock, 0},
-            {1 * mmPerBlock, 3.5f * mmPerBlock, 0},
+            {2 * mmPerBlock, 2 * mmPerBlock, -90},
+            {2 * mmPerBlock, 1 * mmPerBlock, -90},
+            {1.5f * mmPerBlock, 1 * mmPerBlock, 90},
             {InstructionType.MOVE_REL_TARGET},
             {InstructionType.ARM_UP},
             {InstructionType.DROP_BLOCK},
@@ -48,9 +48,9 @@ class AutonInstructions {
             {InstructionType.BASH_BLOCK},
     };
     private final float[][] RED_LEFT_INSTRUCTIONS = new float[][] {
-            {2 * mmPerBlock, 2 * mmPerBlock, -90},
-            {2 * mmPerBlock, 1 * mmPerBlock, -90},
-            {1.5f * mmPerBlock, 1 * mmPerBlock, -90},
+            {2 * mmPerBlock, 5 * mmPerBlock, -90},
+            {2 * mmPerBlock, 3.5f * mmPerBlock, 0},
+            {1 * mmPerBlock, 3.5f * mmPerBlock, 0},
             {InstructionType.MOVE_REL_TARGET},
             {InstructionType.ARM_UP},
             {InstructionType.DROP_BLOCK},
@@ -74,7 +74,7 @@ class AutonInstructions {
     }
 
     boolean has_instructions() {
-        return ptr > instructions.length - 1;
+        return ptr < instructions.length - 1;
     }
 
     Pair<InstructionType, Pair<VectorF, Float>> next_instruction() {

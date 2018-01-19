@@ -76,6 +76,7 @@ class AutonMain {
         sensorDistance = hardwareMap.get(DistanceSensor.class, "colorDistanceSensor");
 
         navinfo = new NavigationalState();
+        telemetry.addData("Start Location", startLocation);
         instructions = new AutonInstructions(startLocation);
         telemetry.addLine("Initializing vuforia...");
         telemetry.update();
@@ -124,10 +125,13 @@ class AutonMain {
         }
 
         // move the arm up slightly so that it doesn't drag
+        arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         moveArm(armPower, 800);
+        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         Thread.sleep(500);
         // get off the blocks
-        move(-0.8, 0, 400);
+        move(-0.8, 0, 800);
+        move(0.8, 0, 300);
 
         // get vuforia position
         Pair<OpenGLMatrix, RelicRecoveryVuMark> position = vuforiaPositionFinder.getCurrentPosition();
@@ -149,8 +153,9 @@ class AutonMain {
             telemetry.addData("Using default target", vumark);
             telemetry.update();
         }
+        Thread.sleep(2000);
         // remove the vuforia finder when we're done
-        vuforiaPositionFinder = null;
+        // vuforiaPositionFinder = null;
 
         while (instructions.has_instructions()) {
             Pair<InstructionType, Pair<VectorF, Float>> instruction = instructions.next_instruction();
@@ -212,6 +217,7 @@ class AutonMain {
         }
 
         telemetry.addLine("Finished");
+        telemetry.update();
         stop();
 
         /*
@@ -570,6 +576,11 @@ class AutonMain {
 
 
     public void move(double xvector, double yvector, int ms) throws InterruptedException{
+        north.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        south.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        east.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        west.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         west.setPower(-yvector);
         east.setPower(yvector);
         north.setPower(xvector);
