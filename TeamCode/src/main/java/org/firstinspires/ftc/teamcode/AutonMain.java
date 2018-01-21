@@ -133,10 +133,19 @@ class AutonMain {
         Thread.sleep(500);
         // get off the blocks
         move(-0.8, 0, 800);
-        move(0.8, 0, 300);
 
         // get vuforia position
         Pair<OpenGLMatrix, RelicRecoveryVuMark> position = vuforiaPositionFinder.getCurrentPosition();
+        int vuforia_try_count = 1;
+        int vuforia_max_tries = 3;
+
+        while ((vuforia_try_count <= vuforia_max_tries) && (position == null)) {
+            telemetry.addLine("Did not get vuforia position on try: " + vuforia_try_count + ", trying again.");
+            move(0.8, 0, 200);
+            position = vuforiaPositionFinder.getCurrentPosition();
+            vuforia_try_count += 1;
+        }
+
         if (position != null) {
             navinfo = new NavigationalState(position.first);
             vumark = position.second;
