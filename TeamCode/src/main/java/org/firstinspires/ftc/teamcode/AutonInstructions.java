@@ -64,12 +64,16 @@ class AutonInstructions {
         switch (start) {
             case BLUE_RIGHT:
                 this.instructions = BLUE_RIGHT_INSTRUCTIONS;
+                break;
             case BLUE_LEFT:
                 this.instructions = BLUE_LEFT_INSTRUCTIONS;
+                break;
             case RED_RIGHT:
                 this.instructions = RED_RIGHT_INSTRUCTIONS;
+                break;
             case RED_LEFT:
                 this.instructions = RED_LEFT_INSTRUCTIONS;
+                break;
         }
     }
 
@@ -89,16 +93,22 @@ class AutonInstructions {
             switch ((int)instruction[0]) {
                 case InstructionType.ARM_DOWN:
                     instType = InstructionType.ArmDown;
+                    break;
                 case InstructionType.ARM_UP:
                     instType = InstructionType.ArmUp;
+                    break;
                 case InstructionType.DROP_BLOCK:
                     instType = InstructionType.DropBlock;
+                    break;
                 case InstructionType.GRAB_BLOCK:
                     instType = InstructionType.GrabBlock;
+                    break;
                 case InstructionType.MOVE_REL_TARGET:
                     instType = InstructionType.MoveRelTarget;
+                    break;
                 case InstructionType.BASH_BLOCK:
                     instType = InstructionType.BashBlock;
+                    break;
             }
 
             return Pair.create(instType, null);

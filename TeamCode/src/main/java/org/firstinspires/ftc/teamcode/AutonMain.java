@@ -113,6 +113,7 @@ class AutonMain {
                     // if left is red
                     knock_right_jewel(colorSensorServo);
                 }
+                break;
             case RED_LEFT:
             case RED_RIGHT:
                 if (sensorColor.red() > sensorColor.blue()) {
@@ -122,6 +123,7 @@ class AutonMain {
                     // if left is blue
                     knock_right_jewel(colorSensorServo);
                 }
+                break;
         }
 
         // move the arm up slightly so that it doesn't drag
@@ -168,25 +170,30 @@ class AutonMain {
                             instructionValues.first,
                             String.valueOf(instructionValues.second)));
                     move_to_position_with_heading(instructionValues.first, instructionValues.second, motorPower, TIMEOUT_MILLIS);
+                    break;
                 case ArmUp:
                     telemetry.addLine("Moving arm up");
                     telemetry.update();
                     move_arm_up(armPower);
+                    break;
                 case ArmDown:
                     telemetry.addLine("Moving arm down");
                     telemetry.update();
                     move_arm_down(armPower);
+                    break;
                 case DropBlock:
                     telemetry.addLine("Dropping block");
                     telemetry.update();
                     robot.openServo();
                     Thread.sleep(500);
+                    break;
                 case GrabBlock:
                     telemetry.addLine("Grabbing block");
                     telemetry.update();
                     robot.openServo();
                     Thread.sleep(500);
                     robot.closeServo();
+                    break;
                 case MoveRelTarget:
                     // assume that robot is facing away from center, 1 block away
 
@@ -197,22 +204,27 @@ class AutonMain {
                             telemetry.addLine("Moving to LEFT");
                             telemetry.update();
                             move_by_vector_split(new VectorF(-0.25f * mmPerBlock,-0.5f * mmPerBlock), motorPower, TIMEOUT_MILLIS);
+                            break;
                         case RIGHT:
                             telemetry.addLine("Moving to RIGHT");
                             telemetry.update();
                             move_by_vector_split(new VectorF(0.25f * mmPerBlock,-0.5f * mmPerBlock), motorPower, TIMEOUT_MILLIS);
+                            break;
                         case UNKNOWN:
                         case CENTER:
                             telemetry.addLine("Moving to CENTER");
                             telemetry.update();
                             move_by_vector_split(new VectorF(0,-0.5f * mmPerBlock), motorPower, TIMEOUT_MILLIS);
+                            break;
                     }
+                    break;
                 case BashBlock:
                     telemetry.addLine("Bashing block in");
                     telemetry.update();
                     move_by_vector_split(new VectorF(0, -0.5f * mmPerBlock), 0.5f, TIMEOUT_MILLIS);
                     move_by_vector_split(new VectorF(0, 0.2f * mmPerBlock), 0.5f, TIMEOUT_MILLIS);
                     move_by_vector_split(new VectorF(0, -0.5f * mmPerBlock), 0.5f, TIMEOUT_MILLIS);
+                    break;
             }
         }
 
@@ -252,6 +264,7 @@ class AutonMain {
                 move (0, -.4, 3000);
 
                 moveArm(-.25, 500);
+                break;
             case RED_RIGHT:
             case BLUE_RIGHT:
                 // move the arm up slightly so that it doesn't drag
@@ -283,6 +296,7 @@ class AutonMain {
                 move(0, 0.6, 100);
 
                 moveArm(-.25, 500);
+                break;
         }
         */
     }

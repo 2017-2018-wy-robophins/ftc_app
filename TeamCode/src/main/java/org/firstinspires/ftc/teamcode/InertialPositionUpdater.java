@@ -89,6 +89,7 @@ class InertialPositionUpdater implements SensorEventListener {
                     VectorF dX = velocity.multiplied(dT);
                     position.add(dX);
                 }
+                break;
 
             case Sensor.TYPE_GYROSCOPE:
                 // gyroscope
@@ -104,6 +105,7 @@ class InertialPositionUpdater implements SensorEventListener {
                     VectorF dtheta = omega.multiplied(dT);
                     heading.add(dtheta);
                 }
+                break;
         }
         if (event_happened) {
             previous_timestamp = event.timestamp;

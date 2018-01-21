@@ -65,12 +65,16 @@ class VuforiaPositionFinder {
         switch (start) {
             case BLUE_LEFT:
                 this.markerTargetPositionOnField = blueLeftTargetLocationOnField;
+                break;
             case BLUE_RIGHT:
                 this.markerTargetPositionOnField = blueRightTargetLocationOnField;
+                break;
             case RED_LEFT:
                 this.markerTargetPositionOnField = redLeftTargetLocationOnField;
+                break;
             case RED_RIGHT:
                 this.markerTargetPositionOnField = redRightTargetLocationOnField;
+                break;
         }
         this.hardwareMap = hwmap;
 
