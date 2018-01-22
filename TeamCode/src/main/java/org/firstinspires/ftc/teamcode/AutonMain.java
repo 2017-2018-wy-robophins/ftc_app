@@ -128,11 +128,11 @@ class AutonMain {
 
         // move the arm up slightly so that it doesn't drag
         arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        moveArm(armPower, 800);
-        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        moveArm(0.4, 800);
+        arm.setPower(0);
         Thread.sleep(500);
         // get off the blocks
-        move(-0.8, 0, 800);
+        move(-0.8, 0, 1400);
 
         // get vuforia position
         Pair<OpenGLMatrix, RelicRecoveryVuMark> position = vuforiaPositionFinder.getCurrentPosition();
@@ -141,7 +141,8 @@ class AutonMain {
 
         while ((vuforia_try_count <= vuforia_max_tries) && (position == null)) {
             telemetry.addLine("Did not get vuforia position on try: " + vuforia_try_count + ", trying again.");
-            move(0.8, 0, 200);
+            telemetry.update();
+            move(0.8, 0, 400);
             position = vuforiaPositionFinder.getCurrentPosition();
             vuforia_try_count += 1;
         }
@@ -167,7 +168,8 @@ class AutonMain {
         Thread.sleep(2000);
         // remove the vuforia finder when we're done
         // vuforiaPositionFinder = null;
-
+        telemetry.addLine("Ok at line 171");
+        telemetry.update();
         while (instructions.has_instructions()) {
             Pair<InstructionType, Pair<VectorF, Float>> instruction = instructions.next_instruction();
             Pair<VectorF, Float> instructionValues = instruction.second;
@@ -175,9 +177,12 @@ class AutonMain {
             float mmPerBlock = mmPerInch * 24;
             switch (instruction.first) {
                 case Move:
+                    telemetry.addLine("Ok so far");
+                    telemetry.update();
                     telemetry.addLine(String.format("Moving to target position %s and heading %s",
                             instructionValues.first,
                             String.valueOf(instructionValues.second)));
+                    telemetry.update();
                     move_to_position_with_heading(instructionValues.first, instructionValues.second, motorPower, TIMEOUT_MILLIS);
                     break;
                 case ArmUp:

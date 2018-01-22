@@ -65,10 +65,7 @@ class ExtendedMath {
     });
 
     static VectorF convert_3d_to_2d(VectorF v) {
-        return new VectorF(new float[] {
-                v.getData()[0],
-                v.getData()[1]
-        });
+        return new VectorF(v.getData()[0], v.getData()[1]);
     }
 
     // z-rotation is the same as normal rotation in x-y plane

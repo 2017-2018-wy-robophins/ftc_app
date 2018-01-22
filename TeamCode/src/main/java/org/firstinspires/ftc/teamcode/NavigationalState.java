@@ -64,6 +64,6 @@ class NavigationalState {
     //    float rot1 = new_theta
     //}
     public String toString() {
-        return "x: " + this.position.get(0) + " y: " + this.position.get(1) + " heading: " + this.heading;
+        return "Vector size: " + this.position.length() + " x: " + this.position.get(0) + " y: " + this.position.get(1) + " heading: " + this.heading;
     }
 }
