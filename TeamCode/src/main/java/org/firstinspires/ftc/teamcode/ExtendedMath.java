@@ -7,6 +7,10 @@ import org.firstinspires.ftc.robotcore.external.matrices.GeneralMatrixF;
 import org.firstinspires.ftc.robotcore.external.matrices.MatrixF;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 /**
  * Created by efyang on 1/3/18.
@@ -69,11 +73,14 @@ class ExtendedMath {
     }
 
     // z-rotation is the same as normal rotation in x-y plane
-    static float extract_z_rot(MatrixF m) {
+    static float extract_z_rot(OpenGLMatrix m) {
+        Orientation orientation = Orientation.getOrientation(m, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+        return orientation.thirdAngle;
+        /*
         return (float)Math.atan2(
                 m.get(2,1),
                 m.get(1, 1)
-        );
+        );*/
     }
 
     static float positive_min_degrees(float degrees) {

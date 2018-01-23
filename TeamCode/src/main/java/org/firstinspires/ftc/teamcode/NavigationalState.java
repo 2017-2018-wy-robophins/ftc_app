@@ -22,7 +22,7 @@ class NavigationalState {
     NavigationalState(OpenGLMatrix m) {
         Pair<VectorF, MatrixF> decomp = ExtendedMath.decompose_opengl_matrix(m);
         this.position = decomp.first;
-        this.heading = (float)Math.toDegrees(ExtendedMath.extract_z_rot(decomp.second));
+        this.heading = (float)Math.toDegrees(ExtendedMath.extract_z_rot(m));
     }
 
     VectorF get_robot_movement_vector(VectorF field_target) {
