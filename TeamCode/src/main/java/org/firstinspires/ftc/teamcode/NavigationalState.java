@@ -21,7 +21,7 @@ class NavigationalState {
     NavigationalState(){}
     NavigationalState(OpenGLMatrix m) {
         Pair<VectorF, MatrixF> decomp = ExtendedMath.decompose_opengl_matrix(m);
-        this.position = decomp.first;
+        this.position = ExtendedMath.convert_3d_to_2d(decomp.first);
         this.heading = (float)Math.toDegrees(ExtendedMath.extract_z_rot(m));
     }
 
@@ -64,6 +64,6 @@ class NavigationalState {
     //    float rot1 = new_theta
     //}
     public String toString() {
-        return "Vector size: " + this.position.length() + " x: " + this.position.get(0) + " y: " + this.position.get(1) + " heading: " + this.heading;
+        return "Position: " + this.position + " | Heading: " + this.heading;
     }
 }
