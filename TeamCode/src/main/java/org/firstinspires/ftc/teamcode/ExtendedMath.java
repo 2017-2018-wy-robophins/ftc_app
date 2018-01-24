@@ -73,14 +73,14 @@ class ExtendedMath {
     }
 
     // z-rotation is the same as normal rotation in x-y plane
+    // return value in degrees
     static float extract_z_rot(OpenGLMatrix m) {
         Orientation orientation = Orientation.getOrientation(m, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
         return orientation.thirdAngle;
-        /*
-        return (float)Math.atan2(
-                m.get(2,1),
-                m.get(1, 1)
-        );*/
+    }
+
+    static float extract_angle(VectorF v) {
+        return (float)Math.atan2(v.get(1), v.get(0));
     }
 
     static float positive_min_degrees(float degrees) {
