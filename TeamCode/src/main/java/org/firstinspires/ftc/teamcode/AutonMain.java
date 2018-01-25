@@ -92,9 +92,9 @@ class AutonMain {
         */
     }
     private float armPower = 0.2f;
-    private float motorPower = 0.5f;
+    private float motorPower = 0.3f;
     private float ENCODER_TICKS_TIMEOUT_THRESHOLD = 10;
-    private int TIMEOUT_MILLIS = 500;
+    private int TIMEOUT_MILLIS = 2000;
     // run this once
     void runOnce() throws InterruptedException {
         // stopTime = SystemClock.currentThreadTimeMillis() + 30000;
@@ -214,27 +214,27 @@ class AutonMain {
                         case LEFT:
                             telemetry.addLine("Moving to LEFT");
                             telemetry.update();
-                            move_by_vector_split(new VectorF(-0.25f * mmPerBlock,-0.5f * mmPerBlock), motorPower, TIMEOUT_MILLIS);
+                            move_by_vector_split(new VectorF(-0.5f * mmPerBlock,-0.25f * mmPerBlock), motorPower, TIMEOUT_MILLIS);
                             break;
                         case RIGHT:
                             telemetry.addLine("Moving to RIGHT");
                             telemetry.update();
-                            move_by_vector_split(new VectorF(0.25f * mmPerBlock,-0.5f * mmPerBlock), motorPower, TIMEOUT_MILLIS);
+                            move_by_vector_split(new VectorF(-0.5f * mmPerBlock,0.25f * mmPerBlock), motorPower, TIMEOUT_MILLIS);
                             break;
                         case UNKNOWN:
                         case CENTER:
                             telemetry.addLine("Moving to CENTER");
                             telemetry.update();
-                            move_by_vector_split(new VectorF(0,-0.5f * mmPerBlock), motorPower, TIMEOUT_MILLIS);
+                            move_by_vector_split(new VectorF(-0.5f * mmPerBlock,0), motorPower, TIMEOUT_MILLIS);
                             break;
                     }
                     break;
                 case BashBlock:
                     telemetry.addLine("Bashing block in");
                     telemetry.update();
-                    move_by_vector_split(new VectorF(0, -0.5f * mmPerBlock), 0.5f, TIMEOUT_MILLIS);
-                    move_by_vector_split(new VectorF(0, 0.2f * mmPerBlock), 0.5f, TIMEOUT_MILLIS);
-                    move_by_vector_split(new VectorF(0, -0.5f * mmPerBlock), 0.5f, TIMEOUT_MILLIS);
+                    move_by_vector_split(new VectorF(-0.5f * mmPerBlock, 0), 0.5f, TIMEOUT_MILLIS);
+                    move_by_vector_split(new VectorF(0.2f * mmPerBlock, 0), 0.5f, TIMEOUT_MILLIS);
+                    move_by_vector_split(new VectorF(-0.5f * mmPerBlock, 0), 0.5f, TIMEOUT_MILLIS);
                     break;
             }
         }
@@ -370,7 +370,7 @@ class AutonMain {
 
     // TODO: set these
     private final float TICKS_PER_MM = 1.4f;
-    private final float TICKS_PER_DEGREE = 4.5f;
+    private final float TICKS_PER_DEGREE = 4.4f;
     // TODO: make version without both vectors at the same time
     // target in mm
 
@@ -384,10 +384,10 @@ class AutonMain {
         int x_vector = (int)robotTickVector.get(0);
         int y_vector = (int)robotTickVector.get(1);
 
-        north.setTargetPosition(north.getCurrentPosition() + x_vector);
-        south.setTargetPosition(south.getCurrentPosition() - x_vector);
-        west.setTargetPosition(west.getCurrentPosition() - y_vector);
-        east.setTargetPosition(east.getCurrentPosition() + y_vector);
+        north.setTargetPosition(north.getCurrentPosition() - y_vector);
+        south.setTargetPosition(south.getCurrentPosition() + y_vector);
+        west.setTargetPosition(west.getCurrentPosition() - x_vector);
+        east.setTargetPosition(east.getCurrentPosition() + x_vector);
 
         north.setPower(power);
         south.setPower(power);
@@ -444,8 +444,8 @@ class AutonMain {
 
     private void move_by_vector_split(VectorF movement, float power, int timeout) throws InterruptedException {
         VectorF[] components = ExtendedMath.vector_components(movement);
-        move_by_vector(components[0], power, timeout);
         move_by_vector(components[1], power, timeout);
+        move_by_vector(components[0], power, timeout);
     }
 
 
@@ -461,8 +461,8 @@ class AutonMain {
 
         north.setTargetPosition(north.getCurrentPosition() - rotation_vector);
         south.setTargetPosition(south.getCurrentPosition() - rotation_vector);
-        west.setTargetPosition(west.getCurrentPosition() + rotation_vector);
-        east.setTargetPosition(east.getCurrentPosition() + rotation_vector);
+        west.setTargetPosition(west.getCurrentPosition() - rotation_vector);
+        east.setTargetPosition(east.getCurrentPosition() - rotation_vector);
 
         north.setPower(power);
         south.setPower(power);
@@ -573,6 +573,8 @@ class AutonMain {
                     telemetry.update();
                     break;
                 }
+                last_arm = arm.getCurrentPosition();
+                next_check_timestamp = System.currentTimeMillis() + timeout;
             }
 
             Thread.sleep(10);
