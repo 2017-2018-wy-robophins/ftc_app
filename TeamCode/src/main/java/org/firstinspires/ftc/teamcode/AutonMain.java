@@ -92,16 +92,16 @@ class AutonMain {
         */
     }
     private float armPower = 0.2f;
-    private float motorPower = 0.3f;
+    private float motorPower = 0.4f;
     private float ENCODER_TICKS_TIMEOUT_THRESHOLD = 10;
-    private int TIMEOUT_MILLIS = 2000;
+    private int TIMEOUT_MILLIS = 1000;
     // run this once
     void runOnce() throws InterruptedException {
         // stopTime = SystemClock.currentThreadTimeMillis() + 30000;
         robot.closeServo();
         colorSensorServo.setPosition(1);
 
-        Thread.sleep(1000);
+        Thread.sleep(500);
         // note that the color sensor is on the left side of the arm
         switch (startLocation) {
             case BLUE_LEFT:
@@ -130,7 +130,7 @@ class AutonMain {
         arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         moveArm(0.4, 800);
         // get off the blocks
-        move(-0.8, 0, 1400);
+        move(-0.8, 0, 1300);
 
         // get vuforia position
         Pair<OpenGLMatrix, RelicRecoveryVuMark> position = vuforiaPositionFinder.getCurrentPosition();
@@ -140,7 +140,7 @@ class AutonMain {
         while ((vuforia_try_count <= vuforia_max_tries) && (position == null)) {
             telemetry.addLine("Did not get vuforia position on try: " + vuforia_try_count + ", trying again.");
             telemetry.update();
-            move(0.6, 0, 500);
+            move(1.0, 0, 200);
             position = vuforiaPositionFinder.getCurrentPosition();
             vuforia_try_count += 1;
         }
@@ -363,9 +363,7 @@ class AutonMain {
     //https://ftcforum.usfirst.org/forum/ftc-technology/android-studio/6170-encodejavars-and-autonomous
     private void move_to_position_with_heading(VectorF pos, float heading, float power, int timeout) throws InterruptedException {
         move_to_position_split(pos, power, timeout);
-        Thread.sleep(500);
         turn_to_heading(heading, power, timeout);
-        Thread.sleep(500);
     }
 
     // TODO: set these
