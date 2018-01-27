@@ -51,7 +51,7 @@ class VuforiaPositionFinder {
                     AngleUnit.DEGREES, 90, 90, 0));
 
     private final OpenGLMatrix phoneLocationOnRobot = OpenGLMatrix
-            .translation((float)7.5 * mmPerInch,(float)-1.5 * mmPerInch,8 * mmPerInch)
+            .translation((float)7.5 * mmPerInch,(float)-3 * mmPerInch,8 * mmPerInch)
             .multiplied(Orientation.getRotationMatrix(
                     AxesReference.EXTRINSIC, AxesOrder.YZY,
                     AngleUnit.DEGREES, 90, 135, 0));

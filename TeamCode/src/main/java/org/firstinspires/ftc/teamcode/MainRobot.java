@@ -72,5 +72,6 @@ class MainRobot {
         grab1.setPosition(servoOpen);
         Thread.sleep(500);
         grab2.setPosition(servoClosed);
+        Thread.sleep(500);
     }
 }

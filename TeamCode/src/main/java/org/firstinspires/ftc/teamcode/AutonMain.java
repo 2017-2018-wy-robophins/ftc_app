@@ -92,7 +92,7 @@ class AutonMain {
         */
     }
     private float armPower = 0.2f;
-    private float motorPower = 0.4f;
+    private float motorPower = 0.3f;
     private float ENCODER_TICKS_TIMEOUT_THRESHOLD = 10;
     private int TIMEOUT_MILLIS = 1000;
     // run this once
@@ -101,7 +101,7 @@ class AutonMain {
         robot.closeServo();
         colorSensorServo.setPosition(1);
 
-        Thread.sleep(500);
+        Thread.sleep(250);
         // note that the color sensor is on the left side of the arm
         switch (startLocation) {
             case BLUE_LEFT:
@@ -128,10 +128,11 @@ class AutonMain {
 
         // move the arm up slightly so that it doesn't drag
         arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        moveArm(0.4, 800);
+        moveArm(-0.7, 800);
+        arm.setPower(0);
         // get off the blocks
-        move(-0.8, 0, 1300);
-
+        move(-0.8, 0, 1100);
+        move(0.8, 0, 300);
         // get vuforia position
         Pair<OpenGLMatrix, RelicRecoveryVuMark> position = vuforiaPositionFinder.getCurrentPosition();
         int vuforia_try_count = 1;
@@ -140,7 +141,7 @@ class AutonMain {
         while ((vuforia_try_count <= vuforia_max_tries) && (position == null)) {
             telemetry.addLine("Did not get vuforia position on try: " + vuforia_try_count + ", trying again.");
             telemetry.update();
-            move(1.0, 0, 200);
+            move(0.8, 0, 300);
             position = vuforiaPositionFinder.getCurrentPosition();
             vuforia_try_count += 1;
         }
@@ -196,13 +197,11 @@ class AutonMain {
                     telemetry.addLine("Dropping block");
                     telemetry.update();
                     robot.openServo();
-                    Thread.sleep(500);
                     break;
                 case GrabBlock:
                     telemetry.addLine("Grabbing block");
                     telemetry.update();
                     robot.openServo();
-                    Thread.sleep(500);
                     robot.closeServo();
                     break;
                 case MoveRelTarget:
@@ -242,123 +241,12 @@ class AutonMain {
         telemetry.addLine("Finished");
         telemetry.update();
         stop();
-
-        /*
-        // TODO: put block in - theoretically
-        switch (startLocation) {
-            case RED_LEFT:
-            case BLUE_LEFT:
-                // move the arm up slightly so that it doesn't drag
-                moveArm(armPower, 800);
-                Thread.sleep(500);
-                // get off platform, move to intersection of center line and first dotted line in diagram
-                move(0, -.8, 850);
-                turn(1,50);
-                // move forward a tiny bit to leave space for arm
-                move(0, 0.5, 400);
-                 // "throw" block by bringing arm over
-                moveArm(armPower, 1700);
-                // * after the arm has reached the point where gravity helps - don't throw it
-                moveArm(armPowerWithGravity, 500);
-                Thread.sleep(1500);
-                // drop glyph
-                // move towards cryptobox (but backwards facing)
-                move(0, -.5, 900);
-                Thread.sleep(100);
-                robot.openServo();
-                Thread.sleep(1000);
-                // get arm back down
-
-                // make sure that glyph is off the robot by driving forward
-                move(0, .6, 700);
-                // ram it in the cryptobox
-                move (0, -.4, 3000);
-
-                moveArm(-.25, 500);
-                break;
-            case RED_RIGHT:
-            case BLUE_RIGHT:
-                // move the arm up slightly so that it doesn't drag
-                moveArm(armPower, 800);
-                Thread.sleep(500);
-                // blue2 same as red2 (symmetrical)
-                // get off platform, move to intersection of center line and first dotted line in diagram
-                move(0, -.8, 850);
-                turn(-1, 470);
-                // "throw" block by bringing arm over
-                move(0, -.5, 500);
-                moveArm(armPower, 1900);
-                // * after the arm has reached the point where gravity helps - don't throw it
-                moveArm(armPowerWithGravity, 500);
-                Thread.sleep(1500);
-                // drop glyph
-                // move towards cryptobox (but backwards facing)
-                move(0, -.5, 900);
-                Thread.sleep(100);
-                robot.openServo();
-                Thread.sleep(1000);
-                // get arm back down
-
-                // make sure that glyph is off the robot by driving forward
-                move(0, .6, 700);
-                // ram it in the cryptobox
-                move (0, -.4, 3000);
-                // move slightly forward so that we don't touch the glyph anymore
-                move(0, 0.6, 100);
-
-                moveArm(-.25, 500);
-                break;
-        }
-        */
     }
 
-    void mainLoop() throws InterruptedException {
-        // convert the RGB values to HSV values.
-        // multiply by the SCALE_FACTOR.
-        // then cast it back to int (SCALE_FACTOR is a double
-        /*
-        Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
-                (int) (sensorColor.green() * SCALE_FACTOR),
-                (int) (sensorColor.blue() * SCALE_FACTOR),
-                hsvValues);
-
-        // send the info back to driver station using telemetry function.
-        telemetry.addData("Distance (cm)",
-                String.format(Locale.US, "%.02f", sensorDistance.getDistance(DistanceUnit.CM)));
-        telemetry.addData("Alpha", sensorColor.alpha());
-        telemetry.addData("Red  ", sensorColor.red());
-        telemetry.addData("Green", sensorColor.green());
-        telemetry.addData("Blue ", sensorColor.blue());
-        telemetry.addData("Runtime ", stopTime - SystemClock.currentThreadTimeMillis());
-        telemetry.addData("Hue", hsvValues[0]);
-
-        // change the background color to match the color detected by the RGB sensor.
-        // pass a reference to the hue, saturation, and value array as an argument
-        // to the HSVToColor method.
-        relativeLayout.post(new Runnable() {
-            public void run() {
-                relativeLayout.setBackgroundColor(Color.HSVToColor(0xff, values));
-            }
-        });
-
-        telemetry.update();
-        if ((stopTime - SystemClock.currentThreadTimeMillis()) < 5000) {
-
-        }
-        */
-    }
+    void mainLoop() throws InterruptedException {}
 
 
-    void finish() throws InterruptedException {
-        /*
-        // Set the panel back to the default color
-        relativeLayout.post(new Runnable() {
-            public void run() {
-                relativeLayout.setBackgroundColor(Color.WHITE);
-            }
-        });
-        */
-    }
+    void finish() throws InterruptedException {}
 
     //https://ftcforum.usfirst.org/forum/ftc-technology/android-studio/6170-encodejavars-and-autonomous
     private void move_to_position_with_heading(VectorF pos, float heading, float power, int timeout) throws InterruptedException {
@@ -366,6 +254,7 @@ class AutonMain {
         turn_to_heading(heading, power, timeout);
     }
 
+    private final int TICK_ALLOWED_ABS_ERROR = 20;
     // TODO: set these
     private final float TICKS_PER_MM = 1.4f;
     private final float TICKS_PER_DEGREE = 4.4f;
@@ -382,10 +271,15 @@ class AutonMain {
         int x_vector = (int)robotTickVector.get(0);
         int y_vector = (int)robotTickVector.get(1);
 
-        north.setTargetPosition(north.getCurrentPosition() - y_vector);
-        south.setTargetPosition(south.getCurrentPosition() + y_vector);
-        west.setTargetPosition(west.getCurrentPosition() - x_vector);
-        east.setTargetPosition(east.getCurrentPosition() + x_vector);
+        int north_target = north.getCurrentPosition() - y_vector;
+        int south_target = south.getCurrentPosition() + y_vector;
+        int west_target = west.getCurrentPosition() - x_vector;
+        int east_target = east.getCurrentPosition() + x_vector;
+
+        north.setTargetPosition(north_target);
+        south.setTargetPosition(south_target);
+        west.setTargetPosition(west_target);
+        east.setTargetPosition(east_target);
 
         north.setPower(power);
         south.setPower(power);
@@ -399,23 +293,38 @@ class AutonMain {
         long next_check_timestamp = System.currentTimeMillis() + timeout;
 
         while (north.isBusy() || south.isBusy() || east.isBusy() || west.isBusy()) {
+            int north_current = north.getCurrentPosition();
+            int south_current = south.getCurrentPosition();
+            int west_current = west.getCurrentPosition();
+            int east_current = east.getCurrentPosition();
+
+            if ((Math.abs(north_current - north_target) < TICK_ALLOWED_ABS_ERROR) &&
+                    (Math.abs(south_current - south_target) < TICK_ALLOWED_ABS_ERROR) &&
+                    (Math.abs(west_current - west_target) < TICK_ALLOWED_ABS_ERROR) &&
+                    (Math.abs(east_current - east_target) < TICK_ALLOWED_ABS_ERROR)) {
+                telemetry.addLine(String.format("Move by vector %s interrupted: within absolute error.", movement));
+                telemetry.update();
+                break;
+            }
+
             if (System.currentTimeMillis() >= next_check_timestamp) {
-                if ((Math.abs(north.getCurrentPosition() - last_north) < ENCODER_TICKS_TIMEOUT_THRESHOLD) &&
-                        (Math.abs(south.getCurrentPosition() - last_south) < ENCODER_TICKS_TIMEOUT_THRESHOLD) &&
-                        (Math.abs(west.getCurrentPosition() - last_west) < ENCODER_TICKS_TIMEOUT_THRESHOLD) &&
-                        (Math.abs(east.getCurrentPosition() - last_east) < ENCODER_TICKS_TIMEOUT_THRESHOLD)) {
+                if ((Math.abs(north_current - last_north) < ENCODER_TICKS_TIMEOUT_THRESHOLD) &&
+                        (Math.abs(south_current - last_south) < ENCODER_TICKS_TIMEOUT_THRESHOLD) &&
+                        (Math.abs(west_current - last_west) < ENCODER_TICKS_TIMEOUT_THRESHOLD) &&
+                        (Math.abs(east_current - last_east) < ENCODER_TICKS_TIMEOUT_THRESHOLD)) {
                     telemetry.addLine(String.format("Move by vector %s interrupted: timed out.", movement));
                     telemetry.update();
                     break;
                 }
-                last_north = north.getCurrentPosition();
-                last_south = south.getCurrentPosition();
-                last_west = west.getCurrentPosition();
-                last_east = east.getCurrentPosition();
+
+                last_north = north_current;
+                last_south = south_current;
+                last_west = west_current;
+                last_east = east_current;
                 next_check_timestamp = System.currentTimeMillis() + timeout;
             }
 
-            Thread.sleep(10);
+            Thread.sleep(5);
         }
 
         north.setPower(0);
@@ -457,10 +366,15 @@ class AutonMain {
         float robotTickVector = robotVector * TICKS_PER_DEGREE;
         int rotation_vector = (int)robotTickVector;
 
-        north.setTargetPosition(north.getCurrentPosition() - rotation_vector);
-        south.setTargetPosition(south.getCurrentPosition() - rotation_vector);
-        west.setTargetPosition(west.getCurrentPosition() - rotation_vector);
-        east.setTargetPosition(east.getCurrentPosition() - rotation_vector);
+        int north_target = north.getCurrentPosition() - rotation_vector;
+        int south_target = south.getCurrentPosition() - rotation_vector;
+        int west_target = west.getCurrentPosition() - rotation_vector;
+        int east_target = east.getCurrentPosition() - rotation_vector;
+
+        north.setTargetPosition(north_target);
+        south.setTargetPosition(south_target);
+        west.setTargetPosition(west_target);
+        east.setTargetPosition(east_target);
 
         north.setPower(power);
         south.setPower(power);
@@ -477,22 +391,38 @@ class AutonMain {
         long next_check_timestamp = System.currentTimeMillis() + timeout;
 
         while (north.isBusy() || south.isBusy() || east.isBusy() || west.isBusy()) {
+            int north_current = north.getCurrentPosition();
+            int south_current = south.getCurrentPosition();
+            int west_current = west.getCurrentPosition();
+            int east_current = east.getCurrentPosition();
+
+            if ((Math.abs(north_current - north_target) < TICK_ALLOWED_ABS_ERROR) &&
+                    (Math.abs(south_current - south_target) < TICK_ALLOWED_ABS_ERROR) &&
+                    (Math.abs(west_current - west_target) < TICK_ALLOWED_ABS_ERROR) &&
+                    (Math.abs(east_current - east_target) < TICK_ALLOWED_ABS_ERROR)) {
+                telemetry.addLine(String.format("Turn by amount %s interrupted: within absolute error.", rotation_vector));
+                telemetry.update();
+                break;
+            }
+
             if (System.currentTimeMillis() >= next_check_timestamp) {
-                if ((Math.abs(north.getCurrentPosition() - last_north) < ENCODER_TICKS_TIMEOUT_THRESHOLD) &&
-                        (Math.abs(south.getCurrentPosition() - last_south) < ENCODER_TICKS_TIMEOUT_THRESHOLD) &&
-                        (Math.abs(west.getCurrentPosition() - last_west) < ENCODER_TICKS_TIMEOUT_THRESHOLD) &&
-                        (Math.abs(east.getCurrentPosition() - last_east) < ENCODER_TICKS_TIMEOUT_THRESHOLD)) {
-                    telemetry.addLine(String.format("Turn to target heading %s interrupted: timed out.", String.valueOf(target)));
+                if ((Math.abs(north_current - last_north) < ENCODER_TICKS_TIMEOUT_THRESHOLD) &&
+                        (Math.abs(south_current - last_south) < ENCODER_TICKS_TIMEOUT_THRESHOLD) &&
+                        (Math.abs(west_current - last_west) < ENCODER_TICKS_TIMEOUT_THRESHOLD) &&
+                        (Math.abs(east_current - last_east) < ENCODER_TICKS_TIMEOUT_THRESHOLD)) {
+                    telemetry.addLine(String.format("Turn by amount %s interrupted: timed out.", rotation_vector));
                     telemetry.update();
                     break;
                 }
-                last_north = north.getCurrentPosition();
-                last_south = south.getCurrentPosition();
-                last_west = west.getCurrentPosition();
-                last_east = east.getCurrentPosition();
+
+                last_north = north_current;
+                last_south = south_current;
+                last_west = west_current;
+                last_east = east_current;
                 next_check_timestamp = System.currentTimeMillis() + timeout;
             }
-            Thread.sleep(10);
+
+            Thread.sleep(5);
         }
 
         north.setPower(0);
@@ -558,15 +488,23 @@ class AutonMain {
     private int ARM_MOVEMENT_TICKS = -771;
     private void move_arm_ticks(int ticks, float power, int timeout) throws InterruptedException {
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        arm.setTargetPosition(arm.getCurrentPosition() + ticks);
+        int arm_target = arm.getCurrentPosition() + ticks;
+        arm.setTargetPosition(arm_target);
         arm.setPower(power);
         int last_arm = arm.getCurrentPosition();
         long next_check_timestamp = System.currentTimeMillis() + timeout;
 
 
         while (arm.isBusy()) {
+            int arm_current = arm.getCurrentPosition();
+            if (Math.abs(arm_current - arm_target) < TICK_ALLOWED_ABS_ERROR) {
+                telemetry.addLine(String.format("Move arm to target %s interrupted: within encoder abs error.", String.valueOf(ticks)));
+                telemetry.update();
+                break;
+            }
+
             if (System.currentTimeMillis() >= next_check_timestamp) {
-                if ((Math.abs(arm.getCurrentPosition() - last_arm) < ENCODER_TICKS_TIMEOUT_THRESHOLD)) {
+                if ((Math.abs(arm_current - last_arm) < ENCODER_TICKS_TIMEOUT_THRESHOLD)) {
                     telemetry.addLine(String.format("Move arm to target %s interrupted: timed out.", String.valueOf(ticks)));
                     telemetry.update();
                     break;
@@ -575,7 +513,7 @@ class AutonMain {
                 next_check_timestamp = System.currentTimeMillis() + timeout;
             }
 
-            Thread.sleep(10);
+            Thread.sleep(5);
         }
         arm.setPower(0);
         arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
