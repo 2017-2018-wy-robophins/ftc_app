@@ -99,10 +99,15 @@ class AutonMain {
     void runOnce() throws InterruptedException {
         // stopTime = SystemClock.currentThreadTimeMillis() + 30000;
         robot.closeServo();
+
         colorSensorServo.setPosition(1);
 
         Thread.sleep(250);
         // note that the color sensor is on the left side of the arm
+        telemetry.addData("Red amount", sensorColor.red());
+        telemetry.addData("Blue amount", sensorColor.blue());
+        telemetry.update();
+        Thread.sleep(500);
         switch (startLocation) {
             case BLUE_LEFT:
             case BLUE_RIGHT:
@@ -125,6 +130,7 @@ class AutonMain {
                 }
                 break;
         }
+        // colorSensorServo.setPosition(0);
 
         // move the arm up slightly so that it doesn't drag
         arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -132,7 +138,7 @@ class AutonMain {
         arm.setPower(0);
         // get off the blocks
         move(-0.8, 0, 1100);
-        move(0.8, 0, 300);
+        move(0.8, 0, 400);
         // get vuforia position
         Pair<OpenGLMatrix, RelicRecoveryVuMark> position = vuforiaPositionFinder.getCurrentPosition();
         int vuforia_try_count = 1;
@@ -141,7 +147,7 @@ class AutonMain {
         while ((vuforia_try_count <= vuforia_max_tries) && (position == null)) {
             telemetry.addLine("Did not get vuforia position on try: " + vuforia_try_count + ", trying again.");
             telemetry.update();
-            move(0.8, 0, 300);
+            move(0.8, 0, 400);
             position = vuforiaPositionFinder.getCurrentPosition();
             vuforia_try_count += 1;
         }
@@ -213,30 +219,36 @@ class AutonMain {
                         case LEFT:
                             telemetry.addLine("Moving to LEFT");
                             telemetry.update();
-                            move_by_vector_split(new VectorF(-0.5f * mmPerBlock,-0.25f * mmPerBlock), motorPower, TIMEOUT_MILLIS);
+                            move_by_vector_split(new VectorF(-0.2f * mmPerBlock,-0.25f * mmPerBlock), motorPower, TIMEOUT_MILLIS);
                             break;
                         case RIGHT:
                             telemetry.addLine("Moving to RIGHT");
                             telemetry.update();
-                            move_by_vector_split(new VectorF(-0.5f * mmPerBlock,0.25f * mmPerBlock), motorPower, TIMEOUT_MILLIS);
+                            move_by_vector_split(new VectorF(-0.2f * mmPerBlock,0.25f * mmPerBlock), motorPower, TIMEOUT_MILLIS);
                             break;
                         case UNKNOWN:
                         case CENTER:
                             telemetry.addLine("Moving to CENTER");
                             telemetry.update();
-                            move_by_vector_split(new VectorF(-0.5f * mmPerBlock,0), motorPower, TIMEOUT_MILLIS);
+                            move_by_vector_split(new VectorF(-0.2f * mmPerBlock,0), motorPower, TIMEOUT_MILLIS);
                             break;
                     }
                     break;
                 case BashBlock:
                     telemetry.addLine("Bashing block in");
                     telemetry.update();
-                    move_by_vector_split(new VectorF(-0.5f * mmPerBlock, 0), 0.5f, TIMEOUT_MILLIS);
-                    move_by_vector_split(new VectorF(0.2f * mmPerBlock, 0), 0.5f, TIMEOUT_MILLIS);
-                    move_by_vector_split(new VectorF(-0.5f * mmPerBlock, 0), 0.5f, TIMEOUT_MILLIS);
+                    move(0, 0.8, 500);
+                    move(0, -0.8, 500);
+                    //move_by_vector_split(new VectorF(-0.5f * mmPerBlock, 0), 0.5f, TIMEOUT_MILLIS);
+                    //move_by_vector_split(new VectorF(0.2f * mmPerBlock, 0), 0.5f, TIMEOUT_MILLIS);
+                    //move_by_vector_split(new VectorF(-0.5f * mmPerBlock, 0), 0.5f, TIMEOUT_MILLIS);
                     break;
             }
         }
+        telemetry.addLine("Bashing block in");
+        telemetry.update();
+        move(0, 0.8, 500);
+        move(0, -0.8, 500);
 
         telemetry.addLine("Finished");
         telemetry.update();
@@ -254,7 +266,7 @@ class AutonMain {
         turn_to_heading(heading, power, timeout);
     }
 
-    private final int TICK_ALLOWED_ABS_ERROR = 20;
+    private final int TICK_ALLOWED_ABS_ERROR = 35;
     // TODO: set these
     private final float TICKS_PER_MM = 1.4f;
     private final float TICKS_PER_DEGREE = 4.4f;
@@ -448,6 +460,11 @@ class AutonMain {
     }
 
     public void turn(double v, int ms) throws InterruptedException {
+        north.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        south.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        east.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        west.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         west.setPower(v);
         east.setPower(v);
         north.setPower(v);

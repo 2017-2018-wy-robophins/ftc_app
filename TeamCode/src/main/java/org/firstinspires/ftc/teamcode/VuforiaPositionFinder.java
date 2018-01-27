@@ -39,13 +39,13 @@ class VuforiaPositionFinder {
                     AngleUnit.DEGREES, 90, -90, 0));
 
     private final OpenGLMatrix redRightTargetLocationOnField = OpenGLMatrix
-            .translation(mmFTCFieldWidth, (float)(24 * 2 - 3 - 11./2) * mmPerInch, mmPictographHeight)
+            .translation(0, (float)(24 * 2 - 3 - 11./2) * mmPerInch, mmPictographHeight)
             .multiplied(Orientation.getRotationMatrix(
                     AxesReference.EXTRINSIC, AxesOrder.XZX,
                     AngleUnit.DEGREES, 90, 90, 0));
 
     private final OpenGLMatrix redLeftTargetLocationOnField = OpenGLMatrix
-            .translation(mmFTCFieldWidth, (float)(24 * 5 - 3 - 11./2) * mmPerInch, mmPictographHeight)
+            .translation(0, (float)(24 * 5 - 3 - 11./2) * mmPerInch, mmPictographHeight)
             .multiplied(Orientation.getRotationMatrix(
                     AxesReference.EXTRINSIC, AxesOrder.XZX,
                     AngleUnit.DEGREES, 90, 90, 0));
