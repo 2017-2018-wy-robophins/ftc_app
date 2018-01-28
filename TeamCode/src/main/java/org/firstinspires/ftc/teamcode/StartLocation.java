@@ -5,6 +5,8 @@ package org.firstinspires.ftc.teamcode;
  */
 
 enum StartLocation {
-    RIGHT_PLATFORM,
-    LEFT_PLATFORM
+    RED_RIGHT,
+    RED_LEFT,
+    BLUE_RIGHT,
+    BLUE_LEFT
 }

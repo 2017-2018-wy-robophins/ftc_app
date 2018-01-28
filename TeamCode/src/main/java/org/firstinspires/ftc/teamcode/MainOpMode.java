@@ -27,7 +27,6 @@ public class MainOpMode extends LinearOpMode {
     public void runOpMode() throws InterruptedException  {
         // setup constants
         // TODO: use telemetry data to actually set this correctly
-        final int ARM_POSITION_THRESHOLD = 30;
         final double ARM_JOYSTICK_MOVEMENT_THRESHOLD = 0.15;
         //initiate robot
         robot.init(hardwareMap);
@@ -41,9 +40,6 @@ public class MainOpMode extends LinearOpMode {
         Servo grab2 = robot.grab2;
         robot.openServo();
         Servo colorSensorServo = robot.colorSensorServo;
-        boolean targetSet = false;
-        int target = 0;
-        double previous_righty = 0;
 
         telemetry.addData("say", "before opmode");
         telemetry.update();
@@ -67,14 +63,8 @@ public class MainOpMode extends LinearOpMode {
                 precision = 1.0;
             }
             // TODO: REFACTOR
-            if (righty > ARM_JOYSTICK_MOVEMENT_THRESHOLD) {
-                arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                arm.setPower(-righty*.30);
-                previous_righty = righty;
-            } else if (righty < -ARM_JOYSTICK_MOVEMENT_THRESHOLD) {
-                arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                arm.setPower(-righty * .65);
-                previous_righty = righty;
+            if (Math.abs(righty) > ARM_JOYSTICK_MOVEMENT_THRESHOLD) {
+                arm.setPower(righty*.40);
             } else {
                 /*
                if (arm.getCurrentPosition() > -700) {
@@ -98,7 +88,6 @@ public class MainOpMode extends LinearOpMode {
                     arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                     arm.setPower(0);
                 }*/
-                arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 arm.setPower(0);
             }
             //use only protocol for the currently used joystick
@@ -131,6 +120,10 @@ public class MainOpMode extends LinearOpMode {
             telemetry.addData("L vertical",lefty);
             telemetry.addData("R horizontal", rightx);
             telemetry.addData("L horizontal", leftx);
+            telemetry.addData("North ticks", north.getCurrentPosition());
+            telemetry.addData("East ticks", east.getCurrentPosition());
+            telemetry.addData("West ticks", west.getCurrentPosition());
+            telemetry.addData("South ticks", south.getCurrentPosition());
             telemetry.addData("Engine power", enginePower);
             telemetry.addData("Servo position", grab1.getPosition());
             telemetry.addData("Arm power", arm.getPower());
@@ -141,21 +134,4 @@ public class MainOpMode extends LinearOpMode {
 
         }
     }
-
-
-
-    //a function that returns a modified value, checking if it falls within logical boundaries first
-    public double incr(double value, double incr, String sign) {
-        if (sign.equals("+")) {
-            if (value + incr <= 1.0) {
-                return value + incr;
-            }
-        } else if (sign.equals("-")) {
-            if (value - incr >= 0.0) {
-                return value - incr;
-            }
-        }
-        return value;
-    }
-
 }
