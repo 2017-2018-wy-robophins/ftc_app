@@ -45,8 +45,8 @@ class ExtendedMath {
         return Pair.create(k, w);
     }
 
-    static final float ALPHA = 0.7f;
     static VectorF lowPass( VectorF in, VectorF out ) {
+        final float ALPHA = 0.7f;
         float[] input = in.getData();
         float[] output = out.getData();
         if ( output == null ) return new VectorF(output);
@@ -63,11 +63,6 @@ class ExtendedMath {
         });
     }
 
-    static final MatrixF X_REFLECT_TRANSFORM_MATRIX = new GeneralMatrixF(2, 2, new float[] {
-            1, 0,
-            0, -1
-    });
-
     static VectorF convert_3d_to_2d(VectorF v) {
         return new VectorF(v.get(0), v.get(1));
     }
@@ -79,11 +74,7 @@ class ExtendedMath {
         return orientation.thirdAngle;
     }
 
-    static float extract_angle(VectorF v) {
-        return (float)Math.atan2(v.get(1), v.get(0));
-    }
-
-    static float positive_min_degrees(float degrees) {
+    private static float positive_min_degrees(float degrees) {
         degrees = degrees % 360;
         if (degrees < 0) {
             degrees += 360;

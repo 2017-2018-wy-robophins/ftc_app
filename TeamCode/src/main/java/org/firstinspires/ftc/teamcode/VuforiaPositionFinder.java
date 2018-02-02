@@ -6,10 +6,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
@@ -22,39 +18,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 // will be used as a component in auton: composition > inheritance for this
 class VuforiaPositionFinder {
-    private final float mmPerInch        = 25.4f;
-    private final float mmFTCFieldWidth  = (24*6 - 2) * mmPerInch;
-    private final float mmPictographHeight = 2 * mmPerInch;
-
-    private final OpenGLMatrix blueRightTargetLocationOnField = OpenGLMatrix
-            .translation(mmFTCFieldWidth, (float)(24 * 5 + 3 + 11./2) * mmPerInch, mmPictographHeight)
-            .multiplied(Orientation.getRotationMatrix(
-                    AxesReference.EXTRINSIC, AxesOrder.XZX,
-                    AngleUnit.DEGREES, 90, -90, 0));
-
-    private final OpenGLMatrix blueLeftTargetLocationOnField = OpenGLMatrix
-            .translation(mmFTCFieldWidth, (float)(24 * 2 + 3 + 11./2) * mmPerInch, mmPictographHeight)
-            .multiplied(Orientation.getRotationMatrix(
-                    AxesReference.EXTRINSIC, AxesOrder.XZX,
-                    AngleUnit.DEGREES, 90, -90, 0));
-
-    private final OpenGLMatrix redRightTargetLocationOnField = OpenGLMatrix
-            .translation(0, (float)(24 * 2 - 3 - 11./2) * mmPerInch, mmPictographHeight)
-            .multiplied(Orientation.getRotationMatrix(
-                    AxesReference.EXTRINSIC, AxesOrder.XZX,
-                    AngleUnit.DEGREES, 90, 90, 0));
-
-    private final OpenGLMatrix redLeftTargetLocationOnField = OpenGLMatrix
-            .translation(0, (float)(24 * 5 - 3 - 11./2) * mmPerInch, mmPictographHeight)
-            .multiplied(Orientation.getRotationMatrix(
-                    AxesReference.EXTRINSIC, AxesOrder.XZX,
-                    AngleUnit.DEGREES, 90, 90, 0));
-
-    private final OpenGLMatrix phoneLocationOnRobot = OpenGLMatrix
-            .translation((float)7.5 * mmPerInch,(float)-3 * mmPerInch,8 * mmPerInch)
-            .multiplied(Orientation.getRotationMatrix(
-                    AxesReference.EXTRINSIC, AxesOrder.YZY,
-                    AngleUnit.DEGREES, 90, 135, 0));
 
     private OpenGLMatrix markerTargetPositionOnField;
     private HardwareMap hardwareMap;
@@ -64,16 +27,16 @@ class VuforiaPositionFinder {
     public VuforiaPositionFinder(StartLocation start, HardwareMap hwmap) {
         switch (start) {
             case BLUE_LEFT:
-                this.markerTargetPositionOnField = blueLeftTargetLocationOnField;
+                this.markerTargetPositionOnField = FieldConstants.blueLeftTargetLocationOnField;
                 break;
             case BLUE_RIGHT:
-                this.markerTargetPositionOnField = blueRightTargetLocationOnField;
+                this.markerTargetPositionOnField = FieldConstants.blueRightTargetLocationOnField;
                 break;
             case RED_LEFT:
-                this.markerTargetPositionOnField = redLeftTargetLocationOnField;
+                this.markerTargetPositionOnField = FieldConstants.redLeftTargetLocationOnField;
                 break;
             case RED_RIGHT:
-                this.markerTargetPositionOnField = redRightTargetLocationOnField;
+                this.markerTargetPositionOnField = FieldConstants.redRightTargetLocationOnField;
                 break;
         }
         this.hardwareMap = hwmap;
@@ -102,7 +65,7 @@ class VuforiaPositionFinder {
                 if (pose != null) {
                     OpenGLMatrix robotLocationTransform = markerTargetPositionOnField
                             .multiplied(pose.inverted())
-                            .multiplied(phoneLocationOnRobot.inverted());
+                            .multiplied(FieldConstants.phoneLocationOnRobot.inverted());
                     return Pair.create(robotLocationTransform, vuMark);
                 }
 

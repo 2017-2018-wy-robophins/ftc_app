@@ -18,7 +18,7 @@ import org.firstinspires.ftc.robotcore.internal.opmode.OnBotJavaService;
 
 @Autonomous(name="Inertial Position Testing", group="Concept")
 public class InertialPositionTesting extends LinearOpMode {
-    public static InertialPositionUpdater position_updater;
+    InertialPositionUpdater position_updater;
     @Override public void runOpMode() {
         telemetry.addLine("Inertial Position Testing Module");
         telemetry.update();

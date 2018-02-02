@@ -12,7 +12,7 @@ import org.firstinspires.ftc.robotcore.internal.ui.GamepadUser;
 public class MainOpMode extends LinearOpMode {
 
     //creates an instance variable fo the robot
-    MainRobot robot = new MainRobot();
+    private MainRobot robot = new MainRobot();
 
     private static double enginePower = 1.0;
     private static double turnCoefficient = .4;
@@ -21,8 +21,7 @@ public class MainOpMode extends LinearOpMode {
     private static double rightx = 0.0;
     private static double lefty = 0.0;
 
-    private static double precision = 1.0;
-
+    private static double move_coeff = 0.7;
     @Override
     public void runOpMode() throws InterruptedException  {
         // setup constants
@@ -49,61 +48,31 @@ public class MainOpMode extends LinearOpMode {
                 stop();
             }
             righty = gamepad1.right_stick_y;
-            // temporary fix for bad controller
-            // remap from 0 - 1 to -1 to 1
             rightx = gamepad1.right_stick_x;
             leftx = gamepad1.left_stick_x;
             lefty = gamepad1.left_stick_y;
             telemetry.clear();
             colorSensorServo.setPosition(0);
-            //hold y for precision
-            if (gamepad1.y) {
-                precision = 0.5;
-            } else {
-                precision = 1.0;
-            }
-            // TODO: REFACTOR
+
             if (Math.abs(righty) > ARM_JOYSTICK_MOVEMENT_THRESHOLD) {
                 arm.setPower(righty*.40);
             } else {
-                /*
-               if (arm.getCurrentPosition() > -700) {
-                    if (targetSet) {
-                        if (previous_righty < ARM_JOYSTICK_MOVEMENT_THRESHOLD) {
-                            telemetry.addLine("Active braking in effect");
-                            arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                            arm.setPower(-0.3);
-                            arm.setTargetPosition(target);
-                        } else {
-                            telemetry.addLine("Passive braking in effect");
-                            arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                            arm.setPower(0);
-                        }
-                    } else {
-                        telemetry.addLine("Active braking in effect");
-                        target = arm.getCurrentPosition();
-                    }
-                } else {
-                    telemetry.addLine("Passive braking in effect");
-                    arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                    arm.setPower(0);
-                }*/
                 arm.setPower(0);
             }
             //use only protocol for the currently used joystick
             if (((Math.abs(leftx) + Math.abs(lefty))/2) >= (Math.abs(rightx) + Math.abs(righty))/2) {
                 //set motor powers for transposing
-                west.setPower(lefty*precision*.7); // in commit - fix reversal
-                east.setPower(-lefty*precision*.7);
-                north.setPower(leftx*precision*.7);
-                south.setPower(-leftx*precision*.7);
+                west.setPower(lefty * move_coeff); // in commit - fix reversal
+                east.setPower(-lefty * move_coeff);
+                north.setPower(leftx * move_coeff);
+                south.setPower(-leftx * move_coeff);
 
             } else {
                 //set motor powers for turning
-                west.setPower(rightx*precision*turnCoefficient);
-                east.setPower(rightx*precision*turnCoefficient);
-                north.setPower(rightx*precision*turnCoefficient);
-                south.setPower(rightx*precision*turnCoefficient);
+                west.setPower(rightx * turnCoefficient);
+                east.setPower(rightx * turnCoefficient);
+                north.setPower(rightx * turnCoefficient);
+                south.setPower(rightx * turnCoefficient);
             }
 
 
@@ -113,7 +82,6 @@ public class MainOpMode extends LinearOpMode {
             if (gamepad1.left_bumper) {
                 robot.openServo();
             }
-
 
             //update telemetry
             telemetry.addData("R vertical", righty);
@@ -128,10 +96,8 @@ public class MainOpMode extends LinearOpMode {
             telemetry.addData("Servo position", grab1.getPosition());
             telemetry.addData("Arm power", arm.getPower());
             telemetry.addData("Arm position", arm.getCurrentPosition()); // NICO - use this info to determine what ARM_POSITION_THRESHOLD is
-            telemetry.addData("Precision coefficient", precision);
             telemetry.addData("Gamepad status",  GamepadUser.ONE == gamepad1.getUser());
             telemetry.update();
-
         }
     }
 }

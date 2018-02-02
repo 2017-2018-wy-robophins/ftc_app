@@ -257,7 +257,6 @@ class AutonMain {
 
     void mainLoop() throws InterruptedException {}
 
-
     void finish() throws InterruptedException {}
 
     //https://ftcforum.usfirst.org/forum/ftc-technology/android-studio/6170-encodejavars-and-autonomous
@@ -445,7 +444,7 @@ class AutonMain {
         navinfo.set_heading(target);
     }
 
-    public void move(double xvector, double yvector, int ms) throws InterruptedException{
+    private void move(double xvector, double yvector, int ms) throws InterruptedException{
         north.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         south.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         east.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -459,7 +458,7 @@ class AutonMain {
         stop();
     }
 
-    public void turn(double v, int ms) throws InterruptedException {
+    private void turn(double v, int ms) throws InterruptedException {
         north.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         south.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         east.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

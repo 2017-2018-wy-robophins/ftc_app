@@ -6,14 +6,13 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 
+import static org.firstinspires.ftc.teamcode.FieldConstants.mmPerBlock;
+
 /**
  * Created by efyang on 1/11/18.
  */
 
 class AutonInstructions {
-    private final float mmPerInch        = 25.4f;
-    private final float mmPerBlock = mmPerInch * 24;
-    private final float mmFTCFieldWidth  = (24*6 - 2) * mmPerInch;
     // currently placeholder values
     private final float[][] BLUE_RIGHT_INSTRUCTIONS = new float[][] {
             // target x, y, heading
