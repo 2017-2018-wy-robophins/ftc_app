@@ -11,6 +11,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
  */
 
 final class FieldConstants {
+    static final double rt2 = Math.sqrt(2);
     static final float mmPerInch = 25.4f;
     static final float mmPerBlock = mmPerInch * 24;
     static final float mmFTCFieldWidth = (24 * 6 - 2) * mmPerInch;
@@ -44,6 +45,6 @@ final class FieldConstants {
             .translation((float) 7.5 * mmPerInch, (float) -3 * mmPerInch, 8 * mmPerInch)
             .multiplied(Orientation.getRotationMatrix(
                     AxesReference.EXTRINSIC, AxesOrder.YZY,
-                    AngleUnit.DEGREES, 90, 135, 0));
+                    AngleUnit.DEGREES, 90, 90, 0));
 
 }

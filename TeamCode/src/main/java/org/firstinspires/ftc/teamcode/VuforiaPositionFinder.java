@@ -53,7 +53,6 @@ class VuforiaPositionFinder {
         relicTrackables.activate();
     }
 
-    // TODO: possibly change return type later on
     // return the transformation matrix and the template type
     public Pair<OpenGLMatrix, RelicRecoveryVuMark> getCurrentPosition() throws InterruptedException {
         // we want to wait a second before finding a vumark so that we have a good read of it

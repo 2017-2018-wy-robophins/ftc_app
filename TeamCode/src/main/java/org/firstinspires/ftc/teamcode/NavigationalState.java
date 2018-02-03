@@ -26,10 +26,7 @@ class NavigationalState {
     }
 
     VectorF get_robot_movement_vector(VectorF field_target) {
-        //VectorF nv = field_target.subtracted(position);
-        //float new_rad = -(float)(ExtendedMath.extract_angle(nv) - Math.toRadians(heading));
-        //return (new VectorF((float)Math.cos(new_rad), (float)Math.sin(new_rad))).multiplied(nv.magnitude());
-        return ExtendedMath.get_rotation_matrix(-(float)Math.toRadians(heading))
+        return ExtendedMath.get_rotation_matrix(-(float)Math.toRadians(heading - 90))
                 .multiplied(field_target.subtracted(position));
     }
 
