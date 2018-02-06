@@ -39,21 +39,18 @@ class MainRobot {
         grab2 =  HM.servo.get("grab2");
         colorSensorServo = HM.servo.get("colorSensorServo");
         colorDistanceSensor = HM.get(DistanceSensor.class, "colorDistanceSensor");
-        // colorSensor = HM.get(ColorSensor.class, "colorSensor");
-
+        north.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        west.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        east.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        south.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         north.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         west.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         east.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         south.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        arm.setDirection(DcMotor.Direction.REVERSE);
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        //north.setDirection(DcMotor.Direction.REVERSE);
-        //west.setDirection(DcMotor.Direction.REVERSE);
-        //east.setDirection(DcMotor.Direction.REVERSE);
-        //south.setDirection(DcMotor.Direction.REVERSE);
-        //pulley.setDirection(DcMotor.Direction.REVERSE);
     }
     private static final double servoClosed = 1.0;
     private static final double servoOpen = 0;
@@ -67,5 +64,6 @@ class MainRobot {
         grab1.setPosition(servoOpen);
         Thread.sleep(500);
         grab2.setPosition(servoClosed);
+        Thread.sleep(500);
     }
 }
