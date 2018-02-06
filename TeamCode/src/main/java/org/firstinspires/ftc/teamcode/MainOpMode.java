@@ -22,9 +22,7 @@ public class MainOpMode extends LinearOpMode {
         robot.init(hardwareMap);
         //initiate hardware variables
         DcMotor arm = robot.arm;
-        Servo grab1 = robot.grab1;
-        Servo grab2 = robot.grab2;
-        robot.openServo();
+        robot.grabber.open();
         Servo colorSensorServo = robot.colorSensorServo;
 
         telemetry.addData("say", "before opmode");
@@ -56,22 +54,21 @@ public class MainOpMode extends LinearOpMode {
             robot.SE.setPower(multipliers[3]);
 
             if (gamepad1.right_bumper) {
-                robot.closeServo();
+                robot.grabber.close();
             }
             if (gamepad1.left_bumper) {
-                robot.openServo();
+                robot.grabber.open();
             }
 
             //update telemetry
             telemetry.addData("R vertical", righty);
-            telemetry.addData("L vertical",lefty);
             telemetry.addData("R horizontal", rightx);
+            telemetry.addData("L vertical",lefty);
             telemetry.addData("L horizontal", leftx);
             telemetry.addData("NW ticks", robot.NW.getCurrentPosition());
             telemetry.addData("NE ticks", robot.NE.getCurrentPosition());
             telemetry.addData("SW ticks", robot.SW.getCurrentPosition());
             telemetry.addData("SE ticks", robot.SE.getCurrentPosition());
-            telemetry.addData("Servo position", grab1.getPosition());
             telemetry.addData("Arm power", arm.getPower());
             telemetry.addData("Arm position", arm.getCurrentPosition()); // NICO - use this info to determine what ARM_POSITION_THRESHOLD is
             telemetry.addData("Gamepad status",  GamepadUser.ONE == gamepad1.getUser());

@@ -68,7 +68,7 @@ class AutonMain {
     // run this once
     void runOnce() throws InterruptedException {
         // stopTime = SystemClock.currentThreadTimeMillis() + 30000;
-        robot.closeServo();
+        robot.grabber.close();
 
         colorSensorServo.setPosition(1);
 
@@ -174,13 +174,13 @@ class AutonMain {
                 case DropBlock:
                     telemetry.addLine("Dropping block");
                     telemetry.update();
-                    robot.openServo();
+                    robot.grabber.open();
                     break;
                 case GrabBlock:
                     telemetry.addLine("Grabbing block");
                     telemetry.update();
-                    robot.openServo();
-                    robot.closeServo();
+                    robot.grabber.open();
+                    robot.grabber.close();
                     break;
                 case MoveRelTarget:
                     // assume that robot is facing away from center, 1 block away

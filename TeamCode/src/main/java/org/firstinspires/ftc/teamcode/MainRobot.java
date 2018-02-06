@@ -12,49 +12,50 @@ class MainRobot {
     DcMotor SE;
     DcMotor SW;
     DcMotor arm;
-    Servo grab1;
-    Servo grab2;
     Servo colorSensorServo;
+    Grabber grabber;
     DistanceSensor colorDistanceSensor;
     // ColorSensor colorSensor;
 
 
     //runs on press of the "init" button. Maps engines from the robot to variables,
     void init(HardwareMap HM) {
+        // the main drive base
         NE = HM.dcMotor.get("NE");
         NW = HM.dcMotor.get("NW");
         SE = HM.dcMotor.get("SE");
         SW = HM.dcMotor.get("SW");
-        arm = HM.dcMotor.get("arm");
-        grab1 =  HM.servo.get("grab1");
-        grab2 =  HM.servo.get("grab2");
-        colorSensorServo = HM.servo.get("colorSensorServo");
-        colorDistanceSensor = HM.get(DistanceSensor.class, "colorDistanceSensor");
+
         NW.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         NE.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         SE.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         SW.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         NW.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         NE.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         SE.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         SW.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        arm = HM.dcMotor.get("arm");
+
+        // set up the grabber
+        Servo topLeft = HM.servo.get("topLeft");
+        Servo topRight = HM.servo.get("topRight");
+        Servo bottomLeft = HM.servo.get("bottomLeft");
+        Servo bottomRight = HM.servo.get("bottomRight");
+
+        // set grabber servo directions
+        // topLeft.setDirection(Servo.Direction.REVERSE);
+
+        grabber = new Grabber(topLeft, topRight, bottomLeft, bottomRight);
+
+        colorSensorServo = HM.servo.get("colorSensorServo");
+        colorDistanceSensor = HM.get(DistanceSensor.class, "colorDistanceSensor");
+
         arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         arm.setDirection(DcMotor.Direction.REVERSE);
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-    }
-    private static final double servoClosed = 1.0;
-    private static final double servoOpen = 0;
-
-    void closeServo() {
-        grab1.setPosition(servoClosed);
-        grab2.setPosition(servoOpen);
-    }
-    void openServo() throws InterruptedException {
-        grab1.setPosition(servoOpen);
-        Thread.sleep(500);
-        grab2.setPosition(servoClosed);
-        Thread.sleep(500);
     }
 
     private void move_arm_ticks(int ticks, float power, int timeout) throws InterruptedException {
