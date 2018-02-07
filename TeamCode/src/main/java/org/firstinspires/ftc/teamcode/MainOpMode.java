@@ -45,7 +45,7 @@ public class MainOpMode extends LinearOpMode {
                 arm.setPower(0);
             }
 
-            robot.driveBase.move_and_turn((float)leftx, (float)lefty, (float)rightx);
+            robot.driveBase.move_and_turn((float)leftx, -(float)lefty, -(float)rightx);
 
             if (gamepad1.right_bumper) {
                 robot.grabber.close();

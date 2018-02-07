@@ -44,8 +44,10 @@ class MainRobot {
         Servo bottomRight = HM.servo.get("bottomRight");
 
         // set grabber servo directions
-        // topLeft.setDirection(Servo.Direction.REVERSE);
-
+        topLeft.setDirection(Servo.Direction.REVERSE);
+        topRight.setDirection(Servo.Direction.REVERSE);
+        bottomLeft.setDirection(Servo.Direction.REVERSE);
+        bottomRight.setDirection(Servo.Direction.REVERSE);
         grabber = new Grabber(topLeft, topRight, bottomLeft, bottomRight);
 
         // set up the color sensor stuff
@@ -56,7 +58,6 @@ class MainRobot {
         arm = HM.dcMotor.get("arm");
         arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        arm.setDirection(DcMotor.Direction.REVERSE);
         arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 

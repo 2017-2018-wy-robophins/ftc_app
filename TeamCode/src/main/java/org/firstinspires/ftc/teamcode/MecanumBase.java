@@ -110,9 +110,10 @@ class MecanumBase extends DriveBase {
     void move_and_turn(float x, float y, float r) {
         setMotorMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        double speed = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)) / FieldConstants.rt2;
+        double speed = Math.hypot(x,y) / FieldConstants.rt2;
         double angle = Math.atan2(y, x);
         double[] multipliers = mechanum_multipliers(speed, angle, r);
+        telemetry.addData("mecanum multipliers", multipliers);
         NW.setPower(multipliers[0]);
         NE.setPower(multipliers[1]);
         SW.setPower(multipliers[2]);
@@ -145,10 +146,10 @@ class MecanumBase extends DriveBase {
     // angle should be in radians
     private static double[] mechanum_multipliers(double translation, double translation_angle, double rotation) {
         return new double[]{
-                translation * Math.sin(translation_angle + Math.PI/4) + rotation,
+                translation * Math.sin(translation_angle + Math.PI/4) - rotation,
+                translation * Math.cos(translation_angle + Math.PI/4) + rotation,
                 translation * Math.cos(translation_angle + Math.PI/4) - rotation,
-                translation * Math.sin(translation_angle + Math.PI/4) + rotation,
-                translation * Math.cos(translation_angle + Math.PI/4) - rotation
+                translation * Math.sin(translation_angle + Math.PI/4) + rotation
         };
     }
 }
