@@ -94,19 +94,26 @@ class AutonMain {
                 break;
         }
 
+        float start_move_x = 0;
+        float start_move_y = 0;
         // get off the blocks
         switch (startLocation) {
             case BLUE_LEFT:
             case BLUE_RIGHT:
-                robot.driveBase.move_ms(0, 0.8f, 1000);
-                robot.driveBase.move_ms(0, -0.8f, 400);
+                start_move_x = 0.8f;
+                start_move_y = 0;
                 break;
             case RED_LEFT:
-                robot.driveBase.move_ms(0, -0.8f, 1000);
-                robot.driveBase.move_ms(0, 0.8f, 400);
+                start_move_x = 0;
+                start_move_y = -0.8f;
+                break;
             case RED_RIGHT:
+                start_move_x = 0.8f;
+                start_move_y = 0;
                 break;
         }
+        robot.driveBase.move_ms(start_move_x, start_move_y, 1000);
+        robot.driveBase.move_ms(-start_move_x, -start_move_y, 400);
 
         // get vuforia position
         Pair<OpenGLMatrix, RelicRecoveryVuMark> position = vuforiaPositionFinder.getCurrentPosition();
@@ -116,7 +123,7 @@ class AutonMain {
         while ((vuforia_try_count <= vuforia_max_tries) && (position == null)) {
             telemetry.addLine("Did not get vuforia position on try: " + vuforia_try_count + ", trying again.");
             telemetry.update();
-            robot.driveBase.move_ms(0.8f, 0, 400);
+            robot.driveBase.move_ms(-start_move_x, -start_move_y, 400);
             position = vuforiaPositionFinder.getCurrentPosition();
             vuforia_try_count += 1;
         }

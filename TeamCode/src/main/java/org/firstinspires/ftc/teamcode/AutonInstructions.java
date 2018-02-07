@@ -13,9 +13,10 @@ import static org.firstinspires.ftc.teamcode.FieldConstants.mmPerBlock;
  */
 
 class AutonInstructions {
-    // currently placeholder values
+    // stay with conventional
     private final float[][] BLUE_RIGHT_INSTRUCTIONS = new float[][] {
             // target x, y, heading
+            {3.5f * mmPerBlock, 5f * mmPerBlock, 180},
             {5f * mmPerBlock, 3.5f * mmPerBlock, 180},
             // if single value then match to instruction enum
             {InstructionType.MOVE_REL_TARGET},
@@ -25,6 +26,7 @@ class AutonInstructions {
             {InstructionType.BASH_BLOCK},
     };
     private final float[][] BLUE_LEFT_INSTRUCTIONS = new float[][] {
+            {4f * mmPerBlock, 1 * mmPerBlock, 90},
             {4.5f * mmPerBlock, 1 * mmPerBlock, 90},
             {InstructionType.MOVE_REL_TARGET},
             {InstructionType.ARM_UP},
@@ -33,6 +35,7 @@ class AutonInstructions {
             {InstructionType.BASH_BLOCK},
     };
     private final float[][] RED_RIGHT_INSTRUCTIONS = new float[][] {
+            {2f * mmPerBlock, 1 * mmPerBlock, 90},
             {1.5f * mmPerBlock, 1 * mmPerBlock, 90},
             {InstructionType.MOVE_REL_TARGET},
             {InstructionType.ARM_UP},
