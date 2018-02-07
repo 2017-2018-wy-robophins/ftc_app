@@ -4,27 +4,26 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 
 class MainRobot {
+    DriveBase driveBase;
     //define all variables used
-    DcMotor NE;
-    DcMotor NW;
-    DcMotor SE;
-    DcMotor SW;
     DcMotor arm;
     Servo colorSensorServo;
     Grabber grabber;
-    DistanceSensor colorDistanceSensor;
+    // DistanceSensor colorDistanceSensor;
     // ColorSensor colorSensor;
 
 
     //runs on press of the "init" button. Maps engines from the robot to variables,
-    void init(HardwareMap HM) {
+    void init(HardwareMap HM, Telemetry telemetry) {
         // the main drive base
-        NE = HM.dcMotor.get("NE");
-        NW = HM.dcMotor.get("NW");
-        SE = HM.dcMotor.get("SE");
-        SW = HM.dcMotor.get("SW");
+        DcMotor NE = HM.dcMotor.get("NE");
+        DcMotor NW = HM.dcMotor.get("NW");
+        DcMotor SE = HM.dcMotor.get("SE");
+        DcMotor SW = HM.dcMotor.get("SW");
 
         NW.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         NE.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -36,7 +35,7 @@ class MainRobot {
         SE.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         SW.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        arm = HM.dcMotor.get("arm");
+        driveBase = new MecanumBase(NW, NE, SW, SE, telemetry);
 
         // set up the grabber
         Servo topLeft = HM.servo.get("topLeft");
@@ -49,9 +48,12 @@ class MainRobot {
 
         grabber = new Grabber(topLeft, topRight, bottomLeft, bottomRight);
 
+        // set up the color sensor stuff
         colorSensorServo = HM.servo.get("colorSensorServo");
-        colorDistanceSensor = HM.get(DistanceSensor.class, "colorDistanceSensor");
+        // colorDistanceSensor = HM.get(DistanceSensor.class, "colorDistanceSensor");
 
+        // set up the arm
+        arm = HM.dcMotor.get("arm");
         arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         arm.setDirection(DcMotor.Direction.REVERSE);
@@ -65,7 +67,6 @@ class MainRobot {
         arm.setPower(power);
         int last_arm = arm.getCurrentPosition();
         long next_check_timestamp = System.currentTimeMillis() + timeout;
-
 
         while (arm.isBusy()) {
             int arm_current = arm.getCurrentPosition();
@@ -93,12 +94,5 @@ class MainRobot {
 
     void move_arm_down(float power) throws InterruptedException {
         move_arm_ticks(-RobotConstants.ARM_MOVEMENT_TICKS, power, RobotConstants.MOTOR_TIMEOUT_MILLIS);
-    }
-
-    void stop() {
-        NW.setPower(0);
-        NE.setPower(0);
-        SW.setPower(0);
-        SE.setPower(0);
     }
 }

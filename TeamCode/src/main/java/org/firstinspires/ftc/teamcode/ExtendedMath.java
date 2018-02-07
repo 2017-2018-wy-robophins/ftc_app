@@ -102,16 +102,4 @@ class ExtendedMath {
                 new VectorF(0, v.get(1))
         };
     }
-
-    // http://thinktank.wpi.edu/resources/346/ControllingMecanumDrive.pdf
-    // return [NW, NE, SW, SE]
-    // angle should be in radians
-    static double[] mechanum_multipliers(double translation, double translation_angle, double rotation) {
-        return new double[]{
-                translation * Math.sin(translation_angle + Math.PI/4) + rotation,
-                translation * Math.cos(translation_angle + Math.PI/4) - rotation,
-                translation * Math.sin(translation_angle + Math.PI/4) + rotation,
-                translation * Math.cos(translation_angle + Math.PI/4) - rotation
-        };
-    }
 }

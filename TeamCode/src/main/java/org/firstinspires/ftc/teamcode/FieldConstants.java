@@ -42,7 +42,7 @@ final class FieldConstants {
                     AngleUnit.DEGREES, 90, 90, 0));
 
     static final OpenGLMatrix phoneLocationOnRobot = OpenGLMatrix
-            .translation((float) 7.5 * mmPerInch, (float) -3 * mmPerInch, 8 * mmPerInch)
+            .translation((float) 0 * mmPerInch, (float) -3 * mmPerInch, 6 * mmPerInch)
             .multiplied(Orientation.getRotationMatrix(
                     AxesReference.EXTRINSIC, AxesOrder.YZY,
                     AngleUnit.DEGREES, 90, 90, 0));

@@ -19,7 +19,7 @@ public class MainOpMode extends LinearOpMode {
         // setup constants
         final double ARM_JOYSTICK_MOVEMENT_THRESHOLD = 0.15;
         //initiate robot
-        robot.init(hardwareMap);
+        robot.init(hardwareMap, telemetry);
         //initiate hardware variables
         DcMotor arm = robot.arm;
         robot.grabber.open();
@@ -45,13 +45,7 @@ public class MainOpMode extends LinearOpMode {
                 arm.setPower(0);
             }
 
-            double speed = Math.sqrt(Math.pow(leftx, 2) + Math.pow(lefty, 2)) / FieldConstants.rt2;
-            double angle = Math.atan2(lefty, leftx);
-            double[] multipliers = ExtendedMath.mechanum_multipliers(speed, angle, rightx);
-            robot.NW.setPower(multipliers[0]);
-            robot.NE.setPower(multipliers[1]);
-            robot.SW.setPower(multipliers[2]);
-            robot.SE.setPower(multipliers[3]);
+            robot.driveBase.move_and_turn((float)leftx, (float)lefty, (float)rightx);
 
             if (gamepad1.right_bumper) {
                 robot.grabber.close();
@@ -65,10 +59,7 @@ public class MainOpMode extends LinearOpMode {
             telemetry.addData("R horizontal", rightx);
             telemetry.addData("L vertical",lefty);
             telemetry.addData("L horizontal", leftx);
-            telemetry.addData("NW ticks", robot.NW.getCurrentPosition());
-            telemetry.addData("NE ticks", robot.NE.getCurrentPosition());
-            telemetry.addData("SW ticks", robot.SW.getCurrentPosition());
-            telemetry.addData("SE ticks", robot.SE.getCurrentPosition());
+            robot.driveBase.report_encoder_ticks();
             telemetry.addData("Arm power", arm.getPower());
             telemetry.addData("Arm position", arm.getCurrentPosition()); // NICO - use this info to determine what ARM_POSITION_THRESHOLD is
             telemetry.addData("Gamepad status",  GamepadUser.ONE == gamepad1.getUser());

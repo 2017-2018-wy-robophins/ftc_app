@@ -4,7 +4,6 @@ import android.util.Pair;
 
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -25,7 +24,6 @@ class AutonMain {
     private DcMotor arm;
     private Servo colorSensorServo;
     private ColorSensor sensorColor;
-    private DistanceSensor sensorDistance;
     private NavigationalState navinfo;
     private AutonInstructions instructions;
     private VuforiaPositionFinder vuforiaPositionFinder;
@@ -35,7 +33,7 @@ class AutonMain {
         this.telemetry = telemetry;
         this.startLocation = startLocation;
         this.robot = robot;
-        robot.init(hardwareMap);
+        robot.init(hardwareMap, telemetry);
         //initiate hardware variables
         arm = robot.arm;
         colorSensorServo = robot.colorSensorServo;
@@ -46,7 +44,6 @@ class AutonMain {
         // get a reference to the color sensor.
         sensorColor = hardwareMap.get(ColorSensor.class, "colorDistanceSensor");
         // get a reference to the distance sensor that shares the same name.
-        sensorDistance = hardwareMap.get(DistanceSensor.class, "colorDistanceSensor");
 
         navinfo = new NavigationalState();
         telemetry.addData("Start Location", startLocation);
@@ -79,20 +76,20 @@ class AutonMain {
             case BLUE_RIGHT:
                 if (sensorColor.red() < sensorColor.blue()) {
                     // if left is blue
-                    knock_left_jewel(colorSensorServo);
+                    knock_left_jewel();
                 } else {
                     // if left is red
-                    knock_right_jewel(colorSensorServo);
+                    knock_right_jewel();
                 }
                 break;
             case RED_LEFT:
             case RED_RIGHT:
                 if (sensorColor.red() > sensorColor.blue()) {
                     // if left is red
-                    knock_left_jewel(colorSensorServo);
+                    knock_left_jewel();
                 } else {
                     // if left is blue
-                    knock_right_jewel(colorSensorServo);
+                    knock_right_jewel();
                 }
                 break;
         }
@@ -101,12 +98,12 @@ class AutonMain {
         switch (startLocation) {
             case BLUE_LEFT:
             case BLUE_RIGHT:
-                move(-0.8, 0, 1000);
-                move(0.8, 0, 400);
+                robot.driveBase.move_ms(0, 0.8f, 1000);
+                robot.driveBase.move_ms(0, -0.8f, 400);
                 break;
             case RED_LEFT:
-                move(0.8, 0, 1000);
-                move(-0.8, 0, 400);
+                robot.driveBase.move_ms(0, -0.8f, 1000);
+                robot.driveBase.move_ms(0, 0.8f, 400);
             case RED_RIGHT:
                 break;
         }
@@ -119,7 +116,7 @@ class AutonMain {
         while ((vuforia_try_count <= vuforia_max_tries) && (position == null)) {
             telemetry.addLine("Did not get vuforia position on try: " + vuforia_try_count + ", trying again.");
             telemetry.update();
-            move(0.8, 0, 400);
+            robot.driveBase.move_ms(0.8f, 0, 400);
             position = vuforiaPositionFinder.getCurrentPosition();
             vuforia_try_count += 1;
         }
@@ -191,37 +188,51 @@ class AutonMain {
                         case LEFT:
                             telemetry.addLine("Moving to LEFT");
                             telemetry.update();
-                            move_by_vector_and_rotation(new VectorF(-0.25f * mmPerBlock, -0.2f * mmPerBlock), 0, RobotConstants.AUTON_MOTOR_SPEED, RobotConstants.MOTOR_TIMEOUT_MILLIS);
+                            robot.driveBase.move_by_vector_and_rotation(
+                                    new VectorF(-0.25f * mmPerBlock, -0.2f * mmPerBlock),
+                                    0,
+                                    RobotConstants.AUTON_MOTOR_SPEED,
+                                    RobotConstants.TICK_ALLOWED_ABS_ERROR,
+                                    RobotConstants.MOTOR_TIMEOUT_MILLIS);
                             break;
                         case RIGHT:
                             telemetry.addLine("Moving to RIGHT");
                             telemetry.update();
-                            move_by_vector_and_rotation(new VectorF(0.25f * mmPerBlock, -0.2f * mmPerBlock), 0, RobotConstants.AUTON_MOTOR_SPEED, RobotConstants.MOTOR_TIMEOUT_MILLIS);
+                            robot.driveBase.move_by_vector_and_rotation(
+                                    new VectorF(0.25f * mmPerBlock, -0.2f * mmPerBlock),
+                                    0,
+                                    RobotConstants.AUTON_MOTOR_SPEED,
+                                    RobotConstants.TICK_ALLOWED_ABS_ERROR,
+                                    RobotConstants.MOTOR_TIMEOUT_MILLIS);
                             break;
                         case UNKNOWN:
                         case CENTER:
                             telemetry.addLine("Moving to CENTER");
                             telemetry.update();
-                            move_by_vector_and_rotation(new VectorF(0, -0.2f * mmPerBlock), 0, RobotConstants.AUTON_MOTOR_SPEED, RobotConstants.MOTOR_TIMEOUT_MILLIS);
+                            robot.driveBase.move_by_vector_and_rotation(new VectorF(0, -0.2f * mmPerBlock),
+                                    0,
+                                    RobotConstants.AUTON_MOTOR_SPEED,
+                                    RobotConstants.TICK_ALLOWED_ABS_ERROR,
+                                    RobotConstants.MOTOR_TIMEOUT_MILLIS);
                             break;
                     }
                     break;
                 case BashBlock:
                     telemetry.addLine("Bashing block in");
                     telemetry.update();
-                    move(0, 0.8, 500);
-                    move(0, -0.8, 500);
+                    robot.driveBase.move_ms(0, 0.8f, 500);
+                    robot.driveBase.move_ms(0, -0.8f, 500);
                     break;
             }
         }
         telemetry.addLine("Bashing block in");
         telemetry.update();
-        move(0, 0.8, 500);
-        move(0, -0.8, 500);
+        robot.driveBase.move_ms(0, 0.8f, 500);
+        robot.driveBase.move_ms(0, -0.8f, 500);
 
         telemetry.addLine("Finished");
         telemetry.update();
-        robot.stop();
+        robot.driveBase.stop();
     }
 
     void mainLoop() throws InterruptedException {}
@@ -233,122 +244,17 @@ class AutonMain {
         telemetry.addData("Moving to target position", target_pos);
         telemetry.addData("Moving to target heading", target_heading);
         telemetry.update();
-        Thread.sleep(1000);
-        move_by_vector_and_rotation(
+        Thread.sleep(250);
+        robot.driveBase.move_by_vector_and_rotation(
                 navinfo.get_robot_movement_vector(target_pos),
                 navinfo.get_robot_rotation(target_heading),
                 power,
+                RobotConstants.TICK_ALLOWED_ABS_ERROR,
                 timeout
         );
         navinfo.set_position(target_pos);
         navinfo.set_heading(target_heading);
     }
-
-    private void move_by_vector_and_rotation(VectorF movement, float rotation, float power, int timeout) throws InterruptedException {
-        robot.NW.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.NE.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.SW.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.SE.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        VectorF movementTickVector = movement.multiplied(RobotConstants.TICKS_PER_MM);
-        float rotationTickVector = rotation * RobotConstants.TICKS_PER_DEGREE;
-
-        double[] multipliers = ExtendedMath.mechanum_multipliers(
-                movementTickVector.magnitude(),
-                Math.atan2(movementTickVector.get(1), movementTickVector.get(0)),
-                rotationTickVector);
-
-        int NW_target = robot.NW.getCurrentPosition() + (int)multipliers[0];
-        int NE_target = robot.NE.getCurrentPosition() + (int)multipliers[1];
-        int SW_target = robot.SW.getCurrentPosition() + (int)multipliers[2];
-        int SE_target = robot.SE.getCurrentPosition() + (int)multipliers[3];
-
-        robot.NW.setTargetPosition(NW_target);
-        robot.NE.setTargetPosition(NE_target);
-        robot.SW.setTargetPosition(SW_target);
-        robot.SE.setTargetPosition(SE_target);
-
-        robot.NW.setPower(power);
-        robot.NE.setPower(power);
-        robot.SW.setPower(power);
-        robot.SE.setPower(power);
-
-        int last_NW = robot.NW.getCurrentPosition();
-        int last_NE = robot.NE.getCurrentPosition();
-        int last_SW = robot.SW.getCurrentPosition();
-        int last_SE = robot.SE.getCurrentPosition();
-        long next_check_timestamp = System.currentTimeMillis() + timeout;
-
-        while (robot.NW.isBusy() || robot.NE.isBusy() || robot.SW.isBusy() || robot.NW.isBusy()) {
-            int NW_current = robot.NW.getCurrentPosition();
-            int NE_current = robot.NE.getCurrentPosition();
-            int SW_current = robot.SW.getCurrentPosition();
-            int SE_current = robot.SE.getCurrentPosition();
-
-            if ((Math.abs(NW_current - NW_target) < RobotConstants.TICK_ALLOWED_ABS_ERROR) &&
-                    (Math.abs(NE_current - NE_target) < RobotConstants.TICK_ALLOWED_ABS_ERROR) &&
-                    (Math.abs(SW_current - SW_target) < RobotConstants.TICK_ALLOWED_ABS_ERROR) &&
-                    (Math.abs(SE_current - SW_target) < RobotConstants.TICK_ALLOWED_ABS_ERROR)) {
-                telemetry.addLine(String.format("Move by vector %s and rotation %s interrupted: within absolute error.", movementTickVector, rotationTickVector));
-                telemetry.update();
-                break;
-            }
-
-            if (System.currentTimeMillis() >= next_check_timestamp) {
-                if ((Math.abs(NW_current - last_NW) < RobotConstants.ENCODER_TICKS_TIMEOUT_THRESHOLD) &&
-                        (Math.abs(NE_current - last_NE) < RobotConstants.ENCODER_TICKS_TIMEOUT_THRESHOLD) &&
-                        (Math.abs(SW_current - last_SW) < RobotConstants.ENCODER_TICKS_TIMEOUT_THRESHOLD) &&
-                        (Math.abs(SE_current - last_SE) < RobotConstants.ENCODER_TICKS_TIMEOUT_THRESHOLD)) {
-                    telemetry.addLine(String.format("Move by vector %s and rotation %s interrupted: timed out.", movementTickVector, rotationTickVector));
-                    telemetry.update();
-                    break;
-                }
-
-                last_NW = NW_current;
-                last_NE = NE_current;
-                last_SW = SW_current;
-                last_SE = SE_current;
-                next_check_timestamp = System.currentTimeMillis() + timeout;
-            }
-
-            Thread.sleep(5);
-        }
-
-        robot.stop();
-    }
-
-    private void move(double xvector, double yvector, int ms) throws InterruptedException{
-        robot.NW.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.NE.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.SW.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.SE.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-        double speed = Math.sqrt(Math.pow(xvector, 2) + Math.pow(yvector, 2)) / FieldConstants.rt2;
-        double translation_angle = Math.atan2(yvector, xvector);
-        double[] multipliers = ExtendedMath.mechanum_multipliers(speed, translation_angle, 0);
-        robot.NW.setPower(multipliers[0]);
-        robot.NE.setPower(multipliers[1]);
-        robot.SW.setPower(multipliers[2]);
-        robot.SE.setPower(multipliers[3]);
-        Thread.sleep(ms);
-        robot.stop();
-    }
-
-    private void turn(double v, int ms) throws InterruptedException {
-        robot.NW.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.NE.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.SW.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.SE.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-        double[] multipliers = ExtendedMath.mechanum_multipliers(0, 0, v);
-        robot.NW.setPower(multipliers[0]);
-        robot.NE.setPower(multipliers[1]);
-        robot.SW.setPower(multipliers[2]);
-        robot.SE.setPower(multipliers[3]);
-        Thread.sleep(ms);
-        robot.stop();
-    }
-
 
     //up is positive
     private void moveArm(double v, int ms) throws InterruptedException {
@@ -357,18 +263,18 @@ class AutonMain {
         arm.setPower(0);
     }
 
-    private void knock_left_jewel(Servo colorSensorServo) throws InterruptedException {
-        turn(1, 120); // turn left
+    private void knock_left_jewel() throws InterruptedException {
+        robot.driveBase.turn_ms(1, 120); // turn left
         colorSensorServo.setPosition(0);
         Thread.sleep(500);
-        turn(-1, 120); // turn right
+        robot.driveBase.turn_ms(-1, 120); // turn right
     }
 
-    private void knock_right_jewel(Servo colorSensorServo) throws InterruptedException {
-        turn(-1, 120); // turn right
+    private void knock_right_jewel() throws InterruptedException {
+        robot.driveBase.turn_ms(-1, 120); // turn right
         colorSensorServo.setPosition(0);
         Thread.sleep(500);
-        turn(1, 120); // turn left
+        robot.driveBase.turn_ms(1, 120); // turn left
     }
 
 
