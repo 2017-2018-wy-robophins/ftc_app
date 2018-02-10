@@ -30,6 +30,10 @@ class NavigationalState {
                 .multiplied(field_target.subtracted(position));
     }
 
+    float get_distance(VectorF field_target) {
+        return field_target.subtracted(position).magnitude();
+    }
+
     float get_robot_rotation(float field_target) {
         return ExtendedMath.get_min_rotation(heading, field_target);
     }

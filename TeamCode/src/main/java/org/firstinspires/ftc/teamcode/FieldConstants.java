@@ -42,9 +42,9 @@ final class FieldConstants {
                     AngleUnit.DEGREES, 90, 90, 0));
 
     static final OpenGLMatrix phoneLocationOnRobot = OpenGLMatrix
-            .translation(-21.5f * 10, -15f * 10, 22 * 10)
+            .translation(-15f * 10, -21.5f * 10, 22 * 10)
             .multiplied(Orientation.getRotationMatrix(
                     AxesReference.EXTRINSIC, AxesOrder.YZY,
-                    AngleUnit.DEGREES, -90, 180, 0));
-
+                    AngleUnit.DEGREES, -90, 90, 0));
+    // we use the robot pointing to the right as the default axial system here
 }

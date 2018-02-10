@@ -5,6 +5,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 
+import java.util.Arrays;
+import java.util.concurrent.TimeoutException;
+
 /**
  * Created by efyang on 2/6/18.
  */
@@ -17,8 +20,8 @@ class MecanumBase extends DriveBase {
 
     private final Telemetry telemetry;
 
-    static final float TICKS_PER_MM = 1.4f;
-    static final float TICKS_PER_DEGREE = 4.4f;
+    static final float TICKS_PER_MM = 2.42f;
+    static final float TICKS_PER_DEGREE = 12.75f;
 
     MecanumBase(DcMotor NW, DcMotor NE, DcMotor SW, DcMotor SE, Telemetry telemetry) {
         this.NW = NW;
@@ -29,8 +32,6 @@ class MecanumBase extends DriveBase {
     }
 
     void move_by_vector_and_rotation(VectorF movement, float rotation, float speed, int encoder_epsilon, int timeout_ms) throws InterruptedException {
-        setMotorMode(DcMotor.RunMode.RUN_TO_POSITION);
-
         VectorF movementTickVector = movement.multiplied(TICKS_PER_MM);
         double rotationTickVector = rotation * TICKS_PER_DEGREE;
 
@@ -39,10 +40,65 @@ class MecanumBase extends DriveBase {
                 Math.atan2(movementTickVector.get(1), movementTickVector.get(0)),
                 rotationTickVector);
 
-        int NW_target = NW.getCurrentPosition() + (int)multipliers[0];
-        int NE_target = NE.getCurrentPosition() + (int)multipliers[1];
-        int SW_target = SW.getCurrentPosition() + (int)multipliers[2];
-        int SE_target = SE.getCurrentPosition() + (int)multipliers[3];
+        set_encoder_dx(
+                (int)multipliers[0],
+                (int)multipliers[1],
+                (int)multipliers[2],
+                (int)multipliers[3],
+                speed,
+                encoder_epsilon,
+                timeout_ms,
+                String.format("Move by vector %s and rotation %s interrupted: within absolute error.", movement, rotation),
+                String.format("Move by vector %s and rotation %s interrupted: timed out.", movement, rotation)
+                );
+    }
+
+    // rotate, then move, then rotate
+    void rotate_and_move_only_vertical_drive(float initial_rotation, float movement, float final_rotation, float speed, int encoder_epsilon, int timeout_ms) throws InterruptedException {
+        rotate(initial_rotation, speed, encoder_epsilon, timeout_ms);
+        move_vertical(movement, speed, encoder_epsilon, timeout_ms);
+        rotate(final_rotation, speed, encoder_epsilon, timeout_ms);
+    }
+
+    private void move_vertical(float movement, float speed, int encoder_epsilon, int timeout_ms) throws InterruptedException {
+        int movement_ticks = (int)(movement * TICKS_PER_MM);
+
+        set_encoder_dx(
+                movement_ticks,
+                movement_ticks,
+                movement_ticks,
+                movement_ticks,
+                speed,
+                encoder_epsilon,
+                timeout_ms,
+                String.format("Movement by amount %s interrupted: within absolute error", movement_ticks),
+                String.format("Movement by amount %s interrupted: timed out.", movement_ticks)
+                );
+    }
+
+    private void rotate(float rotation, float speed, int encoder_epsilon, int timeout_ms) throws InterruptedException {
+        int rotation_ticks = (int)(rotation * TICKS_PER_DEGREE);
+
+        set_encoder_dx(
+                -rotation_ticks,
+                rotation_ticks,
+                -rotation_ticks,
+                rotation_ticks,
+                speed,
+                encoder_epsilon,
+                timeout_ms,
+                String.format("Rotation by amount %s interrupted: within absolute error", rotation_ticks),
+                String.format("Rotation by amount %s interrupted: timed out.", rotation_ticks)
+                );
+    }
+
+    private void set_encoder_dx(int dNW, int dNE, int dSW, int dSE, float speed, int encoder_epsilon, int timeout_ms, String epsilon_error, String timeout_error) throws InterruptedException {
+        setMotorMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        int NW_target = NW.getCurrentPosition() + dNW;
+        int NE_target = NE.getCurrentPosition() + dNE;
+        int SW_target = SW.getCurrentPosition() + dSW;
+        int SE_target = SE.getCurrentPosition() + dSE;
 
         NW.setTargetPosition(NW_target);
         NE.setTargetPosition(NE_target);
@@ -70,7 +126,7 @@ class MecanumBase extends DriveBase {
                     (Math.abs(NE_current - NE_target) < encoder_epsilon) &&
                     (Math.abs(SW_current - SW_target) < encoder_epsilon) &&
                     (Math.abs(SE_current - SE_target) < encoder_epsilon)) {
-                telemetry.addLine(String.format("Move by vector %s and rotation %s interrupted: within absolute error.", movementTickVector, rotationTickVector));
+                telemetry.addLine(epsilon_error);
                 telemetry.update();
                 break;
             }
@@ -80,7 +136,7 @@ class MecanumBase extends DriveBase {
                         (Math.abs(NE_current - last_NE) < RobotConstants.ENCODER_TICKS_TIMEOUT_THRESHOLD) &&
                         (Math.abs(SW_current - last_SW) < RobotConstants.ENCODER_TICKS_TIMEOUT_THRESHOLD) &&
                         (Math.abs(SE_current - last_SE) < RobotConstants.ENCODER_TICKS_TIMEOUT_THRESHOLD)) {
-                    telemetry.addLine(String.format("Move by vector %s and rotation %s interrupted: timed out.", movementTickVector, rotationTickVector));
+                    telemetry.addLine(timeout_error);
                     telemetry.update();
                     break;
                 }
@@ -108,12 +164,11 @@ class MecanumBase extends DriveBase {
 
     // x, y, r should be from -1 to 1
     void move_and_turn(float x, float y, float r) {
-        setMotorMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        setMotorMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         double speed = Math.hypot(x,y) / FieldConstants.rt2;
         double angle = Math.atan2(y, x);
         double[] multipliers = mechanum_multipliers(speed, angle, r);
-        telemetry.addData("mecanum multipliers", multipliers);
         NW.setPower(multipliers[0]);
         NE.setPower(multipliers[1]);
         SW.setPower(multipliers[2]);
@@ -146,10 +201,10 @@ class MecanumBase extends DriveBase {
     // angle should be in radians
     private static double[] mechanum_multipliers(double translation, double translation_angle, double rotation) {
         return new double[]{
-                translation * Math.sin(translation_angle + Math.PI/4) - rotation,
-                translation * Math.cos(translation_angle + Math.PI/4) + rotation,
-                translation * Math.cos(translation_angle + Math.PI/4) - rotation,
-                translation * Math.sin(translation_angle + Math.PI/4) + rotation
+                translation * Math.sin(-translation_angle + 3*Math.PI/4) - rotation,
+                translation * Math.cos(-translation_angle + 3*Math.PI/4) + rotation,
+                translation * Math.cos(-translation_angle + 3*Math.PI/4) - rotation,
+                translation * Math.sin(-translation_angle + 3*Math.PI/4) + rotation
         };
     }
 }

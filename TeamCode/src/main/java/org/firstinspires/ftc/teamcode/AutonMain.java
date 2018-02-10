@@ -12,6 +12,8 @@ import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
+import java.util.Vector;
+
 /**
  * Created by nico on 11/14/17.
  */
@@ -28,6 +30,7 @@ class AutonMain {
     private AutonInstructions instructions;
     private VuforiaPositionFinder vuforiaPositionFinder;
     private RelicRecoveryVuMark vumark;
+    private final boolean DEBUG = true;
 
     AutonMain(MainRobot robot, HardwareMap hardwareMap, Telemetry telemetry, StartLocation startLocation) throws InterruptedException {
         this.telemetry = telemetry;
@@ -224,12 +227,15 @@ class AutonMain {
                             break;
                     }
                     break;
+                // TODO: figure out why this never runs - nested breaks?
+                /*
                 case BashBlock:
                     telemetry.addLine("Bashing block in");
                     telemetry.update();
                     robot.driveBase.move_ms(0, 0.8f, 500);
                     robot.driveBase.move_ms(0, -0.8f, 500);
                     break;
+                    */
             }
         }
         telemetry.addLine("Bashing block in");
@@ -251,7 +257,9 @@ class AutonMain {
         telemetry.addData("Moving to target position", target_pos);
         telemetry.addData("Moving to target heading", target_heading);
         telemetry.update();
-        Thread.sleep(250);
+        if (DEBUG) {
+            Thread.sleep(250);
+        }
         robot.driveBase.move_by_vector_and_rotation(
                 navinfo.get_robot_movement_vector(target_pos),
                 navinfo.get_robot_rotation(target_heading),
@@ -259,6 +267,117 @@ class AutonMain {
                 RobotConstants.TICK_ALLOWED_ABS_ERROR,
                 timeout
         );
+        navinfo.set_position(target_pos);
+        navinfo.set_heading(target_heading);
+    }
+
+    private void move_to_position_with_heading_split_rotation(VectorF target_pos, float target_heading, float power, int timeout) throws InterruptedException {
+        telemetry.addData("Moving to target position", target_pos);
+        telemetry.addData("Moving to target heading", target_heading);
+        telemetry.update();
+        if (DEBUG) {
+            Thread.sleep(250);
+        }
+        robot.driveBase.move_by_vector_and_rotation(
+                navinfo.get_robot_movement_vector(target_pos),
+                0,
+                power,
+                RobotConstants.TICK_ALLOWED_ABS_ERROR,
+                timeout
+        );
+
+        robot.driveBase.move_by_vector_and_rotation(
+                new VectorF(0, 0),
+                navinfo.get_robot_rotation(target_heading),
+                power,
+                RobotConstants.TICK_ALLOWED_ABS_ERROR,
+                timeout
+        );
+        navinfo.set_position(target_pos);
+        navinfo.set_heading(target_heading);
+    }
+
+    private void move_to_position_with_heading_no_diag(VectorF target_pos, float target_heading, float power, int timeout) throws InterruptedException {
+        telemetry.addData("Moving to target position", target_pos);
+        telemetry.addData("Moving to target heading", target_heading);
+        telemetry.update();
+        if (DEBUG) {
+            Thread.sleep(250);
+        }
+        VectorF movement_vector = navinfo.get_robot_movement_vector(target_pos);
+        VectorF[] movement_component_vectors = ExtendedMath.vector_components(movement_vector);
+        robot.driveBase.move_by_vector_and_rotation(
+                movement_component_vectors[0],
+                0,
+                power,
+                RobotConstants.TICK_ALLOWED_ABS_ERROR,
+                timeout
+        );
+
+        robot.driveBase.move_by_vector_and_rotation(
+                movement_component_vectors[1],
+                navinfo.get_robot_rotation(target_heading),
+                power,
+                RobotConstants.TICK_ALLOWED_ABS_ERROR,
+                timeout
+        );
+        navinfo.set_position(target_pos);
+        navinfo.set_heading(target_heading);
+    }
+
+    private void move_to_position_with_heading_no_diag_split_rotation(VectorF target_pos, float target_heading, float power, int timeout) throws InterruptedException {
+        telemetry.addData("Moving to target position", target_pos);
+        telemetry.addData("Moving to target heading", target_heading);
+        telemetry.update();
+        if (DEBUG) {
+            Thread.sleep(250);
+        }
+        VectorF movement_vector = navinfo.get_robot_movement_vector(target_pos);
+        VectorF[] movement_component_vectors = ExtendedMath.vector_components(movement_vector);
+        robot.driveBase.move_by_vector_and_rotation(
+                movement_component_vectors[0],
+                0,
+                power,
+                RobotConstants.TICK_ALLOWED_ABS_ERROR,
+                timeout
+        );
+
+        robot.driveBase.move_by_vector_and_rotation(
+                movement_component_vectors[1],
+                0,
+                power,
+                RobotConstants.TICK_ALLOWED_ABS_ERROR,
+                timeout
+        );
+
+        robot.driveBase.move_by_vector_and_rotation(
+                new VectorF(0, 0),
+                navinfo.get_robot_rotation(target_heading),
+                power,
+                RobotConstants.TICK_ALLOWED_ABS_ERROR,
+                timeout
+        );
+        navinfo.set_position(target_pos);
+        navinfo.set_heading(target_heading);
+    }
+
+    private void move_to_position_with_heading_only_vdrive(VectorF target_pos, float target_heading, float power, int timeout) throws InterruptedException {
+        telemetry.addData("Moving to target position", target_pos);
+        telemetry.addData("Moving to target heading", target_heading);
+        telemetry.update();
+        if (DEBUG) {
+            Thread.sleep(250);
+        }
+        // get the angle we need to rotate to first to move correctly
+        VectorF movement_vector = navinfo.get_robot_movement_vector(target_pos);
+        float movement_angle = (float)Math.toDegrees(Math.atan2(movement_vector.get(1), movement_vector.get(0)));
+
+        float initial_rotation = navinfo.get_robot_rotation(movement_angle);
+        navinfo.set_heading(movement_angle);
+        float final_rotation = navinfo.get_robot_rotation(target_heading);
+        float movement_amount = movement_vector.magnitude();
+        robot.driveBase.rotate_and_move_only_vertical_drive(initial_rotation, movement_amount, final_rotation, power, RobotConstants.TICK_ALLOWED_ABS_ERROR, timeout);
+
         navinfo.set_position(target_pos);
         navinfo.set_heading(target_heading);
     }

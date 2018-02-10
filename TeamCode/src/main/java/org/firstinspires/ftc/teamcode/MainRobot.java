@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
@@ -30,10 +31,13 @@ class MainRobot {
         SE.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         SW.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        NW.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        NE.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        SE.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        SW.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        NW.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        NE.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        SE.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        SW.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        NE.setDirection(DcMotor.Direction.REVERSE);
+        SE.setDirection(DcMotor.Direction.REVERSE);
 
         driveBase = new MecanumBase(NW, NE, SW, SE, telemetry);
 
@@ -44,9 +48,7 @@ class MainRobot {
         Servo bottomRight = HM.servo.get("bottomRight");
 
         // set grabber servo directions
-        topLeft.setDirection(Servo.Direction.REVERSE);
         topRight.setDirection(Servo.Direction.REVERSE);
-        bottomLeft.setDirection(Servo.Direction.REVERSE);
         bottomRight.setDirection(Servo.Direction.REVERSE);
         grabber = new Grabber(topLeft, topRight, bottomLeft, bottomRight);
 

@@ -8,6 +8,8 @@ import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 
 abstract class DriveBase {
     abstract void move_by_vector_and_rotation(VectorF movement, float rotation, float speed, int encoder_epsilon, int timeout_ms) throws InterruptedException;
+    // TODO: remove if unused (backup in case strafe can't be trusted)
+    abstract void rotate_and_move_only_vertical_drive(float initial_rotation, float movement, float final_rotation, float speed, int encoder_epsilon, int timeout_ms) throws InterruptedException;
     abstract void move(float x, float y);
     abstract void turn(float r);
     abstract void move_and_turn(float x, float y, float r);
