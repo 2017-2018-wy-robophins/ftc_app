@@ -69,15 +69,19 @@ class AutonMain {
     void runOnce() throws InterruptedException {
         // stopTime = SystemClock.currentThreadTimeMillis() + 30000;
         robot.grabber.close();
-
+        sensorColor.enableLed(true);
         colorSensorServo.setPosition(1);
 
-        Thread.sleep(250);
+        Thread.sleep(750);
         // note that the color sensor is on the left side of the arm
+        telemetry.addData("red", sensorColor.red());
+        telemetry.addData("blue", sensorColor.blue());
+        telemetry.update();
+        Thread.sleep(500);
         switch (startLocation) {
             case BLUE_LEFT:
             case BLUE_RIGHT:
-                if (sensorColor.red() < sensorColor.blue()) {
+                if (sensorColor.blue() < sensorColor.red()) {
                     // if left is blue
                     knock_left_jewel();
                 } else {
@@ -87,7 +91,7 @@ class AutonMain {
                 break;
             case RED_LEFT:
             case RED_RIGHT:
-                if (sensorColor.red() > sensorColor.blue()) {
+                if (sensorColor.blue() > sensorColor.red()) {
                     // if left is red
                     knock_left_jewel();
                 } else {
@@ -96,28 +100,48 @@ class AutonMain {
                 }
                 break;
         }
-
+        colorSensorServo.setPosition(0);
+/*
         float start_move_x = 0;
         float start_move_y = 0;
         // get off the blocks
         switch (startLocation) {
             case BLUE_LEFT:
             case BLUE_RIGHT:
-                start_move_x = 0.8f;
+                start_move_x = 1f;
                 start_move_y = 0;
                 break;
             case RED_LEFT:
                 start_move_x = 0;
-                start_move_y = -0.8f;
+                start_move_y = -1f;
                 break;
             case RED_RIGHT:
-                start_move_x = 0.8f;
+                start_move_x = 1f;
                 start_move_y = 0;
                 break;
         }
-        robot.driveBase.move_ms(start_move_x, start_move_y, 1000);
-        robot.driveBase.move_ms(-start_move_x, -start_move_y, 400);
-
+        robot.driveBase.move_ms(start_move_x, start_move_y, 1500);
+        */
+        switch (startLocation) {
+            case BLUE_LEFT:
+                robot.driveBase.move_ms(0, 1, 2000);
+                robot.driveBase.move_ms(-1, 0, 500);
+                break;
+            case BLUE_RIGHT:
+                robot.driveBase.move_ms(0, 1, 1500);
+                robot.driveBase.move_ms(-1, 0, 500);
+                break;
+            case RED_LEFT:
+                robot.driveBase.move_ms(0, -1, 2000);
+                robot.driveBase.move_ms(1, 0, 500);
+                break;
+            case RED_RIGHT:
+                robot.driveBase.move_ms(0, -1, 1500);
+                robot.driveBase.move_ms(1, 0, 500);
+                break;
+        }
+        //robot.driveBase.move_ms(-start_move_x, -start_move_y, 400);
+/*
         // get vuforia position
         Pair<OpenGLMatrix, RelicRecoveryVuMark> position = vuforiaPositionFinder.getCurrentPosition();
         int vuforia_try_count = 1;
@@ -166,7 +190,7 @@ class AutonMain {
                             instructionValues.first,
                             String.valueOf(instructionValues.second)));
                     telemetry.update();
-                    move_to_position_with_heading(instructionValues.first, instructionValues.second, RobotConstants.AUTON_MOTOR_SPEED, RobotConstants.MOTOR_TIMEOUT_MILLIS);
+                    move_to_position_with_heading_no_diag_split_rotation(instructionValues.first, instructionValues.second, RobotConstants.AUTON_MOTOR_SPEED, RobotConstants.MOTOR_TIMEOUT_MILLIS);
                     break;
                 case ArmUp:
                     telemetry.addLine("Moving arm up");
@@ -236,6 +260,7 @@ class AutonMain {
                     robot.driveBase.move_ms(0, -0.8f, 500);
                     break;
                     */
+/*
             }
         }
         telemetry.addLine("Bashing block in");
@@ -246,6 +271,7 @@ class AutonMain {
         telemetry.addLine("Finished");
         telemetry.update();
         robot.driveBase.stop();
+        */
     }
 
     void mainLoop() throws InterruptedException {}

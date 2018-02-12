@@ -40,12 +40,15 @@ public class MainOpMode extends LinearOpMode {
             telemetry.clear();
             colorSensorServo.setPosition(0);
 
-            if (Math.abs(righty) > ARM_JOYSTICK_MOVEMENT_THRESHOLD) {
-                arm.setPower(righty*.20);
+            if (Math.abs(rightx) < Math.abs(righty)) {
+                if (Math.abs(righty) > ARM_JOYSTICK_MOVEMENT_THRESHOLD) {
+                    arm.setPower(righty*.25);
+                } else {
+                    arm.setPower(0);
+                }
             } else {
                 arm.setPower(0);
             }
-
             // robot.driveBase.move_and_turn((float) leftx, -(float) lefty, -(float) rightx);
             // reverted to previous conditional
             if (((Math.abs(leftx) + Math.abs(lefty))/2) >= (Math.abs(rightx) + Math.abs(righty))/2) {
@@ -56,7 +59,9 @@ public class MainOpMode extends LinearOpMode {
                     robot.driveBase.move_and_turn(0, -(float) lefty, 0);
                 }
             } else {
-                robot.driveBase.move_and_turn(0, 0, -(float) rightx);
+                if (Math.abs(rightx) > Math.abs(righty)) {
+                    robot.driveBase.move_and_turn(0, 0, -(float) rightx);
+                }
             }
 
             if (gamepad1.right_bumper) {
