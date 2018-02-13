@@ -16,51 +16,59 @@ class MainRobot {
     Grabber grabber;
     // DistanceSensor colorDistanceSensor;
     // ColorSensor colorSensor;
+    boolean DEBUG_CLASSES;
 
 
     //runs on press of the "init" button. Maps engines from the robot to variables,
-    void init(HardwareMap HM, Telemetry telemetry) {
-        // the main drive base
-        DcMotor NE = HM.dcMotor.get("NE");
-        DcMotor NW = HM.dcMotor.get("NW");
-        DcMotor SE = HM.dcMotor.get("SE");
-        DcMotor SW = HM.dcMotor.get("SW");
+    void init(HardwareMap HM, Telemetry telemetry, boolean DEBUG_CLASSES) {
+        this.DEBUG_CLASSES = DEBUG_CLASSES;
 
-        NW.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        NE.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        SE.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        SW.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        if (DEBUG_CLASSES) {
+            driveBase = new DebugDriveBase(telemetry);
+            grabber = new DebugGrabber(telemetry);
+        } else {
+            // the main drive base
+            DcMotor NE = HM.dcMotor.get("NE");
+            DcMotor NW = HM.dcMotor.get("NW");
+            DcMotor SE = HM.dcMotor.get("SE");
+            DcMotor SW = HM.dcMotor.get("SW");
 
-        NW.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        NE.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        SE.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        SW.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            NW.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            NE.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            SE.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            SW.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        NE.setDirection(DcMotor.Direction.REVERSE);
-        SE.setDirection(DcMotor.Direction.REVERSE);
+            NW.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            NE.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            SE.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            SW.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        driveBase = new MecanumBase(NW, NE, SW, SE, telemetry);
+            NE.setDirection(DcMotor.Direction.REVERSE);
+            SE.setDirection(DcMotor.Direction.REVERSE);
 
-        // set up the grabber
-        Servo topLeft = HM.servo.get("topLeft");
-        Servo topRight = HM.servo.get("topRight");
-        Servo bottomLeft = HM.servo.get("bottomLeft");
-        Servo bottomRight = HM.servo.get("bottomRight");
+            driveBase = new MecanumBase(NW, NE, SW, SE, telemetry);
 
-        // set grabber servo directions
-        topRight.setDirection(Servo.Direction.REVERSE);
-        bottomRight.setDirection(Servo.Direction.REVERSE);
-        grabber = new Grabber(topLeft, topRight, bottomLeft, bottomRight);
+            // set up the grabber
+            Servo topLeft = HM.servo.get("topLeft");
+            Servo topRight = HM.servo.get("topRight");
+            Servo bottomLeft = HM.servo.get("bottomLeft");
+            Servo bottomRight = HM.servo.get("bottomRight");
 
-        // set up the color sensor stuff
-        colorSensorServo = HM.servo.get("colorSensorServo");
-        // colorDistanceSensor = HM.get(DistanceSensor.class, "colorDistanceSensor");
+            // set grabber servo directions
+            topRight.setDirection(Servo.Direction.REVERSE);
+            bottomRight.setDirection(Servo.Direction.REVERSE);
+            grabber = new QuadrupleGrabber(topLeft, topRight, bottomLeft, bottomRight);
 
-        // set up the arm
-        arm = HM.dcMotor.get("arm");
-        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            // set up the color sensor stuff
+            colorSensorServo = HM.servo.get("colorSensorServo");
+            // colorDistanceSensor = HM.get(DistanceSensor.class, "colorDistanceSensor");
+
+            // set up the arm
+            arm = HM.dcMotor.get("arm");
+            arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        }
     }
 
     private void move_arm_ticks(int ticks, float power, int timeout) throws InterruptedException {
@@ -92,10 +100,14 @@ class MainRobot {
     }
 
     void move_arm_up(float power) throws InterruptedException {
-        move_arm_ticks(RobotConstants.ARM_MOVEMENT_TICKS, power, RobotConstants.MOTOR_TIMEOUT_MILLIS);
+        if (!DEBUG_CLASSES) {
+            move_arm_ticks(RobotConstants.ARM_MOVEMENT_TICKS, power, RobotConstants.MOTOR_TIMEOUT_MILLIS);
+        }
     }
 
     void move_arm_down(float power) throws InterruptedException {
-        move_arm_ticks(-RobotConstants.ARM_MOVEMENT_TICKS, power, RobotConstants.MOTOR_TIMEOUT_MILLIS);
+        if (!DEBUG_CLASSES) {
+            move_arm_ticks(-RobotConstants.ARM_MOVEMENT_TICKS, power, RobotConstants.MOTOR_TIMEOUT_MILLIS);
+        }
     }
 }

@@ -19,7 +19,7 @@ public class MainOpMode extends LinearOpMode {
         // setup constants
         final double ARM_JOYSTICK_MOVEMENT_THRESHOLD = 0.15;
         //initiate robot
-        robot.init(hardwareMap, telemetry);
+        robot.init(hardwareMap, telemetry, false);
         //initiate hardware variables
         DcMotor arm = robot.arm;
         robot.grabber.open();

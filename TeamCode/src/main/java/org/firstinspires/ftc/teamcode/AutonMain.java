@@ -28,15 +28,16 @@ class AutonMain {
     private ColorSensor sensorColor;
     private NavigationalState navinfo;
     private AutonInstructions instructions;
-    private VuforiaPositionFinder vuforiaPositionFinder;
+    private PositionFinder positionFinder;
     private RelicRecoveryVuMark vumark;
     private final boolean DEBUG = true;
+    private final boolean DEBUG_CLASSES = true;
 
     AutonMain(MainRobot robot, HardwareMap hardwareMap, Telemetry telemetry, StartLocation startLocation) throws InterruptedException {
         this.telemetry = telemetry;
         this.startLocation = startLocation;
         this.robot = robot;
-        robot.init(hardwareMap, telemetry);
+        robot.init(hardwareMap, telemetry, DEBUG_CLASSES);
         //initiate hardware variables
         arm = robot.arm;
         colorSensorServo = robot.colorSensorServo;
@@ -45,7 +46,9 @@ class AutonMain {
         // cs = robot.colorSensor;
 
         // get a reference to the color sensor.
-        sensorColor = hardwareMap.get(ColorSensor.class, "colorDistanceSensor");
+        if (!DEBUG_CLASSES) {
+            sensorColor = hardwareMap.get(ColorSensor.class, "colorDistanceSensor");
+        }
         // get a reference to the distance sensor that shares the same name.
 
         navinfo = new NavigationalState();
@@ -53,7 +56,11 @@ class AutonMain {
         instructions = new AutonInstructions(startLocation);
         telemetry.addLine("Initializing vuforia...");
         telemetry.update();
-        vuforiaPositionFinder = new VuforiaPositionFinder(startLocation, hardwareMap);
+        if (!DEBUG_CLASSES) {
+            positionFinder = new VuforiaPositionFinder(startLocation, hardwareMap);
+        } else {
+            positionFinder = new DebugPositionFinder();
+        }
         telemetry.addLine("Initialized vuforia.");
         telemetry.update();
         vumark = RelicRecoveryVuMark.CENTER;
@@ -69,39 +76,44 @@ class AutonMain {
     void runOnce() throws InterruptedException {
         // stopTime = SystemClock.currentThreadTimeMillis() + 30000;
         robot.grabber.close();
-        sensorColor.enableLed(true);
-        colorSensorServo.setPosition(1);
+        servoSet(1);
 
         Thread.sleep(750);
         // note that the color sensor is on the left side of the arm
-        telemetry.addData("red", sensorColor.red());
-        telemetry.addData("blue", sensorColor.blue());
-        telemetry.update();
-        Thread.sleep(500);
-        switch (startLocation) {
-            case BLUE_LEFT:
-            case BLUE_RIGHT:
-                if (sensorColor.blue() < sensorColor.red()) {
-                    // if left is blue
-                    knock_left_jewel();
-                } else {
-                    // if left is red
-                    knock_right_jewel();
-                }
-                break;
-            case RED_LEFT:
-            case RED_RIGHT:
-                if (sensorColor.blue() > sensorColor.red()) {
-                    // if left is red
-                    knock_left_jewel();
-                } else {
-                    // if left is blue
-                    knock_right_jewel();
-                }
-                break;
+
+        if (!DEBUG_CLASSES) {
+            telemetry.addData("red", sensorColor.red());
+            telemetry.addData("blue", sensorColor.blue());
+            telemetry.update();
+            Thread.sleep(500);
+            switch (startLocation) {
+                case BLUE_LEFT:
+                case BLUE_RIGHT:
+                    if (sensorColor.blue() < sensorColor.red()) {
+                        // if left is blue
+                        knock_left_jewel();
+                    } else {
+                        // if left is red
+                        knock_right_jewel();
+                    }
+                    break;
+                case RED_LEFT:
+                case RED_RIGHT:
+                    if (sensorColor.blue() > sensorColor.red()) {
+                        // if left is red
+                        knock_left_jewel();
+                    } else {
+                        // if left is blue
+                        knock_right_jewel();
+                    }
+                    break;
+            }
+        } else {
+            telemetry.addLine("Knocked jewel");
+            telemetry.update();
         }
-        colorSensorServo.setPosition(0);
-/*
+
+
         float start_move_x = 0;
         float start_move_y = 0;
         // get off the blocks
@@ -121,7 +133,9 @@ class AutonMain {
                 break;
         }
         robot.driveBase.move_ms(start_move_x, start_move_y, 1500);
-        */
+        robot.driveBase.move_ms(-start_move_x, -start_move_y, 400);
+
+        /* hard bash
         switch (startLocation) {
             case BLUE_LEFT:
                 robot.driveBase.move_ms(0, 1, 2000);
@@ -140,10 +154,10 @@ class AutonMain {
                 robot.driveBase.move_ms(1, 0, 500);
                 break;
         }
-        //robot.driveBase.move_ms(-start_move_x, -start_move_y, 400);
-/*
-        // get vuforia position
-        Pair<OpenGLMatrix, RelicRecoveryVuMark> position = vuforiaPositionFinder.getCurrentPosition();
+        */
+
+        // get position
+        Pair<OpenGLMatrix, RelicRecoveryVuMark> position = positionFinder.getCurrentPosition();
         int vuforia_try_count = 1;
         int vuforia_max_tries = 4;
 
@@ -151,7 +165,7 @@ class AutonMain {
             telemetry.addLine("Did not get vuforia position on try: " + vuforia_try_count + ", trying again.");
             telemetry.update();
             robot.driveBase.move_ms(-start_move_x, -start_move_y, 400);
-            position = vuforiaPositionFinder.getCurrentPosition();
+            position = positionFinder.getCurrentPosition();
             vuforia_try_count += 1;
         }
 
@@ -173,11 +187,14 @@ class AutonMain {
             telemetry.addData("Using default target", vumark);
             telemetry.update();
         }
-        // remove the vuforia finder when we're done
-        // vuforiaPositionFinder = null;
-        telemetry.addLine("Ok at line 171");
-        telemetry.update();
+
         while (instructions.has_instructions()) {
+            if (DEBUG) {
+                telemetry.addData("Navigational Info: ", navinfo);
+                telemetry.update();
+                Thread.sleep(500);
+            }
+
             Pair<InstructionType, Pair<VectorF, Float>> instruction = instructions.next_instruction();
             Pair<VectorF, Float> instructionValues = instruction.second;
             float mmPerInch        = 25.4f;
@@ -260,7 +277,6 @@ class AutonMain {
                     robot.driveBase.move_ms(0, -0.8f, 500);
                     break;
                     */
-/*
             }
         }
         telemetry.addLine("Bashing block in");
@@ -271,7 +287,6 @@ class AutonMain {
         telemetry.addLine("Finished");
         telemetry.update();
         robot.driveBase.stop();
-        */
     }
 
     void mainLoop() throws InterruptedException {}
@@ -417,17 +432,23 @@ class AutonMain {
 
     private void knock_left_jewel() throws InterruptedException {
         robot.driveBase.turn_ms(1, 120); // turn left
-        colorSensorServo.setPosition(0);
-        Thread.sleep(500);
+        servoSet(0);
         robot.driveBase.turn_ms(-1, 120); // turn right
     }
 
     private void knock_right_jewel() throws InterruptedException {
         robot.driveBase.turn_ms(-1, 120); // turn right
-        colorSensorServo.setPosition(0);
-        Thread.sleep(500);
+        servoSet(0);
         robot.driveBase.turn_ms(1, 120); // turn left
     }
 
-
+    private void servoSet(double position) throws InterruptedException {
+        if (DEBUG_CLASSES) {
+            telemetry.addLine("Servo Down");
+            telemetry.update();
+        } else {
+            colorSensorServo.setPosition(position);
+        }
+        Thread.sleep(500);
+    }
 }

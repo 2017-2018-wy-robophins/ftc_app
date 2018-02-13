@@ -17,7 +17,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  */
 
 // will be used as a component in auton: composition > inheritance for this
-class VuforiaPositionFinder {
+class VuforiaPositionFinder implements PositionFinder {
 
     private OpenGLMatrix markerTargetPositionOnField;
     private HardwareMap hardwareMap;

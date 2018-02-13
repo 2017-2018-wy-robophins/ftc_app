@@ -14,6 +14,7 @@ abstract class DriveBase {
     abstract void turn(float r);
     abstract void move_and_turn(float x, float y, float r);
     abstract void stop();
+    abstract void report_encoder_ticks();
 
     void move_ms(float x, float y, int ms) throws InterruptedException {
         move(x, y);
@@ -32,6 +33,4 @@ abstract class DriveBase {
         Thread.sleep(ms);
         stop();
     }
-
-    abstract void report_encoder_ticks();
 }
