@@ -31,10 +31,10 @@ class MainRobot {
         SE.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         SW.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        NW.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        NE.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        SE.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        SW.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        NW.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        NE.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        SE.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        SW.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         NE.setDirection(DcMotor.Direction.REVERSE);
         SE.setDirection(DcMotor.Direction.REVERSE);
