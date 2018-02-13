@@ -26,6 +26,10 @@ public class MainOpMode extends LinearOpMode {
         Servo colorSensorServo = robot.colorSensorServo;
         double JOYSTICK_TRANSLATION_MULTIPLIER = 0.7;
 
+        boolean targetSet = false;
+        boolean toPositionModeSet = false;
+        int target = 0;
+
         telemetry.addData("say", "before opmode");
         telemetry.update();
         waitForStart();
@@ -40,14 +44,27 @@ public class MainOpMode extends LinearOpMode {
             telemetry.clear();
             colorSensorServo.setPosition(0);
 
-            if (Math.abs(rightx) < Math.abs(righty)) {
-                if (Math.abs(righty) > ARM_JOYSTICK_MOVEMENT_THRESHOLD) {
-                    arm.setPower(righty*.25);
-                } else {
-                    arm.setPower(0);
+            if ((Math.abs(rightx) < Math.abs(righty)) && (Math.abs(righty) > ARM_JOYSTICK_MOVEMENT_THRESHOLD)) {
+                if (toPositionModeSet) {
+                    arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    toPositionModeSet = false;
                 }
+
+                arm.setPower(righty*.25);
+                targetSet = false;
             } else {
-                arm.setPower(0);
+                telemetry.addLine("Active braking in effect");
+                if (!toPositionModeSet) {
+                    arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    toPositionModeSet = true;
+                }
+
+                if (!targetSet) {
+                    target = arm.getCurrentPosition();
+                    arm.setPower(0.3);
+                    arm.setTargetPosition(target);
+                    targetSet = true;
+                }
             }
             // robot.driveBase.move_and_turn((float) leftx, -(float) lefty, -(float) rightx);
             // reverted to previous conditional
