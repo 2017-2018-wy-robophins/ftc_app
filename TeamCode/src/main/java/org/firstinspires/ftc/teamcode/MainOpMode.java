@@ -6,20 +6,21 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.internal.ui.GamepadUser;
+import org.firstinspires.ftc.teamcode.components.MainRobot;
 
-
+// note: top-level opmodes have to be public
 @TeleOp(name="Main Teleop", group="Robot")
 public class MainOpMode extends LinearOpMode {
 
     //creates an instance variable fo the robot
-    private MainRobot robot = new MainRobot();
+    private MainRobot robot;
 
     @Override
     public void runOpMode() throws InterruptedException  {
         // setup constants
         final double ARM_JOYSTICK_MOVEMENT_THRESHOLD = 0.15;
         //initiate robot
-        robot.init(hardwareMap, telemetry, false);
+        robot = new MainRobot(hardwareMap, telemetry, false);
         //initiate hardware variables
         DcMotor arm = robot.arm;
         robot.grabber.open();
@@ -28,7 +29,7 @@ public class MainOpMode extends LinearOpMode {
 
         boolean targetSet = false;
         boolean toPositionModeSet = false;
-        int target = 0;
+        int target;
 
         telemetry.addData("say", "before opmode");
         telemetry.update();
