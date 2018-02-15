@@ -21,7 +21,9 @@ abstract class AbstractAutonPlatform extends LinearOpMode {
 
         // run stuff that we want to run repeatedly
         while (opModeIsActive()) {
-            runner.mainLoop();
+            if (!runner.mainLoop()) {
+                break;
+            }
         }
 
         // clean up

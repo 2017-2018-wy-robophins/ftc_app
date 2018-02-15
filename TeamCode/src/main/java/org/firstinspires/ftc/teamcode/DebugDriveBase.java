@@ -19,6 +19,7 @@ class DebugDriveBase extends DriveBase {
         telemetry.addData("Movement (mm)", movement);
         telemetry.addData("Rotation (degrees)", rotation);
         telemetry.update();
+        Thread.sleep(500);
     }
 
     void rotate_and_move_only_vertical_drive(float initial_rotation, float movement, float final_rotation, float speed, int encoder_epsilon, int timeout_ms) throws InterruptedException {
@@ -27,6 +28,7 @@ class DebugDriveBase extends DriveBase {
         telemetry.addData("Movement (mm)", movement);
         telemetry.addData("Final Rotation (degrees)", final_rotation);
         telemetry.update();
+        Thread.sleep(500);
     }
 
     void move(float x, float y) {

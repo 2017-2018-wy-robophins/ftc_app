@@ -16,7 +16,7 @@ class AutonInstructions {
     // stay with conventional
     private final float[][] BLUE_RIGHT_INSTRUCTIONS = new float[][] {
             // target x, y, heading
-            {3.5f * mmPerBlock, 5f * mmPerBlock, 180},
+            {3.5f * mmPerBlock, 5f * mmPerBlock, 135},
             {5f * mmPerBlock, 3.5f * mmPerBlock, 180},
             // if single value then match to instruction enum
             {InstructionType.MOVE_REL_TARGET},
@@ -72,7 +72,7 @@ class AutonInstructions {
     }
 
     boolean has_instructions() {
-        return ptr < instructions.length - 1;
+        return ptr < instructions.length;
     }
 
     Pair<InstructionType, Pair<VectorF, Float>> next_instruction() {

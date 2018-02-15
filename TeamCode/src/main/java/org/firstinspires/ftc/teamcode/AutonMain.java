@@ -78,7 +78,6 @@ class AutonMain {
         robot.grabber.close();
         servoSet(1);
 
-        Thread.sleep(750);
         // note that the color sensor is on the left side of the arm
 
         if (!DEBUG_CLASSES) {
@@ -111,8 +110,14 @@ class AutonMain {
         } else {
             telemetry.addLine("Knocked jewel");
             telemetry.update();
+            Thread.sleep(500);
         }
 
+        if (DEBUG) {
+            telemetry.addLine("Getting off block");
+            telemetry.update();
+            Thread.sleep(500);
+        }
 
         float start_move_x = 0;
         float start_move_y = 0;
@@ -207,26 +212,31 @@ class AutonMain {
                             instructionValues.first,
                             String.valueOf(instructionValues.second)));
                     telemetry.update();
+                    Thread.sleep(500);
                     move_to_position_with_heading_no_diag_split_rotation(instructionValues.first, instructionValues.second, RobotConstants.AUTON_MOTOR_SPEED, RobotConstants.MOTOR_TIMEOUT_MILLIS);
                     break;
                 case ArmUp:
                     telemetry.addLine("Moving arm up");
                     telemetry.update();
+                    Thread.sleep(500);
                     robot.move_arm_up(RobotConstants.AUTON_ARM_SPEED);
                     break;
                 case ArmDown:
                     telemetry.addLine("Moving arm down");
                     telemetry.update();
+                    Thread.sleep(500);
                     robot.move_arm_down(RobotConstants.AUTON_ARM_SPEED);
                     break;
                 case DropBlock:
                     telemetry.addLine("Dropping block");
                     telemetry.update();
+                    Thread.sleep(500);
                     robot.grabber.open();
                     break;
                 case GrabBlock:
                     telemetry.addLine("Grabbing block");
                     telemetry.update();
+                    Thread.sleep(500);
                     robot.grabber.open();
                     robot.grabber.close();
                     break;
@@ -235,10 +245,12 @@ class AutonMain {
 
                     telemetry.addLine("Moving to relative target");
                     telemetry.update();
+                    Thread.sleep(500);
                     switch (vumark) {
                         case LEFT:
                             telemetry.addLine("Moving to LEFT");
                             telemetry.update();
+                            Thread.sleep(500);
                             robot.driveBase.move_by_vector_and_rotation(
                                     new VectorF(-0.25f * mmPerBlock, -0.2f * mmPerBlock),
                                     0,
@@ -249,6 +261,7 @@ class AutonMain {
                         case RIGHT:
                             telemetry.addLine("Moving to RIGHT");
                             telemetry.update();
+                            Thread.sleep(500);
                             robot.driveBase.move_by_vector_and_rotation(
                                     new VectorF(0.25f * mmPerBlock, -0.2f * mmPerBlock),
                                     0,
@@ -260,6 +273,7 @@ class AutonMain {
                         case CENTER:
                             telemetry.addLine("Moving to CENTER");
                             telemetry.update();
+                            Thread.sleep(500);
                             robot.driveBase.move_by_vector_and_rotation(new VectorF(0, -0.2f * mmPerBlock),
                                     0,
                                     RobotConstants.AUTON_MOTOR_SPEED,
@@ -268,28 +282,25 @@ class AutonMain {
                             break;
                     }
                     break;
-                // TODO: figure out why this never runs - nested breaks?
-                /*
                 case BashBlock:
                     telemetry.addLine("Bashing block in");
                     telemetry.update();
+                    Thread.sleep(500);
                     robot.driveBase.move_ms(0, 0.8f, 500);
                     robot.driveBase.move_ms(0, -0.8f, 500);
                     break;
-                    */
             }
         }
-        telemetry.addLine("Bashing block in");
-        telemetry.update();
-        robot.driveBase.move_ms(0, 0.8f, 500);
-        robot.driveBase.move_ms(0, -0.8f, 500);
 
         telemetry.addLine("Finished");
         telemetry.update();
         robot.driveBase.stop();
     }
 
-    void mainLoop() throws InterruptedException {}
+    // return whether we want to continue or not
+    boolean mainLoop() throws InterruptedException {
+        return false;
+    }
 
     void finish() throws InterruptedException {}
 
