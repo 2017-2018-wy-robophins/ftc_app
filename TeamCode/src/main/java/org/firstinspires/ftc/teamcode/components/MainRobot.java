@@ -66,8 +66,7 @@ public class MainRobot {
             // set grabber servo directions
             topRight.setDirection(Servo.Direction.REVERSE);
             bottomRight.setDirection(Servo.Direction.REVERSE);
-            bottomLeft.setDirection(Servo.Direction.REVERSE);
-            rightHinge.setDirection(Servo.Direction.REVERSE);
+            leftHinge.setDirection(Servo.Direction.REVERSE);
             grabber = new HingedGrabber(topLeft, topRight, leftHinge, rightHinge, bottomLeft, bottomRight);
 
             // set up the color sensor stuff

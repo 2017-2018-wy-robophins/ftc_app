@@ -19,6 +19,8 @@ public class MainOpMode extends LinearOpMode {
     public void runOpMode() throws InterruptedException  {
         // setup constants
         final double ARM_JOYSTICK_MOVEMENT_THRESHOLD = 0.15;
+        final double TRIGGER_THRESHOLD = 0.5;
+        gamepad1.setJoystickDeadzone((float)ARM_JOYSTICK_MOVEMENT_THRESHOLD);
         //initiate robot
         robot = new MainRobot(hardwareMap, telemetry, false);
         //initiate hardware variables
@@ -45,7 +47,7 @@ public class MainOpMode extends LinearOpMode {
             telemetry.clear();
             colorSensorServo.setPosition(0);
 
-            if ((Math.abs(rightx) < Math.abs(righty)) && (Math.abs(righty) > ARM_JOYSTICK_MOVEMENT_THRESHOLD)) {
+            if (Math.abs(rightx) < Math.abs(righty)) {
                 if (toPositionModeSet) {
                     arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                     toPositionModeSet = false;
@@ -88,6 +90,12 @@ public class MainOpMode extends LinearOpMode {
             if (gamepad1.left_bumper) {
                 robot.grabber.open();
             }
+            if (gamepad1.left_trigger > TRIGGER_THRESHOLD) {
+                robot.grabber.bottom_grab();
+            }
+            if (gamepad1.right_trigger > TRIGGER_THRESHOLD) {
+                robot.grabber.top_grab();
+            }
 
             //update telemetry
             telemetry.addData("R vertical", righty);
@@ -98,6 +106,10 @@ public class MainOpMode extends LinearOpMode {
             telemetry.addData("Arm power", arm.getPower());
             telemetry.addData("Arm position", arm.getCurrentPosition());
             telemetry.addData("Gamepad status",  GamepadUser.ONE == gamepad1.getUser());
+            telemetry.addData("R Bumper", gamepad1.right_bumper);
+            telemetry.addData("L Bumper", gamepad1.left_bumper);
+            telemetry.addData("R Trigger", gamepad1.right_trigger);
+            telemetry.addData("L Trigger", gamepad1.left_trigger);
             telemetry.update();
         }
     }
