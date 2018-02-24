@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.components;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -49,6 +50,18 @@ public class MainRobot {
             SE.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             SW.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+
+            NW.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            SW.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            NE.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            SE.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+            NW.setDirection(DcMotor.Direction.FORWARD);
+            SW.setDirection(DcMotor.Direction.FORWARD);
+/*
+            NW.setDirection(DcMotor.Direction.REVERSE);
+            SW.setDirection(DcMotor.Direction.REVERSE);
+            */
             NE.setDirection(DcMotor.Direction.REVERSE);
             SE.setDirection(DcMotor.Direction.REVERSE);
 

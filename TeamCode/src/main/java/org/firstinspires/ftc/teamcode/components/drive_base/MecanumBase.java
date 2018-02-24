@@ -120,6 +120,15 @@ public class MecanumBase extends DriveBase {
             int NE_current = NE.getCurrentPosition();
             int SW_current = SW.getCurrentPosition();
             int SE_current = SE.getCurrentPosition();
+            telemetry.addData("NW", NW_current);
+            telemetry.addData("NE", NE_current);
+            telemetry.addData("SW", SW_current);
+            telemetry.addData("SE", SE_current);
+            telemetry.addData("NW target", NW_target);
+            telemetry.addData("NE target", NE_target);
+            telemetry.addData("SW target", SW_target);
+            telemetry.addData("SE target", SE_target);
+            telemetry.update();
 
             if ((Math.abs(NW_current - NW_target) < encoder_epsilon) &&
                     (Math.abs(NE_current - NE_target) < encoder_epsilon) &&
@@ -165,9 +174,13 @@ public class MecanumBase extends DriveBase {
     public void move_and_turn(float x, float y, float r) {
         setMotorMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        double speed = Math.hypot(x,y) / FieldConstants.rt2;
+        double speed = Math.hypot(x,y);
         double angle = Math.atan2(y, x);
-        double[] multipliers = mechanum_multipliers(speed, angle, r);
+        double[] multipliers = mechanum_multipliers_main(speed, angle, r);
+        telemetry.addData("NW Power", multipliers[0]);
+        telemetry.addData("NE Power", multipliers[1]);
+        telemetry.addData("SW Power", multipliers[2]);
+        telemetry.addData("SE Power", multipliers[3]);
         NW.setPower(multipliers[0]);
         NE.setPower(multipliers[1]);
         SW.setPower(multipliers[2]);
@@ -198,6 +211,15 @@ public class MecanumBase extends DriveBase {
     // http://thinktank.wpi.edu/resources/346/ControllingMecanumDrive.pdf
     // return [NW, NE, SW, SE]
     // angle should be in radians
+    private static double[] mechanum_multipliers_main(double translation, double translation_angle, double rotation) {
+        return new double[]{
+                1.5 * translation * Math.sin(-translation_angle + 3*Math.PI/4) - rotation,
+                1.5 * translation * Math.cos(-translation_angle + 3*Math.PI/4) + rotation,
+                1.5 * translation * Math.cos(-translation_angle + 3*Math.PI/4) - rotation,
+                1.5 * translation * Math.sin(-translation_angle + 3*Math.PI/4) + rotation
+        };
+    }
+
     private static double[] mechanum_multipliers(double translation, double translation_angle, double rotation) {
         return new double[]{
                 translation * Math.sin(-translation_angle + 3*Math.PI/4) - rotation,

@@ -10,12 +10,12 @@ public class HingedGrabber implements Grabber {
     private final ServoPair top;
     private final ServoPair hinge;
     private final ServoPair bottom;
-    private final int SERVO_WAIT_MS = 1000;
+    private final int SERVO_WAIT_MS = 400;
 
     public HingedGrabber(Servo topLeft, Servo topRight, Servo leftHinge, Servo rightHinge, Servo bottomLeft, Servo bottomRight) {
-        top = new ServoPair(topLeft, topRight);
-        hinge = new ServoPair(leftHinge, rightHinge);
-        bottom = new ServoPair(bottomLeft, bottomRight);
+        top = new ServoPair(topLeft, topRight, 0, 1.0);
+        hinge = new ServoPair(leftHinge, rightHinge, 0.1, 1.0);
+        bottom = new ServoPair(bottomLeft, bottomRight, 0, 1.0);
         close();
     }
 
@@ -33,7 +33,6 @@ public class HingedGrabber implements Grabber {
     }
 
     public void top_grab() throws InterruptedException {
-        bottom.open();
         top.open();
         hinge.open();
         Thread.sleep(SERVO_WAIT_MS);
@@ -47,5 +46,9 @@ public class HingedGrabber implements Grabber {
     public void bottom_grab() {
         hinge.open();
         bottom.close();
+    }
+
+    public void bottom_open() {
+        bottom.open();
     }
 }

@@ -12,8 +12,8 @@ public class QuadrupleGrabber implements Grabber {
     private final int SERVO_WAIT_MS = 300;
 
     public QuadrupleGrabber(Servo topLeft, Servo topRight, Servo bottomLeft, Servo bottomRight) {
-        top = new ServoPair(topLeft, topRight);
-        bottom = new ServoPair(bottomLeft, bottomRight);
+        top = new ServoPair(topLeft, topRight, 0, 1);
+        bottom = new ServoPair(bottomLeft, bottomRight, 0, 1);
         close();
     }
 
@@ -34,5 +34,9 @@ public class QuadrupleGrabber implements Grabber {
 
     public void bottom_grab() throws InterruptedException {
         bottom.close();
+    }
+
+    public void bottom_open() throws InterruptedException {
+        bottom.open();
     }
 }

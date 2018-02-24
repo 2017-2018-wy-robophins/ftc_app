@@ -15,7 +15,7 @@ import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
 @TeleOp(name = "Color Sensor Tester", group = "Robot")
-class ColorSensorTester extends LinearOpMode {
+public class ColorSensorTester extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {

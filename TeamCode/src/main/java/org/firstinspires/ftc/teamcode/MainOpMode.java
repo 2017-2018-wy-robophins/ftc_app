@@ -25,21 +25,22 @@ public class MainOpMode extends LinearOpMode {
         robot = new MainRobot(hardwareMap, telemetry, false);
         //initiate hardware variables
         DcMotor arm = robot.arm;
+        arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.grabber.open();
         Servo colorSensorServo = robot.colorSensorServo;
         double JOYSTICK_TRANSLATION_MULTIPLIER = 0.7;
 
+        /*
         boolean targetSet = false;
         boolean toPositionModeSet = false;
         int target;
+        */
 
         telemetry.addData("say", "before opmode");
         telemetry.update();
         waitForStart();
+        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         while (opModeIsActive()) {
-            if (GamepadUser.ONE != gamepad1.getUser()) {
-                stop();
-            }
             double righty = gamepad1.right_stick_y;
             double rightx = gamepad1.right_stick_x;
             double leftx = gamepad1.left_stick_x * JOYSTICK_TRANSLATION_MULTIPLIER;
@@ -48,14 +49,21 @@ public class MainOpMode extends LinearOpMode {
             colorSensorServo.setPosition(0);
 
             if (Math.abs(rightx) < Math.abs(righty)) {
+                /*
                 if (toPositionModeSet) {
                     arm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                     toPositionModeSet = false;
                 }
 
-                arm.setPower(righty*.25);
                 targetSet = false;
+                */
+
+                arm.setPower(righty*1);
             } else {
+                arm.setPower(0);
+            }
+            /*else {
+
                 telemetry.addLine("Active braking in effect");
                 if (!toPositionModeSet) {
                     arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -68,19 +76,19 @@ public class MainOpMode extends LinearOpMode {
                     arm.setTargetPosition(target);
                     targetSet = true;
                 }
-            }
+            }*/
             // robot.driveBase.move_and_turn((float) leftx, -(float) lefty, -(float) rightx);
             // reverted to previous conditional
             if (((Math.abs(leftx) + Math.abs(lefty))/2) >= (Math.abs(rightx) + Math.abs(righty))/2) {
                 // no diagonals wanted by nico
                 if (Math.abs(leftx) > Math.abs(lefty)) {
-                    robot.driveBase.move_and_turn((float) leftx, 0, 0);
+                    robot.driveBase.move_and_turn(0.8f * (float) leftx, 0, 0);
                 } else {
                     robot.driveBase.move_and_turn(0, -(float) lefty, 0);
                 }
             } else {
                 if (Math.abs(rightx) > Math.abs(righty)) {
-                    robot.driveBase.move_and_turn(0, 0, -(float) rightx);
+                    robot.driveBase.move_and_turn(0, 0, -(float) rightx * 0.8f);
                 }
             }
 
@@ -91,9 +99,12 @@ public class MainOpMode extends LinearOpMode {
                 robot.grabber.open();
             }
             if (gamepad1.left_trigger > TRIGGER_THRESHOLD) {
-                robot.grabber.bottom_grab();
+                robot.grabber.bottom_open();
             }
             if (gamepad1.right_trigger > TRIGGER_THRESHOLD) {
+                robot.grabber.bottom_grab();
+            }
+            if (gamepad1.b) {
                 robot.grabber.top_grab();
             }
 
@@ -112,5 +123,7 @@ public class MainOpMode extends LinearOpMode {
             telemetry.addData("L Trigger", gamepad1.left_trigger);
             telemetry.update();
         }
+        telemetry.addLine("Finished");
+        telemetry.update();
     }
 }

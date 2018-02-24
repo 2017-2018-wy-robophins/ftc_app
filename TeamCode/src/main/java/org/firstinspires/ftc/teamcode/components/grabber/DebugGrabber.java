@@ -33,4 +33,9 @@ public class DebugGrabber implements Grabber {
         telemetry.addLine("Close bottom grabber");
         telemetry.update();
     }
+
+    public void bottom_open() {
+        telemetry.addLine("Open Bottom");
+        telemetry.update();
+    }
 }

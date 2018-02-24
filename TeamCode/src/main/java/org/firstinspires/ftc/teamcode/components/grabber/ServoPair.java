@@ -10,12 +10,14 @@ class ServoPair {
     // positioning is based on a frontal view of the robot
     private final Servo right;
     private final Servo left;
-    private final double SERVO_OPEN_POS = 1.0;
-    private final double SERVO_CLOSED_POS = 0;
+    private final double SERVO_OPEN_POS;
+    private final double SERVO_CLOSED_POS;
 
-    ServoPair(Servo left, Servo right) {
+    ServoPair(Servo left, Servo right, double min, double max) {
         this.right = right;
         this.left = left;
+        this.SERVO_OPEN_POS = max;
+        this.SERVO_CLOSED_POS = min;
     }
 
     private void setPosition(double position) {

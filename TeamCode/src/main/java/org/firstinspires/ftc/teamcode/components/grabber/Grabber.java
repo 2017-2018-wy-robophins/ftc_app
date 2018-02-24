@@ -9,4 +9,5 @@ public interface Grabber {
     void close() throws InterruptedException;
     void top_grab() throws InterruptedException;
     void bottom_grab() throws InterruptedException;
+    void bottom_open() throws InterruptedException;
 }

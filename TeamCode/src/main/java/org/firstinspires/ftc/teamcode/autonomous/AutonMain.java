@@ -36,12 +36,11 @@ public class AutonMain {
     private PositionFinder positionFinder;
     private RelicRecoveryVuMark vumark;
     private final boolean DEBUG = true;
-    private final boolean DEBUG_CLASSES = true;
+    private final boolean DEBUG_CLASSES = false;
 
     AutonMain(HardwareMap hardwareMap, Telemetry telemetry, StartLocation startLocation) throws InterruptedException {
         this.telemetry = telemetry;
         this.startLocation = startLocation;
-        this.robot = robot;
         robot = new MainRobot(hardwareMap, telemetry, DEBUG_CLASSES);
         //initiate hardware variables
         arm = robot.arm;
@@ -142,8 +141,12 @@ public class AutonMain {
                 start_move_y = 0;
                 break;
         }
-        robot.driveBase.move_ms(start_move_x, start_move_y, 1500);
-        robot.driveBase.move_ms(-start_move_x, -start_move_y, 400);
+        /*moveArm(1, 200);
+        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        arm.setTargetPosition(arm.getCurrentPosition());*/
+
+        robot.driveBase.move_ms(start_move_x, start_move_y, 1000);
+        robot.driveBase.move_ms(-start_move_x, -start_move_y, 200);
 
         /* hard bash
         switch (startLocation) {
@@ -385,12 +388,16 @@ public class AutonMain {
     private void move_to_position_with_heading_no_diag_split_rotation(VectorF target_pos, float target_heading, float power, int timeout) throws InterruptedException {
         telemetry.addData("Moving to target position", target_pos);
         telemetry.addData("Moving to target heading", target_heading);
-        telemetry.update();
-        if (DEBUG) {
-            Thread.sleep(250);
-        }
+
         VectorF movement_vector = navinfo.get_robot_movement_vector(target_pos);
         VectorF[] movement_component_vectors = ExtendedMath.vector_components(movement_vector);
+
+        telemetry.addData("Movement vector", movement_vector);
+        telemetry.addData("Rotation", navinfo.get_robot_rotation(target_heading));
+        telemetry.update();
+        if (DEBUG) {
+            Thread.sleep(1000);
+        }
         robot.driveBase.move_by_vector_and_rotation(
                 movement_component_vectors[0],
                 0,
@@ -398,6 +405,9 @@ public class AutonMain {
                 RobotConstants.TICK_ALLOWED_ABS_ERROR,
                 timeout
         );
+        telemetry.addLine("Move X complete");
+        telemetry.update();
+        Thread.sleep(500);
 
         robot.driveBase.move_by_vector_and_rotation(
                 movement_component_vectors[1],
@@ -406,6 +416,9 @@ public class AutonMain {
                 RobotConstants.TICK_ALLOWED_ABS_ERROR,
                 timeout
         );
+        telemetry.addLine("Move Y complete");
+        telemetry.update();
+        Thread.sleep(500);
 
         robot.driveBase.move_by_vector_and_rotation(
                 new VectorF(0, 0),
@@ -414,6 +427,10 @@ public class AutonMain {
                 RobotConstants.TICK_ALLOWED_ABS_ERROR,
                 timeout
         );
+
+        telemetry.addLine("Rotate complete");
+        telemetry.update();
+        Thread.sleep(500);
         navinfo.set_position(target_pos);
         navinfo.set_heading(target_heading);
     }
