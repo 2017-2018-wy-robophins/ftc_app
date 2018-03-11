@@ -19,8 +19,8 @@ public class MecanumBase extends DriveBase {
 
     private final Telemetry telemetry;
 
-    static final float TICKS_PER_MM = 2.42f;
-    static final float TICKS_PER_DEGREE = 12.75f;
+    static final float TICKS_PER_MM = 2f;
+    static final float TICKS_PER_DEGREE = 12.5f;
 
     public MecanumBase(DcMotor NW, DcMotor NE, DcMotor SW, DcMotor SE, Telemetry telemetry) {
         this.NW = NW;

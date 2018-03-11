@@ -16,7 +16,7 @@ public class AutonInstructions {
     // stay with conventional
     private final float[][] BLUE_RIGHT_INSTRUCTIONS = new float[][] {
             // target x, y, heading
-            {3.5f * mmPerBlock, 5f * mmPerBlock, 135},
+            {3.5f * mmPerBlock, 5f * mmPerBlock, -45},
             {5f * mmPerBlock, 3.5f * mmPerBlock, 180},
             // if single value then match to instruction enum
             {InstructionType.MOVE_REL_TARGET},
@@ -44,7 +44,8 @@ public class AutonInstructions {
             {InstructionType.BASH_BLOCK},
     };
     private final float[][] RED_LEFT_INSTRUCTIONS = new float[][] {
-            {1 * mmPerBlock, 3.5f * mmPerBlock, 0},
+            {2.5f * mmPerBlock, 5f * mmPerBlock, 45},
+            {1f * mmPerBlock, 3.5f * mmPerBlock, 0},
             {InstructionType.MOVE_REL_TARGET},
             {InstructionType.ARM_UP},
             {InstructionType.DROP_BLOCK},

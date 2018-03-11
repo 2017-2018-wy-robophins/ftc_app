@@ -14,7 +14,6 @@ public class QuadrupleGrabber implements Grabber {
     public QuadrupleGrabber(Servo topLeft, Servo topRight, Servo bottomLeft, Servo bottomRight) {
         top = new ServoPair(topLeft, topRight, 0, 1);
         bottom = new ServoPair(bottomLeft, bottomRight, 0, 1);
-        close();
     }
 
     public void close() {

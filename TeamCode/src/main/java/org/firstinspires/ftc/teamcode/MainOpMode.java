@@ -26,9 +26,9 @@ public class MainOpMode extends LinearOpMode {
         //initiate hardware variables
         DcMotor arm = robot.arm;
         arm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.grabber.open();
         Servo colorSensorServo = robot.colorSensorServo;
         double JOYSTICK_TRANSLATION_MULTIPLIER = 0.7;
+        boolean halfpower = false;
 
         /*
         boolean targetSet = false;
@@ -79,16 +79,17 @@ public class MainOpMode extends LinearOpMode {
             }*/
             // robot.driveBase.move_and_turn((float) leftx, -(float) lefty, -(float) rightx);
             // reverted to previous conditional
+            float motor_mult = halfpower ? 0.5f : 1;
             if (((Math.abs(leftx) + Math.abs(lefty))/2) >= (Math.abs(rightx) + Math.abs(righty))/2) {
                 // no diagonals wanted by nico
                 if (Math.abs(leftx) > Math.abs(lefty)) {
-                    robot.driveBase.move_and_turn(0.8f * (float) leftx, 0, 0);
+                    robot.driveBase.move_and_turn(0.8f * (float) leftx * motor_mult, 0, 0);
                 } else {
-                    robot.driveBase.move_and_turn(0, -(float) lefty, 0);
+                    robot.driveBase.move_and_turn(0, -(float) lefty * motor_mult, 0);
                 }
             } else {
                 if (Math.abs(rightx) > Math.abs(righty)) {
-                    robot.driveBase.move_and_turn(0, 0, -(float) rightx * 0.8f);
+                    robot.driveBase.move_and_turn(0, 0, -(float) rightx * 0.8f * motor_mult);
                 }
             }
 
@@ -107,6 +108,9 @@ public class MainOpMode extends LinearOpMode {
             if (gamepad1.b) {
                 robot.grabber.top_grab();
             }
+            if (gamepad1.y) {
+                halfpower = !halfpower;
+            }
 
             //update telemetry
             telemetry.addData("R vertical", righty);
@@ -121,6 +125,7 @@ public class MainOpMode extends LinearOpMode {
             telemetry.addData("L Bumper", gamepad1.left_bumper);
             telemetry.addData("R Trigger", gamepad1.right_trigger);
             telemetry.addData("L Trigger", gamepad1.left_trigger);
+            telemetry.addData("Half power", halfpower);
             telemetry.update();
         }
         telemetry.addLine("Finished");

@@ -14,9 +14,8 @@ public class HingedGrabber implements Grabber {
 
     public HingedGrabber(Servo topLeft, Servo topRight, Servo leftHinge, Servo rightHinge, Servo bottomLeft, Servo bottomRight) {
         top = new ServoPair(topLeft, topRight, 0, 1.0);
-        hinge = new ServoPair(leftHinge, rightHinge, 0.1, 1.0);
+        hinge = new ServoPair(leftHinge, rightHinge, 0.6, 1.0);
         bottom = new ServoPair(bottomLeft, bottomRight, 0, 1.0);
-        close();
     }
 
     public void close() {

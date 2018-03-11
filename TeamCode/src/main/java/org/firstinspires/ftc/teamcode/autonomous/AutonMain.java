@@ -35,7 +35,7 @@ public class AutonMain {
     private AutonInstructions instructions;
     private PositionFinder positionFinder;
     private RelicRecoveryVuMark vumark;
-    private final boolean DEBUG = true;
+    private final boolean DEBUG = false;
     private final boolean DEBUG_CLASSES = false;
 
     AutonMain(HardwareMap hardwareMap, Telemetry telemetry, StartLocation startLocation) throws InterruptedException {
@@ -55,6 +55,7 @@ public class AutonMain {
         }
         // get a reference to the distance sensor that shares the same name.
 
+        robot.grabber.close();
         navinfo = new NavigationalState();
         telemetry.addData("Start Location", startLocation);
         instructions = new AutonInstructions(startLocation);
@@ -79,16 +80,19 @@ public class AutonMain {
     // run this once
     void runOnce() throws InterruptedException {
         // stopTime = SystemClock.currentThreadTimeMillis() + 30000;
-        robot.grabber.close();
+        // robot.grabber.top_grab();
         servoSet(1);
 
+        robot.grabber.close();
         // note that the color sensor is on the left side of the arm
 
         if (!DEBUG_CLASSES) {
-            telemetry.addData("red", sensorColor.red());
-            telemetry.addData("blue", sensorColor.blue());
-            telemetry.update();
-            Thread.sleep(500);
+            if (DEBUG) {
+                telemetry.addData("red", sensorColor.red());
+                telemetry.addData("blue", sensorColor.blue());
+                telemetry.update();
+                Thread.sleep(500);
+            }
             switch (startLocation) {
                 case BLUE_LEFT:
                 case BLUE_RIGHT:
@@ -128,13 +132,16 @@ public class AutonMain {
         // get off the blocks
         switch (startLocation) {
             case BLUE_LEFT:
-            case BLUE_RIGHT:
                 start_move_x = 1f;
                 start_move_y = 0;
                 break;
+            case BLUE_RIGHT:
+                start_move_x = 1;
+                start_move_y = 0f;
+                break;
             case RED_LEFT:
-                start_move_x = 0;
-                start_move_y = -1f;
+                start_move_x = 1f;
+                start_move_y = 0f;
                 break;
             case RED_RIGHT:
                 start_move_x = 1f;
@@ -145,43 +152,33 @@ public class AutonMain {
         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         arm.setTargetPosition(arm.getCurrentPosition());*/
 
-        robot.driveBase.move_ms(start_move_x, start_move_y, 1000);
-        robot.driveBase.move_ms(-start_move_x, -start_move_y, 200);
+        robot.driveBase.move_ms(start_move_x, start_move_y, 1800);
 
-        /* hard bash
-        switch (startLocation) {
-            case BLUE_LEFT:
-                robot.driveBase.move_ms(0, 1, 2000);
-                robot.driveBase.move_ms(-1, 0, 500);
-                break;
-            case BLUE_RIGHT:
-                robot.driveBase.move_ms(0, 1, 1500);
-                robot.driveBase.move_ms(-1, 0, 500);
-                break;
-            case RED_LEFT:
-                robot.driveBase.move_ms(0, -1, 2000);
-                robot.driveBase.move_ms(1, 0, 500);
-                break;
-            case RED_RIGHT:
-                robot.driveBase.move_ms(0, -1, 1500);
-                robot.driveBase.move_ms(1, 0, 500);
-                break;
+        if (startLocation == StartLocation.RED_RIGHT) {
+            robot.driveBase.turn_ms(0.5f, 200);
         }
+
+        if (startLocation == StartLocation.BLUE_RIGHT) {
+            robot.driveBase.turn_ms(0.5f, 200);
+        }
+        /* hard bash
+
         */
 
         // get position
         Pair<OpenGLMatrix, RelicRecoveryVuMark> position = positionFinder.getCurrentPosition();
         int vuforia_try_count = 1;
-        int vuforia_max_tries = 4;
+        int vuforia_max_tries = 3;
 
         while ((vuforia_try_count <= vuforia_max_tries) && (position == null)) {
             telemetry.addLine("Did not get vuforia position on try: " + vuforia_try_count + ", trying again.");
             telemetry.update();
-            robot.driveBase.move_ms(-start_move_x, -start_move_y, 400);
+            robot.driveBase.move_ms(-start_move_x * 0.7f, -start_move_y * 0.7f, 500);
             position = positionFinder.getCurrentPosition();
             vuforia_try_count += 1;
         }
 
+        boolean run_fallback = false;
         if (position != null) {
             navinfo = new NavigationalState(position.first);
             vumark = position.second;
@@ -196,12 +193,35 @@ public class AutonMain {
             navinfo.set_position(default_nav_state.first);
             navinfo.set_heading(default_nav_state.second);
             telemetry.addLine("Could not get vuforia positions, running fallback");
+            telemetry.update();
+            /*
             telemetry.addData("Using default position", navinfo);
             telemetry.addData("Using default target", vumark);
-            telemetry.update();
+            */
+            run_fallback = true;
+            /*
+            switch (startLocation) {
+                case BLUE_LEFT:
+                    robot.driveBase.move_ms(0, 1, 1200);
+                    robot.driveBase.move_ms(-1, 0, 300);
+                    break;
+                case BLUE_RIGHT:
+                    robot.driveBase.move_ms(0, 1, 1000);
+                    robot.driveBase.move_ms(-1, 0, 300);
+                    break;
+                case RED_LEFT:
+                    robot.driveBase.move_ms(0, -1, 1200);
+                    robot.driveBase.move_ms(1, 0, 300);
+                    break;
+                case RED_RIGHT:
+                    robot.driveBase.move_ms(0, -1, 1000);
+                    robot.driveBase.move_ms(1, 0, 300);
+                    break;
+            }
+            */
         }
 
-        while (instructions.has_instructions()) {
+        while (instructions.has_instructions() && !run_fallback) {
             if (DEBUG) {
                 telemetry.addData("Navigational Info: ", navinfo);
                 telemetry.update();
@@ -220,31 +240,35 @@ public class AutonMain {
                             instructionValues.first,
                             String.valueOf(instructionValues.second)));
                     telemetry.update();
-                    Thread.sleep(500);
-                    move_to_position_with_heading_no_diag_split_rotation(instructionValues.first, instructionValues.second, RobotConstants.AUTON_MOTOR_SPEED, RobotConstants.MOTOR_TIMEOUT_MILLIS);
+                    Thread.sleep(100);
+                    move_to_position_with_heading_only_vdrive(instructionValues.first, instructionValues.second, RobotConstants.AUTON_MOTOR_SPEED, RobotConstants.MOTOR_TIMEOUT_MILLIS);
+                    // move_to_position_with_heading_no_diag_split_rotation(instructionValues.first, instructionValues.second, RobotConstants.AUTON_MOTOR_SPEED, RobotConstants.MOTOR_TIMEOUT_MILLIS);
                     break;
                 case ArmUp:
                     telemetry.addLine("Moving arm up");
                     telemetry.update();
-                    Thread.sleep(500);
+                    Thread.sleep(100);
                     robot.move_arm_up(RobotConstants.AUTON_ARM_SPEED);
                     break;
                 case ArmDown:
                     telemetry.addLine("Moving arm down");
                     telemetry.update();
-                    Thread.sleep(500);
+                    Thread.sleep(100);
                     robot.move_arm_down(RobotConstants.AUTON_ARM_SPEED);
                     break;
                 case DropBlock:
                     telemetry.addLine("Dropping block");
                     telemetry.update();
-                    Thread.sleep(500);
+                    robot.driveBase.move_ms(0, -0.7f, 500);
+                    Thread.sleep(100);
+                    robot.driveBase.move_ms(0, 0.7f, 200);
+                    Thread.sleep(100);
                     robot.grabber.open();
                     break;
                 case GrabBlock:
                     telemetry.addLine("Grabbing block");
                     telemetry.update();
-                    Thread.sleep(500);
+                    Thread.sleep(100);
                     robot.grabber.open();
                     robot.grabber.close();
                     break;
@@ -253,14 +277,14 @@ public class AutonMain {
 
                     telemetry.addLine("Moving to relative target");
                     telemetry.update();
-                    Thread.sleep(500);
+                    Thread.sleep(100);
                     switch (vumark) {
                         case LEFT:
                             telemetry.addLine("Moving to LEFT");
                             telemetry.update();
-                            Thread.sleep(500);
+                            Thread.sleep(100);
                             robot.driveBase.move_by_vector_and_rotation(
-                                    new VectorF(-0.25f * mmPerBlock, -0.2f * mmPerBlock),
+                                    new VectorF(-0.5f * mmPerBlock, -0.4f * mmPerBlock),
                                     0,
                                     RobotConstants.AUTON_MOTOR_SPEED,
                                     RobotConstants.TICK_ALLOWED_ABS_ERROR,
@@ -269,9 +293,9 @@ public class AutonMain {
                         case RIGHT:
                             telemetry.addLine("Moving to RIGHT");
                             telemetry.update();
-                            Thread.sleep(500);
+                            Thread.sleep(100);
                             robot.driveBase.move_by_vector_and_rotation(
-                                    new VectorF(0.25f * mmPerBlock, -0.2f * mmPerBlock),
+                                    new VectorF(0.5f * mmPerBlock, -0.4f * mmPerBlock),
                                     0,
                                     RobotConstants.AUTON_MOTOR_SPEED,
                                     RobotConstants.TICK_ALLOWED_ABS_ERROR,
@@ -281,8 +305,8 @@ public class AutonMain {
                         case CENTER:
                             telemetry.addLine("Moving to CENTER");
                             telemetry.update();
-                            Thread.sleep(500);
-                            robot.driveBase.move_by_vector_and_rotation(new VectorF(0, -0.2f * mmPerBlock),
+                            Thread.sleep(100);
+                            robot.driveBase.move_by_vector_and_rotation(new VectorF(0, -0.4f * mmPerBlock),
                                     0,
                                     RobotConstants.AUTON_MOTOR_SPEED,
                                     RobotConstants.TICK_ALLOWED_ABS_ERROR,
@@ -295,7 +319,10 @@ public class AutonMain {
                     telemetry.update();
                     Thread.sleep(500);
                     robot.driveBase.move_ms(0, 0.8f, 500);
-                    robot.driveBase.move_ms(0, -0.8f, 500);
+                    Thread.sleep(200);
+                    robot.driveBase.move_ms(0, -0.8f, 800);
+                    Thread.sleep(200);
+                    robot.driveBase.move_ms(0, 0.8f, 200);
                     break;
             }
         }
@@ -399,7 +426,7 @@ public class AutonMain {
             Thread.sleep(1000);
         }
         robot.driveBase.move_by_vector_and_rotation(
-                movement_component_vectors[0],
+                movement_component_vectors[0].multiplied(2f),
                 0,
                 power,
                 RobotConstants.TICK_ALLOWED_ABS_ERROR,
@@ -443,7 +470,7 @@ public class AutonMain {
             Thread.sleep(250);
         }
         // get the angle we need to rotate to first to move correctly
-        VectorF movement_vector = navinfo.get_robot_movement_vector(target_pos);
+        VectorF movement_vector = target_pos.subtracted(navinfo.get_position());
         float movement_angle = (float)Math.toDegrees(Math.atan2(movement_vector.get(1), movement_vector.get(0)));
 
         float initial_rotation = navinfo.get_robot_rotation(movement_angle);

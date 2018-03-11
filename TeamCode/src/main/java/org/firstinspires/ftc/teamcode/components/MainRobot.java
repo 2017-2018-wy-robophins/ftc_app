@@ -72,15 +72,20 @@ public class MainRobot {
             Servo topRight = HM.servo.get("topRight");
             Servo bottomLeft = HM.servo.get("bottomLeft");
             Servo bottomRight = HM.servo.get("bottomRight");
+            /*
             Servo leftHinge = HM.servo.get("leftHinge");
             Servo rightHinge = HM.servo.get("rightHinge");
+            */
 
 
             // set grabber servo directions
             topRight.setDirection(Servo.Direction.REVERSE);
             bottomRight.setDirection(Servo.Direction.REVERSE);
+            /*
             leftHinge.setDirection(Servo.Direction.REVERSE);
             grabber = new HingedGrabber(topLeft, topRight, leftHinge, rightHinge, bottomLeft, bottomRight);
+            */
+            grabber = new QuadrupleGrabber(topLeft, topRight, bottomLeft, bottomRight);
 
             // set up the color sensor stuff
             colorSensorServo = HM.servo.get("colorSensorServo");
