@@ -40,31 +40,29 @@ public class MainRobot {
             DcMotor SE = HM.dcMotor.get("SE");
             DcMotor SW = HM.dcMotor.get("SW");
 
+            // reset motor encoders
             NW.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             NE.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             SE.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             SW.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
             NW.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             NE.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             SE.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             SW.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-
+            // set them to brake when 0 power
             NW.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             SW.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             NE.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             SE.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+            // set motor directions
             NW.setDirection(DcMotor.Direction.FORWARD);
             SW.setDirection(DcMotor.Direction.FORWARD);
-/*
-            NW.setDirection(DcMotor.Direction.REVERSE);
-            SW.setDirection(DcMotor.Direction.REVERSE);
-            */
             NE.setDirection(DcMotor.Direction.REVERSE);
             SE.setDirection(DcMotor.Direction.REVERSE);
 
+            // instantiate the drivebase with the given motors
             driveBase = new MecanumBase(NW, NE, SW, SE, telemetry);
 
             // set up the grabber

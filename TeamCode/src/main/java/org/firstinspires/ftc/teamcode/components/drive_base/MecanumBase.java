@@ -94,21 +94,26 @@ public class MecanumBase extends DriveBase {
     private void set_encoder_dx(int dNW, int dNE, int dSW, int dSE, float speed, int encoder_epsilon, int timeout_ms, String epsilon_error, String timeout_error) throws InterruptedException {
         setMotorMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+        // get the target encoder values
         int NW_target = NW.getCurrentPosition() + dNW;
         int NE_target = NE.getCurrentPosition() + dNE;
         int SW_target = SW.getCurrentPosition() + dSW;
         int SE_target = SE.getCurrentPosition() + dSE;
 
+        // set the motors to the target
         NW.setTargetPosition(NW_target);
         NE.setTargetPosition(NE_target);
         SW.setTargetPosition(SW_target);
         SE.setTargetPosition(SE_target);
 
+        // set the speed to move at (setPower runs by speed when using RUN_TO_POSITION)
         NW.setPower(speed);
         NE.setPower(speed);
         SW.setPower(speed);
         SE.setPower(speed);
 
+        // setup the last seen encoder values
+        // these get used in conjuction with a timer to check if the robot has been blocked by something
         int last_NW = NW.getCurrentPosition();
         int last_NE = NE.getCurrentPosition();
         int last_SW = SW.getCurrentPosition();
@@ -130,6 +135,7 @@ public class MecanumBase extends DriveBase {
             telemetry.addData("SE target", SE_target);
             telemetry.update();
 
+            // when the robot is within the epsilon, stop early
             if ((Math.abs(NW_current - NW_target) < encoder_epsilon) &&
                     (Math.abs(NE_current - NE_target) < encoder_epsilon) &&
                     (Math.abs(SW_current - SW_target) < encoder_epsilon) &&
@@ -140,6 +146,7 @@ public class MecanumBase extends DriveBase {
             }
 
             if (System.currentTimeMillis() >= next_check_timestamp) {
+                // when the robot hasn't moved much for the past <time>, stop early
                 if ((Math.abs(NW_current - last_NW) < RobotConstants.ENCODER_TICKS_TIMEOUT_THRESHOLD) &&
                         (Math.abs(NE_current - last_NE) < RobotConstants.ENCODER_TICKS_TIMEOUT_THRESHOLD) &&
                         (Math.abs(SW_current - last_SW) < RobotConstants.ENCODER_TICKS_TIMEOUT_THRESHOLD) &&
@@ -149,6 +156,7 @@ public class MecanumBase extends DriveBase {
                     break;
                 }
 
+                // update the timestamps and values
                 last_NW = NW_current;
                 last_NE = NE_current;
                 last_SW = SW_current;
@@ -211,6 +219,7 @@ public class MecanumBase extends DriveBase {
     // http://thinktank.wpi.edu/resources/346/ControllingMecanumDrive.pdf
     // return [NW, NE, SW, SE]
     // angle should be in radians
+    // adjusted version for the main driving opmode
     private static double[] mechanum_multipliers_main(double translation, double translation_angle, double rotation) {
         return new double[]{
                 1.5 * translation * Math.sin(-translation_angle + 3*Math.PI/4) - rotation,
@@ -220,6 +229,7 @@ public class MecanumBase extends DriveBase {
         };
     }
 
+    // normal version
     private static double[] mechanum_multipliers(double translation, double translation_angle, double rotation) {
         return new double[]{
                 translation * Math.sin(-translation_angle + 3*Math.PI/4) - rotation,

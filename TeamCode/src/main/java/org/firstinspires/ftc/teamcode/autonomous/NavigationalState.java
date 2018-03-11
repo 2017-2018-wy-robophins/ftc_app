@@ -24,6 +24,7 @@ public class NavigationalState {
         this.heading = ExtendedMath.extract_z_rot(m);
     }
 
+    // return robot-relative movement vector to get to target
     public VectorF get_robot_movement_vector(VectorF field_target) {
         return ExtendedMath.get_rotation_matrix(-(float)Math.toRadians(heading - 90))
                 .multiplied(field_target.subtracted(position));
@@ -33,6 +34,7 @@ public class NavigationalState {
         return field_target.subtracted(position).magnitude();
     }
 
+    // return how much to rotate to get to target
     public float get_robot_rotation(float field_target) {
         return ExtendedMath.get_min_rotation(heading, field_target);
     }
@@ -60,11 +62,6 @@ public class NavigationalState {
     public VectorF get_position() {return this.position;}
     public float get_heading() {return this.heading;}
 
-    // return how much to rotate to hit target theta
-    // float execute_instruction(float x, float y, float new_theta) {
-    //    move(new VectorF(dx, dy));
-    //    float rot1 = new_theta
-    //}
     public String toString() {
         return "Position: " + this.position + " | Heading: " + this.heading;
     }

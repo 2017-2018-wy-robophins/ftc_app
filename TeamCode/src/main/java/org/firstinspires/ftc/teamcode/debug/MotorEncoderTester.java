@@ -42,10 +42,6 @@ public class MotorEncoderTester extends LinearOpMode {
 
         NW.setDirection(DcMotor.Direction.FORWARD);
         SW.setDirection(DcMotor.Direction.FORWARD);
-/*
-        NW.setDirection(DcMotor.Direction.REVERSE);
-        SW.setDirection(DcMotor.Direction.REVERSE);
-        */
         NE.setDirection(DcMotor.Direction.REVERSE);
         SE.setDirection(DcMotor.Direction.REVERSE);
 

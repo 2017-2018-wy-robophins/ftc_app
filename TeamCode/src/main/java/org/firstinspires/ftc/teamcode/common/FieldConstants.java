@@ -11,7 +11,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
  */
 
 public final class FieldConstants {
-    public static final double rt2 = Math.sqrt(2);
     public static final float mmPerInch = 25.4f;
     public static final float mmPerBlock = mmPerInch * 24;
     public static final float mmFTCFieldWidth = (24 * 6 - 2) * mmPerInch;

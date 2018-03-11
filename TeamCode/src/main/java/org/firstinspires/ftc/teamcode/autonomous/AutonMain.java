@@ -42,18 +42,15 @@ public class AutonMain {
         this.telemetry = telemetry;
         this.startLocation = startLocation;
         robot = new MainRobot(hardwareMap, telemetry, DEBUG_CLASSES);
-        //initiate hardware variables
+        // instantiate hardware variables
         arm = robot.arm;
         colorSensorServo = robot.colorSensorServo;
 
-        // never gets used???
-        // cs = robot.colorSensor;
-
         // get a reference to the color sensor.
         if (!DEBUG_CLASSES) {
+            // get a reference to the distance sensor that shares the same name.
             sensorColor = hardwareMap.get(ColorSensor.class, "colorDistanceSensor");
         }
-        // get a reference to the distance sensor that shares the same name.
 
         robot.grabber.close();
         navinfo = new NavigationalState();
@@ -69,24 +66,14 @@ public class AutonMain {
         telemetry.addLine("Initialized vuforia.");
         telemetry.update();
         vumark = RelicRecoveryVuMark.CENTER;
-        /*
-        // get a reference to the RelativeLayout so we can change the background
-        // color of the Robot Controller app to match the hue detected by the RGB sensor.
-        int relativeLayoutId = hardwareMap.appContext.getResources().getIdentifier("RelativeLayout", "id", hardwareMap.appContext.getPackageName());
-        relativeLayout = ((Activity) hardwareMap.appContext).findViewById(relativeLayoutId);
-        */
     }
 
     // run this once
     void runOnce() throws InterruptedException {
-        // stopTime = SystemClock.currentThreadTimeMillis() + 30000;
-        // robot.grabber.top_grab();
         servoSet(1);
 
-        robot.grabber.close();
-        // note that the color sensor is on the left side of the arm
-
         if (!DEBUG_CLASSES) {
+            // jewel knocking code
             if (DEBUG) {
                 telemetry.addData("red", sensorColor.red());
                 telemetry.addData("blue", sensorColor.blue());
@@ -148,10 +135,6 @@ public class AutonMain {
                 start_move_y = 0;
                 break;
         }
-        /*moveArm(1, 200);
-        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        arm.setTargetPosition(arm.getCurrentPosition());*/
-
         robot.driveBase.move_ms(start_move_x, start_move_y, 1800);
 
         if (startLocation == StartLocation.RED_RIGHT) {
@@ -161,11 +144,8 @@ public class AutonMain {
         if (startLocation == StartLocation.BLUE_RIGHT) {
             robot.driveBase.turn_ms(0.5f, 200);
         }
-        /* hard bash
 
-        */
-
-        // get position
+        // get position using vuforia
         Pair<OpenGLMatrix, RelicRecoveryVuMark> position = positionFinder.getCurrentPosition();
         int vuforia_try_count = 1;
         int vuforia_max_tries = 3;
@@ -178,6 +158,7 @@ public class AutonMain {
             vuforia_try_count += 1;
         }
 
+        // if the position wasn't found
         boolean run_fallback = false;
         if (position != null) {
             navinfo = new NavigationalState(position.first);
@@ -187,40 +168,12 @@ public class AutonMain {
             telemetry.update();
         } else {
             // fallback
-            // set to the assumed positions for each starting location
-            Pair<InstructionType, Pair<VectorF, Float>> first_instruction = instructions.next_instruction();
-            Pair<VectorF, Float> default_nav_state = first_instruction.second;
-            navinfo.set_position(default_nav_state.first);
-            navinfo.set_heading(default_nav_state.second);
-            telemetry.addLine("Could not get vuforia positions, running fallback");
+            telemetry.addLine("Could not get vuforia position, running fallback");
             telemetry.update();
-            /*
-            telemetry.addData("Using default position", navinfo);
-            telemetry.addData("Using default target", vumark);
-            */
             run_fallback = true;
-            /*
-            switch (startLocation) {
-                case BLUE_LEFT:
-                    robot.driveBase.move_ms(0, 1, 1200);
-                    robot.driveBase.move_ms(-1, 0, 300);
-                    break;
-                case BLUE_RIGHT:
-                    robot.driveBase.move_ms(0, 1, 1000);
-                    robot.driveBase.move_ms(-1, 0, 300);
-                    break;
-                case RED_LEFT:
-                    robot.driveBase.move_ms(0, -1, 1200);
-                    robot.driveBase.move_ms(1, 0, 300);
-                    break;
-                case RED_RIGHT:
-                    robot.driveBase.move_ms(0, -1, 1000);
-                    robot.driveBase.move_ms(1, 0, 300);
-                    break;
-            }
-            */
         }
 
+        // run all the instructions from the instruction queue
         while (instructions.has_instructions() && !run_fallback) {
             if (DEBUG) {
                 telemetry.addData("Navigational Info: ", navinfo);
@@ -241,7 +194,11 @@ public class AutonMain {
                             String.valueOf(instructionValues.second)));
                     telemetry.update();
                     Thread.sleep(100);
-                    move_to_position_with_heading_only_vdrive(instructionValues.first, instructionValues.second, RobotConstants.AUTON_MOTOR_SPEED, RobotConstants.MOTOR_TIMEOUT_MILLIS);
+                    move_to_position_with_heading_only_vdrive(
+                            instructionValues.first,
+                            instructionValues.second,
+                            RobotConstants.AUTON_MOTOR_SPEED,
+                            RobotConstants.MOTOR_TIMEOUT_MILLIS);
                     // move_to_position_with_heading_no_diag_split_rotation(instructionValues.first, instructionValues.second, RobotConstants.AUTON_MOTOR_SPEED, RobotConstants.MOTOR_TIMEOUT_MILLIS);
                     break;
                 case ArmUp:
@@ -273,8 +230,7 @@ public class AutonMain {
                     robot.grabber.close();
                     break;
                 case MoveRelTarget:
-                    // assume that robot is facing away from center, 1 block away
-
+                    // move to the relative target: LEFT/RIGHT/CENTER
                     telemetry.addLine("Moving to relative target");
                     telemetry.update();
                     Thread.sleep(100);
