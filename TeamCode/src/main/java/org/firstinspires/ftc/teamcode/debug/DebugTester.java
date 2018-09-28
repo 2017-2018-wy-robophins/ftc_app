@@ -12,8 +12,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-import org.firstinspires.ftc.teamcode.autonomous.AutonInstructions;
-import org.firstinspires.ftc.teamcode.autonomous.InstructionType;
 import org.firstinspires.ftc.teamcode.autonomous.NavigationalState;
 import org.firstinspires.ftc.teamcode.common.StartLocation;
 import org.firstinspires.ftc.teamcode.components.position_finder.VuforiaPositionFinder;
