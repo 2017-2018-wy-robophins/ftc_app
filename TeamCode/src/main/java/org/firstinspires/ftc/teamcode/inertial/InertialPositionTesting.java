@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.inertial.InertialPositionUpdater;
  */
 
 @Autonomous(name="Inertial Position Testing", group="Concept")
-class InertialPositionTesting extends LinearOpMode {
+public class InertialPositionTesting extends LinearOpMode {
     InertialPositionUpdater position_updater;
     @Override public void runOpMode() {
         telemetry.addLine("Inertial Position Testing Module");

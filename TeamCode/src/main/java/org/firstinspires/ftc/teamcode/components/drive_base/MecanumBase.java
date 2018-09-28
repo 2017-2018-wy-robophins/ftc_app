@@ -209,7 +209,7 @@ public class MecanumBase extends DriveBase {
         telemetry.addData("SE ticks", SE.getCurrentPosition());
     }
 
-    private void setMotorMode(DcMotor.RunMode mode) {
+    public void setMotorMode(DcMotor.RunMode mode) {
         NW.setMode(mode);
         NE.setMode(mode);
         SW.setMode(mode);

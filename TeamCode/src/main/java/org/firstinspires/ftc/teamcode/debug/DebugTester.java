@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.common.StartLocation;
 import org.firstinspires.ftc.teamcode.components.position_finder.VuforiaPositionFinder;
 
 @TeleOp(name = "Debug+Vuforia Tester", group = "Robot")
-class DebugTester extends LinearOpMode {
+public class DebugTester extends LinearOpMode {
     private StartLocation startLocation = StartLocation.BLUE_LEFT;
     private NavigationalState navinfo;
     private AutonInstructions instructions;
