@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.components.position_finder;
+package org.firstinspires.ftc.teamcode.components.positionFinder;
 
 import android.util.Pair;
 

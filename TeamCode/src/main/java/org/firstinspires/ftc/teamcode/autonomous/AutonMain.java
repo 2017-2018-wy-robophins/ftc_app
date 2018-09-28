@@ -2,10 +2,7 @@ package org.firstinspires.ftc.teamcode.autonomous;
 
 import android.util.Pair;
 
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
@@ -16,8 +13,8 @@ import org.firstinspires.ftc.teamcode.common.ExtendedMath;
 import org.firstinspires.ftc.teamcode.common.RobotConstants;
 import org.firstinspires.ftc.teamcode.common.StartLocation;
 import org.firstinspires.ftc.teamcode.debug.DebugPositionFinder;
-import org.firstinspires.ftc.teamcode.components.position_finder.PositionFinder;
-import org.firstinspires.ftc.teamcode.components.position_finder.VuforiaPositionFinder;
+import org.firstinspires.ftc.teamcode.components.positionFinder.PositionFinder;
+import org.firstinspires.ftc.teamcode.components.positionFinder.VuforiaPositionFinder;
 
 /**
  * Created by nico on 11/14/17.

@@ -3,10 +3,9 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.internal.ui.GamepadUser;
-import org.firstinspires.ftc.teamcode.components.drive_base.MecanumBase;
+import org.firstinspires.ftc.teamcode.components.MainRobot;
 
 @TeleOp(name="Main Teleop", group="Robot")
 public class MainOpMode extends LinearOpMode {
@@ -17,19 +16,7 @@ public class MainOpMode extends LinearOpMode {
         gamepad1.setJoystickDeadzone((float)ARM_JOYSTICK_MOVEMENT_THRESHOLD);
         //initiate robot
         //initiate hardware variables
-        DcMotor NE = hardwareMap.dcMotor.get("NE");
-        DcMotor NW = hardwareMap.dcMotor.get("NW");
-        DcMotor SE = hardwareMap.dcMotor.get("SE");
-        DcMotor SW = hardwareMap.dcMotor.get("SW");
-        NE.setDirection(DcMotorSimple.Direction.REVERSE);
-        SE.setDirection(DcMotorSimple.Direction.REVERSE);
-        NW.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        NE.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        SW.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        SE.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        MecanumBase driveBase = new MecanumBase(NW, NE, SW, SE, telemetry);
-        driveBase.setMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        driveBase.setMotorMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        MainRobot robot = new MainRobot(hardwareMap, telemetry, false);
 
         DcMotor hookMotor = hardwareMap.dcMotor.get("hookMotor");
         hookMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -53,13 +40,13 @@ public class MainOpMode extends LinearOpMode {
             if (((Math.abs(leftx) + Math.abs(lefty))/2) >= (Math.abs(rightx) + Math.abs(righty))/2) {
                 // no diagonals wanted by nico
                 if (Math.abs(leftx) > Math.abs(lefty)) {
-                    driveBase.move_and_turn(0.8f * (float) leftx * motor_mult, 0, 0);
+                    robot.driveBase.move_and_turn(0.8f * (float) leftx * motor_mult, 0, 0);
                 } else {
-                    driveBase.move_and_turn(0, -(float) lefty * motor_mult, 0);
+                    robot.driveBase.move_and_turn(0, -(float) lefty * motor_mult, 0);
                 }
             } else {
                 if (Math.abs(rightx) > Math.abs(righty)) {
-                    driveBase.move_and_turn(0, 0, -(float) rightx * 0.8f * motor_mult);
+                    robot.driveBase.move_and_turn(0, 0, -(float) rightx * 0.8f * motor_mult);
                 }
             }
 
@@ -79,7 +66,7 @@ public class MainOpMode extends LinearOpMode {
             telemetry.addData("R horizontal", rightx);
             telemetry.addData("L vertical",lefty);
             telemetry.addData("L horizontal", leftx);
-            driveBase.report_encoder_ticks();
+            robot.driveBase.report_encoder_ticks();
             telemetry.addData("Hook power", hookMotor.getPower());
             telemetry.addData("Hook position", hookMotor.getCurrentPosition());
             telemetry.addData("Gamepad status",  GamepadUser.ONE == gamepad1.getUser());
