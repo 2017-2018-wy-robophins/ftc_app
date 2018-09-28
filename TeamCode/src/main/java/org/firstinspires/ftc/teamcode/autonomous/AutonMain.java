@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.components.MainRobot;
 import org.firstinspires.ftc.teamcode.common.ExtendedMath;
 import org.firstinspires.ftc.teamcode.common.RobotConstants;
 import org.firstinspires.ftc.teamcode.common.StartLocation;
-import org.firstinspires.ftc.teamcode.debug.DebugPositionFinder;
+import org.firstinspires.ftc.teamcode.components.positionFinder.DebugPositionFinder;
 import org.firstinspires.ftc.teamcode.components.positionFinder.PositionFinder;
 import org.firstinspires.ftc.teamcode.components.positionFinder.VuforiaPositionFinder;
 

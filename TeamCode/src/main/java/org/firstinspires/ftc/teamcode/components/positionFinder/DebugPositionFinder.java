@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.debug;
+package org.firstinspires.ftc.teamcode.components.positionFinder;
 
 import android.util.Pair;
 
@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.components.positionFinder.PositionFinder;
  */
 
 public class DebugPositionFinder implements PositionFinder {
-    public Pair<OpenGLMatrix, RelicRecoveryVuMark> getCurrentPosition() throws InterruptedException {
+    public Pair<OpenGLMatrix, RelicRecoveryVuMark> getCurrentPosition() {
             return null;
     }
 }

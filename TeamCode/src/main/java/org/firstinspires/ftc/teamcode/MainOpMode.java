@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.robotcore.internal.ui.GamepadUser;
 import org.firstinspires.ftc.teamcode.components.MainRobot;
 
+import java.util.ResourceBundle;
+
 @TeleOp(name="Main Teleop", group="Robot")
 public class MainOpMode extends LinearOpMode {
     @Override
@@ -14,8 +16,8 @@ public class MainOpMode extends LinearOpMode {
         // setup constants
         final double ARM_JOYSTICK_MOVEMENT_THRESHOLD = 0.15;
         gamepad1.setJoystickDeadzone((float)ARM_JOYSTICK_MOVEMENT_THRESHOLD);
+
         //initiate robot
-        //initiate hardware variables
         MainRobot robot = new MainRobot(hardwareMap, telemetry, false);
 
         DcMotor hookMotor = hardwareMap.dcMotor.get("hookMotor");
@@ -69,7 +71,7 @@ public class MainOpMode extends LinearOpMode {
             robot.driveBase.report_encoder_ticks();
             telemetry.addData("Hook power", hookMotor.getPower());
             telemetry.addData("Hook position", hookMotor.getCurrentPosition());
-            telemetry.addData("Gamepad status",  GamepadUser.ONE == gamepad1.getUser());
+            telemetry.addData("Gamepad 1 status",  GamepadUser.ONE == gamepad1.getUser());
             telemetry.addData("R Bumper", gamepad1.right_bumper);
             telemetry.addData("L Bumper", gamepad1.left_bumper);
             telemetry.addData("R Trigger", gamepad1.right_trigger);
@@ -80,4 +82,10 @@ public class MainOpMode extends LinearOpMode {
         telemetry.addLine("Finished");
         telemetry.update();
     }
+}
+
+// TODO: implement control modes
+enum ControlMode {
+    Drive,
+    Arm
 }

@@ -1,8 +1,9 @@
-package org.firstinspires.ftc.teamcode.debug;
+package org.firstinspires.ftc.teamcode.components.driveBase;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.teamcode.components.driveBase.DriveBase;
+import org.firstinspires.ftc.teamcode.components.inertialSensor.InertialSensor;
 
 /**
  * Created by efyang on 2/13/18.
@@ -41,6 +42,12 @@ public class DebugDriveBase extends DriveBase {
 
     public void turn(float r) {
         telemetry.addLine("Running function: turn");
+        telemetry.addData("r", r);
+        telemetry.update();
+    }
+
+    public void imu_turn(float r, InertialSensor imu) {
+        telemetry.addLine("Running function: imu turn");
         telemetry.addData("r", r);
         telemetry.update();
     }

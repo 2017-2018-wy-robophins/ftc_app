@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.teamcode.common.RobotConstants;
+import org.firstinspires.ftc.teamcode.components.inertialSensor.InertialSensor;
 
 /**
  * Created by efyang on 2/6/18.
@@ -26,6 +27,29 @@ public class MecanumBase extends DriveBase {
         this.NE = NE;
         this.SW = SW;
         this.SE = SE;
+
+        // reset motor encoders
+        NW.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        NE.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        SE.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        SW.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        NW.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        NE.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        SE.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        SW.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        // set them to brake when 0 power
+        NW.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        SW.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        NE.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        SE.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        // set motor directions
+        NW.setDirection(DcMotor.Direction.FORWARD);
+        SW.setDirection(DcMotor.Direction.FORWARD);
+        NE.setDirection(DcMotor.Direction.REVERSE);
+        SE.setDirection(DcMotor.Direction.REVERSE);
+
         this.telemetry = telemetry;
     }
 
@@ -33,7 +57,7 @@ public class MecanumBase extends DriveBase {
         VectorF movementTickVector = movement.multiplied(TICKS_PER_MM);
         double rotationTickVector = rotation * TICKS_PER_DEGREE;
 
-        double[] multipliers = mechanum_multipliers(
+        double[] multipliers = mecanum_multipliers(
                 movementTickVector.magnitude(),
                 Math.atan2(movementTickVector.get(1), movementTickVector.get(0)),
                 rotationTickVector);
@@ -177,13 +201,18 @@ public class MecanumBase extends DriveBase {
         move_and_turn(0, 0, r);
     }
 
+    // TODO: unimplemented
+    public void imu_turn(float r, InertialSensor imu) {
+
+    }
+
     // x, y, r should be from -1 to 1
     public void move_and_turn(float x, float y, float r) {
         setMotorMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         double speed = Math.hypot(x,y);
         double angle = Math.atan2(y, x);
-        double[] multipliers = mechanum_multipliers_main(speed, angle, r);
+        double[] multipliers = mecanum_multipliers_main(speed, angle, r);
         telemetry.addData("NW Power", multipliers[0]);
         telemetry.addData("NE Power", multipliers[1]);
         telemetry.addData("SW Power", multipliers[2]);
@@ -208,7 +237,7 @@ public class MecanumBase extends DriveBase {
         telemetry.addData("SE ticks", SE.getCurrentPosition());
     }
 
-    public void setMotorMode(DcMotor.RunMode mode) {
+    private void setMotorMode(DcMotor.RunMode mode) {
         NW.setMode(mode);
         NE.setMode(mode);
         SW.setMode(mode);
@@ -219,7 +248,7 @@ public class MecanumBase extends DriveBase {
     // return [NW, NE, SW, SE]
     // angle should be in radians
     // adjusted version for the main driving opmode
-    private static double[] mechanum_multipliers_main(double translation, double translation_angle, double rotation) {
+    private static double[] mecanum_multipliers_main(double translation, double translation_angle, double rotation) {
         return new double[]{
                 1.5 * translation * Math.sin(-translation_angle + 3*Math.PI/4) - rotation,
                 1.5 * translation * Math.cos(-translation_angle + 3*Math.PI/4) + rotation,
@@ -229,7 +258,7 @@ public class MecanumBase extends DriveBase {
     }
 
     // normal version
-    private static double[] mechanum_multipliers(double translation, double translation_angle, double rotation) {
+    private static double[] mecanum_multipliers(double translation, double translation_angle, double rotation) {
         return new double[]{
                 translation * Math.sin(-translation_angle + 3*Math.PI/4) - rotation,
                 translation * Math.cos(-translation_angle + 3*Math.PI/4) + rotation,
