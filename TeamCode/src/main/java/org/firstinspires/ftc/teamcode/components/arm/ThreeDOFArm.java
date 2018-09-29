@@ -4,6 +4,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
+import org.firstinspires.ftc.teamcode.common.ExtendedMath;
+
+import java.util.Arrays;
 
 class ThreeDOFArm implements Arm {
     private DcMotor M1;
@@ -13,6 +16,7 @@ class ThreeDOFArm implements Arm {
     private float theta1;
     private float phi2;
     private float phi3;
+    private VectorF current;
 
     private static float L1;
     private static float L2;
@@ -24,6 +28,8 @@ class ThreeDOFArm implements Arm {
     private static float phi2Max;
     private static float phi3Min;
     private static float phi3Max;
+    private static VectorF angleMin = new VectorF(theta1Min, phi2Min, phi3Min);
+    private static VectorF angleMax = new VectorF(theta1Max, phi2Max, phi3Max);
 
     ThreeDOFArm(DcMotor M1, DcMotor M2, DcMotor M3, float theta1, float phi2, float phi3, Telemetry telemetry) {
         this.M1 = M1;
@@ -32,11 +38,43 @@ class ThreeDOFArm implements Arm {
         this.theta1 = theta1;
         this.phi2 = phi2;
         this.phi3 = phi3;
+        this.current = new VectorF(theta1, phi2, phi3);
         telemetry.addLine("Instantiated Three DOF Arm");
         telemetry.addData("Initial theta1:", theta1);
         telemetry.addData("Initial phi2:", phi2);
         telemetry.addData("Initial phi3:", phi3);
         telemetry.update();
+    }
+
+    private VectorF getNewOrientation(VectorF target) {
+        VectorF[] possible = invkin3(target, L1, L2, L3);
+        VectorF[] filtered = Arrays.stream(possible)
+                .filter(c -> ExtendedMath.all_components_in_range(c, angleMin, angleMax))
+                .toArray(VectorF[]::new);
+        if (filtered.length == 0) {
+            return null;
+        } else {
+            Arrays.sort(filtered,
+                    (a, b) -> -1 * Float.compare(a.subtracted(current).magnitude(), b.subtracted(current).magnitude())
+            );
+            return filtered[0];
+        }
+    }
+
+    // boolean denotes whether changed
+    boolean goToTarget(VectorF target) {
+        VectorF newOrientation = getNewOrientation(target);
+        if (newOrientation == null) {
+            return false;
+        } else {
+            VectorF change = ExtendedMath.get_min_rotation_radians(newOrientation, target);
+            // now account for the specific setup of the arm (chicken head principle)
+            return true;
+        }
+    }
+
+    void setEncoderDx(int a, int b, int c) {
+
     }
 
     // TODO: Think about calibration?
@@ -77,27 +115,26 @@ class ThreeDOFArm implements Arm {
         // infinite/no solutions or out of range
         if ((x == 0 && y == 0) || (target.magnitude() > L1 + L2)) {
             return new VectorF[]{};
+        } else {
+            float w = (x*x + y*y + L1*L1 + L2*L2) / (2 * L1 * L2);
+            // positive and negative solution
+            float theta2p = (float)Math.atan2(Math.sqrt(1 - w*w), w);
+            float theta2n = -1 * theta2p;
+
+            float theta1p = invkin2_getGamma(theta2p, L1, L2);
+            float theta1n = invkin2_getGamma(theta2n, L1, L2);
+
+            // TODO: handle single solution case?
+            return new VectorF[]{
+                    new VectorF(theta1p, theta2p),
+                    new VectorF(theta1n, theta2n)
+            };
         }
-
-        float w = (x*x + y*y + L1*L1 + L2*L2) / (2 * L1 * L2);
-        // positive and negative solution
-        float theta2p = (float)Math.atan2(Math.sqrt(1 - w*w), w);
-        float theta2n = -1 * theta2p;
-
-        float theta1p = invkin2_getGamma(theta2p, L1, L2);
-        float theta1n = invkin2_getGamma(theta2n, L1, L2);
-
-        // TODO: handle single solution case?
-        return new VectorF[]{
-                new VectorF(theta1p, theta2p),
-                new VectorF(theta1n, theta2n)
-        };
     }
 
     private static float invkin2_getGamma(float theta2, float L1, float L2) {
         float k1 = L1 + L2 * (float)Math.cos(theta2);
         float k2 = L2 * (float)Math.sin(theta2);
-        float gamma = (float)Math.atan2(k2, k1);
-        return gamma;
+        return (float)Math.atan2(k2, k1);
     }
 }

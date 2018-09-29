@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.autonomous.NavigationalState;
 import org.firstinspires.ftc.teamcode.common.StartLocation;
 import org.firstinspires.ftc.teamcode.components.positionFinder.VuforiaPositionFinder;
 
-@TeleOp(name = "Debug+Vuforia Tester", group = "Robot")
+@TeleOp(name = "Debug+Vuforia Tester", group = "Debug")
 public class DebugTester extends LinearOpMode {
     private StartLocation startLocation = StartLocation.BLUE_LEFT;
     private NavigationalState navinfo;

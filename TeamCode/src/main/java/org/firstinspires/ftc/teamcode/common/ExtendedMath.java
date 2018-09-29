@@ -83,6 +83,36 @@ public class ExtendedMath {
         return degrees;
     }
 
+    private static final float TWOPI = (float)(2 * Math.PI);
+    private static float positive_min_radians(float radians) {
+        radians = radians % TWOPI;
+        if (radians < 0) {
+            radians += TWOPI;
+        }
+
+        return radians;
+    }
+
+    public static float get_min_rotation_radians(float current, float target) {
+        float pos_distance = positive_min_radians(target - current);
+        float neg_distance = pos_distance - TWOPI;
+        float dtheta;
+        if (Math.abs(pos_distance) <= Math.abs(neg_distance)) {
+            dtheta = pos_distance;
+        } else {
+            dtheta = neg_distance;
+        }
+        return dtheta;
+    }
+
+    public static VectorF get_min_rotation_radians(VectorF current, VectorF target) {
+        VectorF ret = new VectorF(new float[current.length()]);
+        for (int i = 0; i < current.length(); i++) {
+            ret.put(i, get_min_rotation_radians(current.get(i), target.get(i)));
+        }
+        return ret;
+    }
+
     public static float get_min_rotation(float current, float target) {
         float pos_distance = positive_min_degrees(target - current);
         float neg_distance = pos_distance - 360;

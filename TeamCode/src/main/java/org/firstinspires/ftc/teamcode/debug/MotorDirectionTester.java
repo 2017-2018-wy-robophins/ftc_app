@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.components.MainRobot;
 
-@TeleOp(name = "Motor Direction Tester", group = "Robot")
+@TeleOp(name = "Motor Direction Tester", group = "Debug")
 public class MotorDirectionTester extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
