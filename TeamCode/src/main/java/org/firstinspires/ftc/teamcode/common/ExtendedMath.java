@@ -74,7 +74,15 @@ public class ExtendedMath {
         return orientation.thirdAngle;
     }
 
-    private static float positive_min_degrees(float degrees) {
+    public static VectorF radians_to_degrees(VectorF radians) {
+        VectorF ret = new VectorF(new float[radians.length()]);
+        for (int i = 0; i < radians.length(); i++) {
+            ret.put(i, (float)Math.toDegrees(radians.get(i)));
+        }
+        return ret;
+    }
+
+    public static float positive_min_degrees(float degrees) {
         degrees = degrees % 360;
         if (degrees < 0) {
             degrees += 360;
@@ -84,7 +92,7 @@ public class ExtendedMath {
     }
 
     private static final float TWOPI = (float)(2 * Math.PI);
-    private static float positive_min_radians(float radians) {
+    public static float positive_min_radians(float radians) {
         radians = radians % TWOPI;
         if (radians < 0) {
             radians += TWOPI;
@@ -94,15 +102,13 @@ public class ExtendedMath {
     }
 
     public static float get_min_rotation_radians(float current, float target) {
-        float pos_distance = positive_min_radians(target - current);
-        float neg_distance = pos_distance - TWOPI;
-        float dtheta;
-        if (Math.abs(pos_distance) <= Math.abs(neg_distance)) {
-            dtheta = pos_distance;
-        } else {
-            dtheta = neg_distance;
-        }
-        return dtheta;
+        return get_min_abs_angle_radian(target - current);
+    }
+
+    public static float get_min_abs_angle_radian(float x) {
+        x = positive_min_radians(x);
+        float n = x - TWOPI;
+        return Math.abs(x) < Math.abs(n)? x: n;
     }
 
     public static VectorF get_min_rotation_radians(VectorF current, VectorF target) {
