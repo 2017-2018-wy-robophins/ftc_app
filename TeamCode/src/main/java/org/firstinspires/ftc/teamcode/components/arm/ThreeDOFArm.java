@@ -13,16 +13,16 @@ import java.util.Arrays;
 
 public class ThreeDOFArm implements Arm {
     private static Telemetry telemetry;
-    private static float L1 = 304;
-    private static float L2 = 292;
+    private static float L1 = 323.85f;
+    private static float L2 = 330.2f;
     private static float L3 = 203.2f;
     // all angles in radians
     private static float theta1Min = (float)Math.toRadians(0);
     private static float theta1Max = (float)Math.toRadians(180);
     private static float phi2Min = (float)Math.toRadians(-30);
     private static float phi2Max = (float)Math.toRadians(150);
-    private static float phi3Min = (float)Math.toRadians(0);
-    private static float phi3Max = (float)Math.toRadians(360);
+    private static float phi3Min = (float)Math.toRadians(-180);
+    private static float phi3Max = (float)Math.toRadians(60);
 
     private static final float M1_RADIAN_TO_COUNT_RATIO = 1230/(float)Math.toRadians(90);
     private static final float M2_RADIAN_TO_COUNT_RATIO = 1200/(float)Math.toRadians(90);
@@ -80,6 +80,10 @@ public class ThreeDOFArm implements Arm {
         M1.setTargetPositionTolerance(M1_TOLERANCE);
         M2.setTargetPositionTolerance(M2_TOLERANCE);
         M3.setTargetPositionTolerance(M3_TOLERANCE);
+
+        M1.setTargetPosition(0);
+        M2.setTargetPosition(0);
+        M3.setTargetPosition(0);
     }
 
 private VectorF getNewOrientation(VectorF target) {
@@ -90,6 +94,7 @@ private VectorF getNewOrientation(VectorF target) {
         VectorF[] filtered = Arrays.stream(possible)
                 .filter(c -> ExtendedMath.all_components_in_range(c, angleMin, angleMax))
                 .toArray(VectorF[]::new);
+        telemetry.addData("filtered news", Arrays.toString(filtered));
         if (filtered.length == 0) {
             return null;
         } else {
@@ -133,9 +138,9 @@ private VectorF getNewOrientation(VectorF target) {
     }
 
     private void setEncoderDx(int dM1, int dM2, int dM3) {
-        int M1_TARGET = M1.getCurrentPosition() + dM1;
-        int M2_TARGET = M2.getCurrentPosition() + dM2;
-        int M3_TARGET = M3.getCurrentPosition() + dM3;
+        int M1_TARGET = M1.getTargetPosition() + dM1;
+        int M2_TARGET = M2.getTargetPosition() + dM2;
+        int M3_TARGET = M3.getTargetPosition() + dM3;
 
         M1.setTargetPosition(M1_TARGET);
         M2.setTargetPosition(M2_TARGET);
@@ -152,9 +157,9 @@ private VectorF getNewOrientation(VectorF target) {
     }
 
     private void updateOrientation() {
-        float theta1 = theta1i + M1.getCurrentPosition() / M1_RADIAN_TO_COUNT_RATIO;
-        float phi2 = phi2i + M2.getCurrentPosition() / M2_RADIAN_TO_COUNT_RATIO;
-        float phi3 = phi3i + M3.getCurrentPosition() / M3_RADIAN_TO_COUNT_RATIO;
+        float theta1 = theta1i + M1.getTargetPosition() / M1_RADIAN_TO_COUNT_RATIO;
+        float phi2 = phi2i + M2.getTargetPosition() / M2_RADIAN_TO_COUNT_RATIO;
+        float phi3 = phi3i + M3.getTargetPosition() / M3_RADIAN_TO_COUNT_RATIO;
         current = new VectorF(theta1, phi2, phi3);
     }
 

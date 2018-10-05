@@ -139,11 +139,19 @@ public class ExtendedMath {
         };
     }
 
+    public static boolean angle_in_range(float x, float min, float max) {
+        if (x < 0) {
+            return ((x <= max) && (x >= min));
+        } else {
+            return angle_in_range(x - TWOPI, min, max) || ((x <= max) && (x >= min));
+        }
+    }
+
     public static boolean all_components_in_range(VectorF v, VectorF min, VectorF max) {
         // assume that all vectors are equal length
         boolean inRange = true;
         for (int i = 0; i < v.length(); i++) {
-            inRange = inRange && (v.get(i) >= min.get(i)) && (v.get(i) <= max.get(i));
+            inRange = inRange && angle_in_range(positive_min_radians(v.get(i)), min.get(i), max.get(i));
         }
         return inRange;
     }

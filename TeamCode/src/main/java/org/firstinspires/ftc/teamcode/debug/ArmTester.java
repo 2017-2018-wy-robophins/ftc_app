@@ -23,7 +23,7 @@ public class ArmTester extends LinearOpMode {
         DcMotorEx arm3 = (DcMotorEx)hardwareMap.dcMotor.get("arm3");
 
         Arm arm = new ThreeDOFArm(arm1, arm2, arm3, (float)Math.toRadians(0), (float)Math.toRadians(150), (float)Math.toRadians(-180), telemetry);
-        VectorF target = new VectorF(0, 600, 20);
+        VectorF target = new VectorF(0, 500, 20);
         float ADJUSTMENT_MULTIPLIERS = 5;
 
         waitForStart();
