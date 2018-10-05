@@ -44,7 +44,7 @@ public class AutonMain {
         if (!DEBUG_CLASSES) {
             positionFinder = new VuforiaPositionFinder(startLocation, hardwareMap);
         } else {
-            positionFinder = new DebugPositionFinder();
+            positionFinder = new DebugPositionFinder(telemetry);
         }
         telemetry.addLine("Initialized vuforia.");
         telemetry.update();

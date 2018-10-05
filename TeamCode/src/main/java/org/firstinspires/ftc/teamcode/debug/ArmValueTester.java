@@ -31,7 +31,7 @@ public class ArmValueTester extends LinearOpMode {
         arm1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         arm2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         arm3.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        float speed = 0.4f;
+        float speed = 0.3f;
 
         waitForStart();
         telemetry.addLine("start");

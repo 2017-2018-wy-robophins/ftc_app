@@ -24,9 +24,9 @@ public class ThreeDOFArm implements Arm {
     private static float phi3Min = (float)Math.toRadians(0);
     private static float phi3Max = (float)Math.toRadians(360);
 
-    private static final float M1_RADIAN_TO_COUNT_RATIO = 1265/(float)Math.toRadians(90);
-    private static final float M2_RADIAN_TO_COUNT_RATIO = 100/(float)Math.toRadians(90);
-    private static final float M3_RADIAN_TO_COUNT_RATIO = 100/(float)Math.toRadians(90);
+    private static final float M1_RADIAN_TO_COUNT_RATIO = 1230/(float)Math.toRadians(90);
+    private static final float M2_RADIAN_TO_COUNT_RATIO = 1200/(float)Math.toRadians(90);
+    private static final float M3_RADIAN_TO_COUNT_RATIO = 850/(float)Math.toRadians(90);
 
     // Motor Tolerances
     private static final float TARGET_RADIAN_TOLERANCE = (float)Math.toRadians(0.5);
@@ -48,10 +48,10 @@ public class ThreeDOFArm implements Arm {
     private VectorF current;
 
 
-    public ThreeDOFArm(DcMotorEx M1, DcMotorEx M2, DcMotorEx M3, float theta1, float phi2, float phi3, Telemetry telemetry) {
-        this.M1 = M1;
-        this.M2 = M2;
-        this.M3 = M3;
+    public ThreeDOFArm(DcMotor M1, DcMotor M2, DcMotor M3, float theta1, float phi2, float phi3, Telemetry telemetry) {
+        this.M1 = (DcMotorEx) M1;
+        this.M2 = (DcMotorEx) M2;
+        this.M3 = (DcMotorEx) M3;
         hardwareInit();
 
         this.telemetry = telemetry;

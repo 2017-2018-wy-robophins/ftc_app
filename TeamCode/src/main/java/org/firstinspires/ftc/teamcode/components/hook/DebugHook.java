@@ -1,4 +1,19 @@
 package org.firstinspires.ftc.teamcode.components.hook;
 
-class DebugHook implements Hook {
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
+public class DebugHook implements Hook {
+    Telemetry telemetry;
+
+    public DebugHook(Telemetry telemetry) {
+        this.telemetry = telemetry;
+    }
+
+    public void extend() {
+
+    }
+
+    public void contract() {
+
+    }
 }
