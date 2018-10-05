@@ -33,7 +33,7 @@ public class ThreeDOFArm implements Arm {
     private static final int M1_TOLERANCE = (int)Math.abs(TARGET_RADIAN_TOLERANCE * M1_RADIAN_TO_COUNT_RATIO);
     private static final int M2_TOLERANCE = (int)Math.abs(TARGET_RADIAN_TOLERANCE * M2_RADIAN_TO_COUNT_RATIO);
     private static final int M3_TOLERANCE = (int)Math.abs(TARGET_RADIAN_TOLERANCE * M3_RADIAN_TO_COUNT_RATIO);
-    private static final float SPEED = 0.2f;
+    private static final float SPEED = 0.3f;
 
     private static VectorF angleMin = new VectorF(theta1Min, phi2Min, phi3Min);
     private static VectorF angleMax = new VectorF(theta1Max, phi2Max, phi3Max);
@@ -76,10 +76,6 @@ public class ThreeDOFArm implements Arm {
         M1.setDirection(DcMotorSimple.Direction.REVERSE);
         M2.setDirection(DcMotorSimple.Direction.FORWARD);
         M3.setDirection(DcMotorSimple.Direction.FORWARD);
-
-        M1.setTargetPositionTolerance(M1_TOLERANCE);
-        M2.setTargetPositionTolerance(M2_TOLERANCE);
-        M3.setTargetPositionTolerance(M3_TOLERANCE);
 
         M1.setTargetPosition(0);
         M2.setTargetPosition(0);
@@ -131,6 +127,20 @@ private VectorF getNewOrientation(VectorF target) {
         M1.setMode(mode);
         M2.setMode(mode);
         M3.setMode(mode);
+    }
+
+    private int TOLERANCE = 50;
+
+    public void autoBrake() {
+        if (Math.abs(M1.getCurrentPosition() - M1.getTargetPosition()) < TOLERANCE) {
+            M1.setPower(0);
+        }
+        if (Math.abs(M2.getCurrentPosition() - M2.getTargetPosition()) < TOLERANCE) {
+            M2.setPower(0);
+        }
+        if (Math.abs(M3.getCurrentPosition() - M3.getTargetPosition()) < TOLERANCE) {
+            M3.setPower(0);
+        }
     }
 
     private void setEncoderDRadian(float a, float b, float c) {
@@ -212,8 +222,9 @@ private VectorF getNewOrientation(VectorF target) {
             float theta2p = (float)Math.atan2(Math.sqrt(1 - w*w), w);
             float theta2n = -1 * theta2p;
 
-            float theta1p = invkin2_getGamma(theta2p, L1, L2);
-            float theta1n = invkin2_getGamma(theta2n, L1, L2);
+            float a = (float)Math.atan2(y, x);
+            float theta1p = a - invkin2_getGamma(theta2p, L1, L2);
+            float theta1n = a - invkin2_getGamma(theta2n, L1, L2);
 
             // TODO: handle single solution case?
             return new VectorF[]{

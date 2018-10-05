@@ -24,11 +24,15 @@ public class ArmTester extends LinearOpMode {
 
         Arm arm = new ThreeDOFArm(arm1, arm2, arm3, (float)Math.toRadians(0), (float)Math.toRadians(150), (float)Math.toRadians(-180), telemetry);
         VectorF target = new VectorF(0, 500, 20);
-        float ADJUSTMENT_MULTIPLIERS = 5;
+        float ADJUSTMENT_MULTIPLIERS = 10;
 
         waitForStart();
         telemetry.addLine("start");
         telemetry.update();
+
+        long updateTime = 200;
+        long newTargetTime = System.currentTimeMillis() + updateTime;
+        VectorF newTarget = target;
 
         while (opModeIsActive()) {
             double leftx = gamepad1.left_stick_x;
@@ -39,10 +43,14 @@ public class ArmTester extends LinearOpMode {
             telemetry.addData("Right y", righty);
 
             VectorF change = new VectorF((float)leftx, (float)lefty, (float)righty).multiplied(ADJUSTMENT_MULTIPLIERS);
-            VectorF newTarget = target.added(change);
-            if (arm.goToTarget(newTarget)) {
-                target = newTarget;
+            newTarget = newTarget.added(change);
+            if (System.currentTimeMillis() > newTargetTime) {
+                if (arm.goToTarget(newTarget)) {
+                    target = newTarget;
+                }
+                newTargetTime = System.currentTimeMillis() + updateTime;
             }
+            ((ThreeDOFArm) arm).autoBrake();
 
             telemetry.addData("Current orientation", ExtendedMath.radians_to_degrees(arm.getOrientation()));
             telemetry.addData("Current position", ((ThreeDOFArm) arm).getCartesianPosition());
