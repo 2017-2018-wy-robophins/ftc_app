@@ -83,9 +83,3 @@ public class MainOpMode extends LinearOpMode {
         telemetry.update();
     }
 }
-
-// TODO: implement control modes
-enum ControlMode {
-    Drive,
-    Arm
-}

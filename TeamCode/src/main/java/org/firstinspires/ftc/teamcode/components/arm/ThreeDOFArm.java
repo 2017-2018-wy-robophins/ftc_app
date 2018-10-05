@@ -2,35 +2,38 @@ package org.firstinspires.ftc.teamcode.components.arm;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.common.ExtendedMath;
 
 import java.util.Arrays;
 
 public class ThreeDOFArm implements Arm {
-    private static float L1;
-    private static float L2;
-    private static float L3;
+    private static Telemetry telemetry;
+    private static float L1 = 304;
+    private static float L2 = 292;
+    private static float L3 = 203.2f;
     // all angles in radians
     private static float theta1Min = (float)Math.toRadians(0);
     private static float theta1Max = (float)Math.toRadians(180);
     private static float phi2Min = (float)Math.toRadians(-30);
-    private static float phi2Max = (float)Math.toRadians(165);
-    private static float phi3Min = (float)Math.toRadians(-165);
-    private static float phi3Max = (float)Math.toRadians(0);
+    private static float phi2Max = (float)Math.toRadians(150);
+    private static float phi3Min = (float)Math.toRadians(0);
+    private static float phi3Max = (float)Math.toRadians(360);
 
-    private static final float M1_RADIAN_TO_COUNT_RATIO = 1;
-    private static final float M2_RADIAN_TO_COUNT_RATIO = 1;
-    private static final float M3_RADIAN_TO_COUNT_RATIO = 1;
+    private static final float M1_RADIAN_TO_COUNT_RATIO = 1265/(float)Math.toRadians(90);
+    private static final float M2_RADIAN_TO_COUNT_RATIO = 100/(float)Math.toRadians(90);
+    private static final float M3_RADIAN_TO_COUNT_RATIO = 100/(float)Math.toRadians(90);
 
     // Motor Tolerances
     private static final float TARGET_RADIAN_TOLERANCE = (float)Math.toRadians(0.5);
-    private static final int M1_TOLERANCE = (int)(TARGET_RADIAN_TOLERANCE * M1_RADIAN_TO_COUNT_RATIO);
-    private static final int M2_TOLERANCE = (int)(TARGET_RADIAN_TOLERANCE * M2_RADIAN_TO_COUNT_RATIO);
-    private static final int M3_TOLERANCE = (int)(TARGET_RADIAN_TOLERANCE * M3_RADIAN_TO_COUNT_RATIO);
-    private static final float SPEED = 0.5f;
+    private static final int M1_TOLERANCE = (int)Math.abs(TARGET_RADIAN_TOLERANCE * M1_RADIAN_TO_COUNT_RATIO);
+    private static final int M2_TOLERANCE = (int)Math.abs(TARGET_RADIAN_TOLERANCE * M2_RADIAN_TO_COUNT_RATIO);
+    private static final int M3_TOLERANCE = (int)Math.abs(TARGET_RADIAN_TOLERANCE * M3_RADIAN_TO_COUNT_RATIO);
+    private static final float SPEED = 0.2f;
 
     private static VectorF angleMin = new VectorF(theta1Min, phi2Min, phi3Min);
     private static VectorF angleMax = new VectorF(theta1Max, phi2Max, phi3Max);
@@ -51,6 +54,7 @@ public class ThreeDOFArm implements Arm {
         this.M3 = M3;
         hardwareInit();
 
+        this.telemetry = telemetry;
         this.theta1i = theta1;
         this.phi2i = phi2;
         this.phi3i = phi3;
@@ -65,15 +69,24 @@ public class ThreeDOFArm implements Arm {
     private void hardwareInit() {
         setMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setMotorMode(DcMotor.RunMode.RUN_TO_POSITION);
+        M1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        M2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        M3.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        M1.setDirection(DcMotorSimple.Direction.REVERSE);
+        M2.setDirection(DcMotorSimple.Direction.FORWARD);
+        M3.setDirection(DcMotorSimple.Direction.FORWARD);
 
         M1.setTargetPositionTolerance(M1_TOLERANCE);
         M2.setTargetPositionTolerance(M2_TOLERANCE);
         M3.setTargetPositionTolerance(M3_TOLERANCE);
     }
 
-
-    private VectorF getNewOrientation(VectorF target) {
+private VectorF getNewOrientation(VectorF target) {
         VectorF[] possible = invkin3(target, L1, L2, L3);
+        telemetry.addData("Possible news", Arrays.toString(possible));
+        telemetry.addData("Range min", angleMin);
+        telemetry.addData("Range max", angleMax);
         VectorF[] filtered = Arrays.stream(possible)
                 .filter(c -> ExtendedMath.all_components_in_range(c, angleMin, angleMax))
                 .toArray(VectorF[]::new);
@@ -94,18 +107,17 @@ public class ThreeDOFArm implements Arm {
         if (newOrientation == null) {
             return false;
         } else {
+            telemetry.addData("possible new", ExtendedMath.radians_to_degrees(newOrientation));
             // find the fastest way to get from current to new (shortest abs)
             VectorF change = ExtendedMath.get_min_rotation_radians(current, newOrientation);
+            telemetry.addData("change", ExtendedMath.radians_to_degrees(change));
             float deltaTheta1 = change.get(0);
             float deltaPhi2 = change.get(1);
             float deltaPhi3 = change.get(2);
 
-            // now account for the specific setup of the arm (chicken head principle)
-            // this is the actual angle that the motor has to move
-            float deltaPhi3Motor = ExtendedMath.get_min_abs_angle_radian(deltaPhi2 + deltaPhi3);
-
             // now set the encoders
-            setEncoderDRadian(deltaTheta1, deltaPhi2, deltaPhi3Motor);
+            setEncoderDRadian(deltaTheta1, deltaPhi2, deltaPhi3);
+            current = newOrientation;
             return true;
         }
     }
@@ -142,9 +154,21 @@ public class ThreeDOFArm implements Arm {
     private void updateOrientation() {
         float theta1 = theta1i + M1.getCurrentPosition() / M1_RADIAN_TO_COUNT_RATIO;
         float phi2 = phi2i + M2.getCurrentPosition() / M2_RADIAN_TO_COUNT_RATIO;
-        float phi3Motor = phi3i + M3.getCurrentPosition() / M3_RADIAN_TO_COUNT_RATIO;
-        float phi3 = phi2i + phi3i - phi2 + phi3Motor;
+        float phi3 = phi3i + M3.getCurrentPosition() / M3_RADIAN_TO_COUNT_RATIO;
         current = new VectorF(theta1, phi2, phi3);
+    }
+
+    public VectorF getCartesianPosition() {
+        VectorF angles = getOrientation();
+        float theta1 = angles.get(0);
+        float phi2 = angles.get(1);
+        float phi3 = angles.get(2);
+        float r = (float)(L1 + L2 * Math.cos(phi2) + L3 * Math.cos(phi2 + phi3));
+        return new VectorF(
+                (float)(r * Math.cos(theta1)),
+                (float)(r * Math.sin(theta1)),
+                (float)(L2 * Math.sin(phi2) + L3 * Math.sin(phi2 + phi3))
+        );
     }
 
     // returns [VectorF(theta1, phi2, phi3)]
@@ -158,6 +182,7 @@ public class ThreeDOFArm implements Arm {
         float yPrime = y - L2 * (float)Math.sin(theta1);
 
         VectorF[] invkin2_solns = invkin2(new VectorF((float)Math.sqrt(xPrime*xPrime + yPrime*yPrime), z), L2, L3);
+        telemetry.addData("invkin2", Arrays.toString(invkin2_solns));
 
         VectorF[] solns = new VectorF[invkin2_solns.length];
         for (int i = 0; i < invkin2_solns.length; i++) {
@@ -177,7 +202,7 @@ public class ThreeDOFArm implements Arm {
         if ((x == 0 && y == 0) || (target.magnitude() > L1 + L2)) {
             return new VectorF[0];
         } else {
-            float w = (x*x + y*y + L1*L1 + L2*L2) / (2 * L1 * L2);
+            float w = (x*x + y*y - L1*L1 - L2*L2) / (2 * L1 * L2);
             // positive and negative solution
             float theta2p = (float)Math.atan2(Math.sqrt(1 - w*w), w);
             float theta2n = -1 * theta2p;
