@@ -13,3 +13,12 @@
 
 // Include common definitions from above.
 apply from: '../build.common.gradle'
+repositories {
+    jcenter()
+}
+
+dependencies {
+    implementation 'com.acmerobotics.roadrunner:core:0.2.0'
+    implementation project(':DogeCV')
+    implementation project(':openCVLibrary3')
+}
