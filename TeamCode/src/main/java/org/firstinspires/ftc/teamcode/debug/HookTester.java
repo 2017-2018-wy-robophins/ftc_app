@@ -3,6 +3,10 @@ package org.firstinspires.ftc.teamcode.debug;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
+
+import org.firstinspires.ftc.teamcode.components.hook.LimitedRackAndPinionHook;
 
 @TeleOp(name = "Hook Tester", group = "Debug")
 public class HookTester extends LinearOpMode {
@@ -16,17 +20,34 @@ public class HookTester extends LinearOpMode {
         DcMotor hookMotor = hardwareMap.dcMotor.get("hookMotor");
         hookMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         hookMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        hookMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         hookMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        DigitalChannel touchSensor = hardwareMap.get(DigitalChannel.class, "touchLimit");
+        // set the digital channel to input.
+        touchSensor.setMode(DigitalChannel.Mode.INPUT);
+
+        LimitedRackAndPinionHook hook = new LimitedRackAndPinionHook(hookMotor, touchSensor, telemetry);
+
         waitForStart();
         telemetry.addLine("start");
         telemetry.update();
 
         while (opModeIsActive()) {
-            double righty = gamepad1.right_stick_y;
-            hookMotor.setPower(righty);
+            boolean pressed = !touchSensor.getState();
+
+            if (gamepad1.left_bumper) {
+                hook.extend();
+            }
+            if (gamepad1.right_bumper) {
+                hook.contract();
+            }
+
+            hook.update();
             telemetry.addLine("Running");
             telemetry.addData("Speed", hookMotor.getPower());
             telemetry.addData("Position", hookMotor.getCurrentPosition());
+            telemetry.addData("Pressed", pressed);
             telemetry.update();
         }
         telemetry.addLine("finished");

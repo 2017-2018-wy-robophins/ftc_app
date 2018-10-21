@@ -28,6 +28,7 @@ public class DriveBaseTester extends LinearOpMode {
         left.setDirection(DcMotorSimple.Direction.REVERSE);
         right.setDirection(DcMotorSimple.Direction.FORWARD);
 
+        float MAX_SPEED = 0.9f;
         left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
@@ -39,7 +40,7 @@ public class DriveBaseTester extends LinearOpMode {
         telemetry.update();
 
         boolean rb_pressed = false;
-        ControlMode mode = ControlMode.Tank;
+        ControlMode mode = ControlMode.Joy;
         while (opModeIsActive()) {
             double leftx = gamepad1.left_stick_x;
             double lefty = -gamepad1.left_stick_y;
@@ -60,13 +61,13 @@ public class DriveBaseTester extends LinearOpMode {
 
             switch (mode) {
                 case Tank:
-                    left.setPower(lefty);
-                    right.setPower(righty);
+                    left.setPower(MAX_SPEED * lefty);
+                    right.setPower(MAX_SPEED * righty);
                 case Joy:
                     double turn_contrib = Math.abs(rightx);
                     double throttle_contrib = 1 - turn_contrib;
-                    left.setPower(lefty * throttle_contrib + rightx);
-                    right.setPower(lefty * throttle_contrib - rightx);
+                    left.setPower(MAX_SPEED * (lefty * throttle_contrib + rightx));
+                    right.setPower(MAX_SPEED * (lefty * throttle_contrib - rightx));
             }
 
             telemetry.addData("R speed", right.getPower());
