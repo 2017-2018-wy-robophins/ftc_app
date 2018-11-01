@@ -21,4 +21,5 @@ dependencies {
     implementation 'com.acmerobotics.roadrunner:core:0.2.0'
     implementation project(':DogeCV')
     implementation project(':openCVLibrary3')
+    implementation project(':FtcRobotController')
 }
