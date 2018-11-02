@@ -9,7 +9,6 @@ import org.firstinspires.ftc.teamcode.components.DigitalTouchSensor;
 
 public class LimitedRackAndPinionHook implements Hook {
     private DcMotor hookMotor;
-    // TODO: make a component for this
     private DigitalTouchSensor touchLimit;
     private Telemetry telemetry;
     private State state = State.Contracted;
@@ -34,7 +33,7 @@ public class LimitedRackAndPinionHook implements Hook {
         this.touchLimit = touchLimit;
     }
 
-    public void extend() {
+    public void latch() {
         startedOnSwitch = previousPressed = touchLimit.isPressed();
         offInitialSwitch = false;
         if (state == State.Contracted) {
@@ -45,7 +44,7 @@ public class LimitedRackAndPinionHook implements Hook {
         }
     }
 
-    public void contract() {
+    public void delatch() {
         startedOnSwitch = previousPressed = touchLimit.isPressed();
         offInitialSwitch = false;
         if (state == State.Extended) {

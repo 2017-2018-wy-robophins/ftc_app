@@ -22,12 +22,12 @@ public class RackAndPinionHook implements Hook {
         hookMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
-    public void extend() {
+    public void latch() {
         hookMotor.setTargetPosition(extendPosition);
         hookMotor.setPower(1);
     }
 
-    public void contract() {
+    public void delatch() {
         hookMotor.setTargetPosition(contractPosition);
         hookMotor.setPower(1);
     }

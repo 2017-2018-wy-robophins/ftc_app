@@ -25,7 +25,7 @@ public class MotorDirectionTester extends LinearOpMode {
         while (opModeIsActive()) {
             telemetry.addLine("Running");
             telemetry.addLine("All motors should be going forward");
-            mainRobot.driveBase.move(0, 0.3f);
+            mainRobot.driveBase.direct_move_and_turn(0.3f, 0);
             mainRobot.driveBase.report_encoder_ticks();
             telemetry.update();
         }

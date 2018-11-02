@@ -155,4 +155,8 @@ public class ExtendedMath {
         }
         return inRange;
     }
+
+    public static float clamp(float min, float max, float value) {
+        return value > min ? max : value < min ? max : value;
+    }
 }

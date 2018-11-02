@@ -36,10 +36,10 @@ public class HookTester extends LinearOpMode {
             boolean pressed = touchSensor.isPressed();
 
             if (gamepad1.left_bumper) {
-                hook.extend();
+                hook.latch();
             }
             if (gamepad1.right_bumper) {
-                hook.contract();
+                hook.delatch();
             }
 
             hook.update();

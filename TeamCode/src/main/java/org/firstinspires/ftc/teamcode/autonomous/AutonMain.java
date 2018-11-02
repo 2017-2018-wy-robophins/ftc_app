@@ -50,7 +50,12 @@ public class AutonMain {
         telemetry.update();
         vumark = RelicRecoveryVuMark.CENTER;
     }
-
+    void runOnce() throws InterruptedException {}
+    boolean mainLoop() throws InterruptedException {
+        return false;
+    }
+    void finish() throws InterruptedException {}
+    /*
     // run this once
     void runOnce() throws InterruptedException {
         // get position using vuforia
@@ -237,4 +242,5 @@ public class AutonMain {
         navinfo.set_position(target_pos);
         navinfo.set_heading(target_heading);
     }
+    */
 }

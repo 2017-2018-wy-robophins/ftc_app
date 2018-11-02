@@ -9,11 +9,11 @@ public class DebugHook implements Hook {
         this.telemetry = telemetry;
     }
 
-    public void extend() {
+    public void latch() {
 
     }
 
-    public void contract() {
+    public void delatch() {
 
     }
 }

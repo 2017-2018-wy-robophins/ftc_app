@@ -15,34 +15,9 @@ public class DebugDriveBase extends DriveBase {
     public DebugDriveBase(Telemetry telemetry) {
         this.telemetry = telemetry;
     }
-
-    public void move_by_vector_and_rotation(VectorF movement, float rotation, float speed, int encoder_epsilon, int timeout_ms) throws InterruptedException {
-        telemetry.addLine("Running function: move_by_vector_and_rotation");
-        telemetry.addData("Movement (mm)", movement);
-        telemetry.addData("Rotation (degrees)", rotation);
-        telemetry.update();
-        Thread.sleep(500);
-    }
-
-    public void rotate_and_move_only_vertical_drive(float initial_rotation, float movement, float final_rotation, float speed, int encoder_epsilon, int timeout_ms) throws InterruptedException {
-        telemetry.addLine("Running function: rotate_and_move_only_vertical_drive");
-        telemetry.addData("Initial Rotation (degrees)", initial_rotation);
-        telemetry.addData("Movement (mm)", movement);
-        telemetry.addData("Final Rotation (degrees)", final_rotation);
-        telemetry.update();
-        Thread.sleep(500);
-    }
-
-    public void move(float x, float y) {
-        telemetry.addLine("Running function: move");
+    public void imu_forward_move(float x, InertialSensor imu) {
+        telemetry.addLine("Running function: imu forward move");
         telemetry.addData("x", x);
-        telemetry.addData("y", y);
-        telemetry.update();
-    }
-
-    public void turn(float r) {
-        telemetry.addLine("Running function: turn");
-        telemetry.addData("r", r);
         telemetry.update();
     }
 
@@ -52,10 +27,9 @@ public class DebugDriveBase extends DriveBase {
         telemetry.update();
     }
 
-    public void move_and_turn(float x, float y, float r) {
-        telemetry.addLine("Running function: move_and_turn");
+    public void direct_move_and_turn(float x, float r) {
+        telemetry.addLine("Running function: direct_move_and_turn");
         telemetry.addData("x", x);
-        telemetry.addData("y", y);
         telemetry.addData("r", r);
         telemetry.update();
     }

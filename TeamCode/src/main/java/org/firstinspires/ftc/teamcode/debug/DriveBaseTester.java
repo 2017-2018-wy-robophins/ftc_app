@@ -6,8 +6,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import org.firstinspires.ftc.teamcode.components.arm.Arm;
-
 import java.text.BreakIterator;
 
 @TeleOp(name = "Drive Base Tester", group = "Debug")

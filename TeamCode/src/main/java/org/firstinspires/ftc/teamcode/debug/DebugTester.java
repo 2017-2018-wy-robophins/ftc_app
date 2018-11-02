@@ -38,7 +38,7 @@ public class DebugTester extends LinearOpMode {
         telemetry.addLine("Initialized vuforia.");
         telemetry.update();
         vumark = RelicRecoveryVuMark.CENTER;
-        Pair<OpenGLMatrix, RelicRecoveryVuMark> position = vuforiaPositionFinder.getCurrentPosition();
+        Pair<OpenGLMatrix, RelicRecoveryVuMark> position;
 
 
         while (opModeIsActive()) {
