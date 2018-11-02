@@ -2,25 +2,29 @@ package org.firstinspires.ftc.teamcode.components.hook;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
+
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.components.DigitalTouchSensor;
 
 public class LimitedRackAndPinionHook implements Hook {
-    DcMotor hookMotor;
+    private DcMotor hookMotor;
     // TODO: make a component for this
-    DigitalChannel touchLimit;
-    long lastExtensionCommandTime = System.currentTimeMillis();
-    long touchLimitTimeBuffer = 1000; // ms
-    Telemetry telemetry;
-    State state = State.Contracted;
-    State nextState = State.Between;
+    private DigitalTouchSensor touchLimit;
+    private Telemetry telemetry;
+    private State state = State.Contracted;
+    private State nextState = State.Between;
+
+    private boolean startedOnSwitch; // only do this if we started on a switch
+    private boolean previousPressed; // when previous switch state was pressed, now not pressed, then off initial switch
+    private boolean offInitialSwitch; // now when off initial switch, check for if pressed again
+
 
     private static final int extendPosition = 13000;
     private static final int contractPosition = 0;
 
 
-    public LimitedRackAndPinionHook(DcMotor hookMotor, DigitalChannel touchLimit, Telemetry telemetry) {
+    public LimitedRackAndPinionHook(DcMotor hookMotor, DigitalTouchSensor touchLimit, Telemetry telemetry) {
         this.hookMotor = hookMotor;
 
         hookMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -31,7 +35,8 @@ public class LimitedRackAndPinionHook implements Hook {
     }
 
     public void extend() {
-        lastExtensionCommandTime = System.currentTimeMillis();
+        startedOnSwitch = previousPressed = touchLimit.isPressed();
+        offInitialSwitch = false;
         if (state == State.Contracted) {
             hookMotor.setPower(1);
             state = State.Between;
@@ -41,7 +46,8 @@ public class LimitedRackAndPinionHook implements Hook {
     }
 
     public void contract() {
-        lastExtensionCommandTime = System.currentTimeMillis();
+        startedOnSwitch = previousPressed = touchLimit.isPressed();
+        offInitialSwitch = false;
         if (state == State.Extended) {
             hookMotor.setPower(-1);
             state = State.Between;
@@ -51,12 +57,24 @@ public class LimitedRackAndPinionHook implements Hook {
     }
 
     public void update() {
-        boolean pressed = !touchLimit.getState();
-        if (System.currentTimeMillis() - lastExtensionCommandTime > touchLimitTimeBuffer && pressed) {
-            hookMotor.setPower(0);
-            state = nextState;
-            System.out.println("Stop");
+        boolean pressed = touchLimit.isPressed();
+        if (startedOnSwitch) {
+            if (previousPressed && !pressed) {
+                offInitialSwitch = true;
+            } else if (offInitialSwitch && !previousPressed && pressed) {
+                stop();
+            }
+        } else {
+            if (pressed) {
+                stop();
+            }
         }
+    }
+
+    public void stop() {
+        hookMotor.setPower(0);
+        state = nextState;
+        System.out.println("Stop");
     }
 
     enum State {

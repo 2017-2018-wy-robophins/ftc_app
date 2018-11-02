@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 
+import org.firstinspires.ftc.teamcode.components.DigitalTouchSensor;
 import org.firstinspires.ftc.teamcode.components.hook.LimitedRackAndPinionHook;
 
 @TeleOp(name = "Hook Tester", group = "Debug")
@@ -23,9 +24,7 @@ public class HookTester extends LinearOpMode {
         hookMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         hookMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        DigitalChannel touchSensor = hardwareMap.get(DigitalChannel.class, "touchLimit");
-        // set the digital channel to input.
-        touchSensor.setMode(DigitalChannel.Mode.INPUT);
+        DigitalTouchSensor touchSensor = new DigitalTouchSensor(hardwareMap, "touchLimit");
 
         LimitedRackAndPinionHook hook = new LimitedRackAndPinionHook(hookMotor, touchSensor, telemetry);
 
@@ -34,7 +33,7 @@ public class HookTester extends LinearOpMode {
         telemetry.update();
 
         while (opModeIsActive()) {
-            boolean pressed = !touchSensor.getState();
+            boolean pressed = touchSensor.isPressed();
 
             if (gamepad1.left_bumper) {
                 hook.extend();
