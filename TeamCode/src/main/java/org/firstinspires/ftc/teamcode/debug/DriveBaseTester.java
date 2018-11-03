@@ -6,8 +6,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import java.text.BreakIterator;
-
 @TeleOp(name = "Drive Base Tester", group = "Debug")
 public class DriveBaseTester extends LinearOpMode {
     @Override
@@ -37,36 +35,20 @@ public class DriveBaseTester extends LinearOpMode {
         telemetry.addLine("start");
         telemetry.update();
 
-        boolean rb_pressed = false;
-        ControlMode mode = ControlMode.Joy;
         while (opModeIsActive()) {
             double leftx = gamepad1.left_stick_x;
             double lefty = -gamepad1.left_stick_y;
             double rightx = gamepad1.right_stick_x;
             double righty = -gamepad1.right_stick_y;
-            boolean right_bumper = gamepad1.right_bumper;
             telemetry.addData("Left x", leftx);
             telemetry.addData("Left y", lefty);
             telemetry.addData("Right x", rightx);
             telemetry.addData("Right y", righty);
-            telemetry.addData("Right bumper", right_bumper);
 
-            if (!rb_pressed && right_bumper) {
-                mode = mode.toggle();
-            }
-            rb_pressed = right_bumper;
-            telemetry.addData("Mode", mode);
-
-            switch (mode) {
-                case Tank:
-                    left.setPower(MAX_SPEED * lefty);
-                    right.setPower(MAX_SPEED * righty);
-                case Joy:
-                    double turn_contrib = Math.abs(rightx);
-                    double throttle_contrib = 1 - turn_contrib;
-                    left.setPower(MAX_SPEED * (lefty * throttle_contrib + rightx));
-                    right.setPower(MAX_SPEED * (lefty * throttle_contrib - rightx));
-            }
+            double turn_contrib = Math.abs(rightx);
+            double throttle_contrib = 1 - turn_contrib;
+            left.setPower(MAX_SPEED * (lefty * throttle_contrib + rightx));
+            right.setPower(MAX_SPEED * (lefty * throttle_contrib - rightx));
 
             telemetry.addData("R speed", right.getPower());
             telemetry.addData("L speed", left.getPower());

@@ -18,7 +18,7 @@ public class DebugPositionFinder implements PositionFinder {
         this.telemetry = telemetry;
     }
 
-    public Pair<OpenGLMatrix, RelicRecoveryVuMark> getCurrentPosition() {
+    public OpenGLMatrix getCurrentPosition() {
             return null;
     }
 }

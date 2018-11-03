@@ -10,5 +10,5 @@ import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
  */
 
 public interface PositionFinder {
-    Pair<OpenGLMatrix, RelicRecoveryVuMark> getCurrentPosition() throws InterruptedException;
+    OpenGLMatrix getCurrentPosition() throws InterruptedException;
 }

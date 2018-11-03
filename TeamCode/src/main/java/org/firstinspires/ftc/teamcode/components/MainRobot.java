@@ -1,5 +1,4 @@
 package org.firstinspires.ftc.teamcode.components;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -7,7 +6,6 @@ import org.firstinspires.ftc.teamcode.components.driveBase.DebugDriveBase;
 import org.firstinspires.ftc.teamcode.components.driveBase.DriveBase;
 import org.firstinspires.ftc.teamcode.components.hook.DebugHook;
 import org.firstinspires.ftc.teamcode.components.hook.Hook;
-import org.firstinspires.ftc.teamcode.components.hook.RackAndPinionHook;
 
 
 public class MainRobot {
