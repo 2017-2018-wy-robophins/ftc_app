@@ -12,7 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
-public class InertialSensorBNO055 {
+public class InertialSensorBNO055 implements InertialSensor {
     // The IMU sensor object
     BNO055IMU imu;
 

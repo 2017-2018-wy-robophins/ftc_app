@@ -27,7 +27,6 @@ public class AutonMain {
     // hardware components
     private NavigationalState navinfo;
     private PositionFinder positionFinder;
-    private RelicRecoveryVuMark vumark;
     private final boolean DEBUG = false;
     private final boolean DEBUG_CLASSES = false;
 
@@ -39,16 +38,7 @@ public class AutonMain {
 
         navinfo = new NavigationalState();
         telemetry.addData("Start Location", startLocation);
-        telemetry.addLine("Initializing vuforia...");
         telemetry.update();
-        if (!DEBUG_CLASSES) {
-            positionFinder = new VuforiaPositionFinder(hardwareMap);
-        } else {
-            positionFinder = new DebugPositionFinder(telemetry);
-        }
-        telemetry.addLine("Initialized vuforia.");
-        telemetry.update();
-        vumark = RelicRecoveryVuMark.CENTER;
     }
     void runOnce() throws InterruptedException {}
     boolean mainLoop() throws InterruptedException {

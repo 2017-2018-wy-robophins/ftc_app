@@ -1,27 +1,27 @@
-package org.firstinspires.ftc.teamcode.components.positionFinder;
-
-import android.util.Pair;
+package org.firstinspires.ftc.teamcode.components.visionProcessor;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+import org.firstinspires.ftc.robotcore.internal.android.dex.util.ExceptionWithContext;
 import org.firstinspires.ftc.teamcode.BuildConfig;
-import org.firstinspires.ftc.teamcode.common.FieldConstants;
-import org.firstinspires.ftc.teamcode.common.StartLocation;
+import org.firstinspires.ftc.teamcode.common.SamplingConfiguration;
+import org.firstinspires.ftc.teamcode.components.positionFinder.PositionFinder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
-import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
-import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
+import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.LABEL_GOLD_MINERAL;
+import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.LABEL_SILVER_MINERAL;
+import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.TFOD_MODEL_ASSET;
 import static org.firstinspires.ftc.teamcode.common.FieldConstants.backSpaceLocationOnField;
 import static org.firstinspires.ftc.teamcode.common.FieldConstants.blueRoverLocationOnField;
 import static org.firstinspires.ftc.teamcode.common.FieldConstants.frontCraterLocationOnField;
@@ -33,13 +33,14 @@ import static org.firstinspires.ftc.teamcode.common.FieldConstants.redFootprintL
  */
 
 // will be used as a component in auton: composition > inheritance for this
-public class VuforiaPositionFinder implements PositionFinder {
+public class VuforiaVisionProcessor implements VisionProcessor {
 
     private HardwareMap hardwareMap;
     private VuforiaLocalizer vuforia;
+    private Optional<TFObjectDetector> tfod;
     List<VuforiaTrackable> allTrackables;
 
-    public VuforiaPositionFinder(HardwareMap hwmap) {
+    public VuforiaVisionProcessor(HardwareMap hwmap) {
         this.hardwareMap = hwmap;
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -62,6 +63,15 @@ public class VuforiaPositionFinder implements PositionFinder {
         backSpace.setName("Back-Space");
         backSpace.setLocation(backSpaceLocationOnField);
 
+        /**
+         * To place the RedFootprint target in the middle of the red perimeter wall:
+         * - First we rotate it 90 around the field's X axis to flip it upright.
+         * - Second, we rotate it 180 around the field's Z axis so the image is flat against the red perimeter wall
+         *   and facing inwards to the center of the field.
+         * - Then, we translate it along the negative Y axis to the red perimeter wall.
+         */
+
+
         // For convenience, gather together all the trackable objects in one easily-iterable collection */
         allTrackables = new ArrayList<VuforiaTrackable>();
         allTrackables.addAll(targetsRoverRuckus);
@@ -71,6 +81,19 @@ public class VuforiaPositionFinder implements PositionFinder {
             ((VuforiaTrackableDefaultListener)trackable.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
         }
         targetsRoverRuckus.activate();
+    }
+
+    private void initTfod() {
+        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
+            "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+        tfod = Optional.of(ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia));
+        tfod.get().loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
+        tfod.get().activate();
+    }
+
+    private void stopTfod() {
+        tfod.map(tf -> {tf.shutdown(); return tf;});
     }
 
     // return the transformation matrix and the template type
@@ -90,5 +113,49 @@ public class VuforiaPositionFinder implements PositionFinder {
         }
 
         return null;
+    }
+
+    public SamplingConfiguration getSamplingConfiguration() throws InterruptedException {
+        Thread.sleep(1000);
+
+        if (tfod.isPresent()) {
+            TFObjectDetector tf = tfod.get();
+
+            List<Recognition> updatedRecognitions = tf.getUpdatedRecognitions();
+            if (updatedRecognitions != null) {
+                if (updatedRecognitions.size() == 3) {
+                    int goldMineralX = -1;
+                    int silverMineral1X = -1;
+                    int silverMineral2X = -1;
+                    for (Recognition recognition : updatedRecognitions) {
+                        if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
+                            goldMineralX = (int) recognition.getLeft();
+                        } else if (silverMineral1X == -1) {
+                            silverMineral1X = (int) recognition.getLeft();
+                        } else {
+                            silverMineral2X = (int) recognition.getLeft();
+                        }
+                    }
+                    if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1) {
+                        if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
+                            return SamplingConfiguration.LEFT;
+                        } else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
+                            return SamplingConfiguration.RIGHT;
+                        } else {
+                            return SamplingConfiguration.CENTER;
+                        }
+                    } else {
+                        return null;
+                    }
+                } else {
+                    return null;
+                }
+            } else {
+                return null;
+            }
+        } else {
+            System.out.println("TRIED TO SAMPLE WITHOUT TFOD");
+            return null;
+        }
     }
 }

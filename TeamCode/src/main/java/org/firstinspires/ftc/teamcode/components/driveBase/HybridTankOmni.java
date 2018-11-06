@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.common.ExtendedMath;
 import org.firstinspires.ftc.teamcode.components.inertialSensor.InertialSensor;
 
 // keep in mind that the center of rotation/the robot will be considered as in between the drive wheels
-class HybridTankOmni extends DriveBase {
+public class HybridTankOmni extends DriveBase {
     DcMotor left;
     DcMotor right;
     Telemetry telemetry;
