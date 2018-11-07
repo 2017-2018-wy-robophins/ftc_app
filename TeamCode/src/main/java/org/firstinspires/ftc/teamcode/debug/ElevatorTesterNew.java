@@ -20,13 +20,15 @@ public class ElevatorTesterNew extends LinearOpMode {
 
         waitForStart();
         while (opModeIsActive()) {
-            if (gamepad1.right_bumper) {
-                telemetry.addLine("up");
-                hook.latch();
-            }
-            if (gamepad1.left_bumper) {
-                telemetry.addLine("down");
-                hook.delatch();
+            if (gamepad1.a) {
+                telemetry.addLine("GOTO Fully Extended");
+                hook.goToState(ElevatorHook.State.FullyExtended);
+            } else if (gamepad1.b) {
+                telemetry.addLine("GOTO Partially Extended");
+                hook.goToState(ElevatorHook.State.PartiallyExtended);
+            } else if (gamepad1.x) {
+                telemetry.addLine("GOTO Contracted");
+                hook.goToState(ElevatorHook.State.Contracted);
             }
 
             hook.update();

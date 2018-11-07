@@ -15,13 +15,15 @@ import org.firstinspires.ftc.teamcode.components.inertialSensor.InertialSensor;
 import org.firstinspires.ftc.teamcode.components.inertialSensor.InertialSensorBNO055;
 import org.firstinspires.ftc.teamcode.components.positionFinder.PositionFinder;
 import org.firstinspires.ftc.teamcode.components.positionFinder.VuforiaPositionFinder;
+import org.firstinspires.ftc.teamcode.components.visionProcessor.VisionProcessor;
+import org.firstinspires.ftc.teamcode.components.visionProcessor.VuforiaVisionProcessor;
 
 
 public class MainRobot {
     public DriveBase driveBase;
-    public Hook hook;
+    public ElevatorHook hook;
     public InertialSensor imu;
-    public PositionFinder localization;
+    public VisionProcessor visionProcessor;
     //define all variables used
     boolean DEBUG_CLASSES;
 
@@ -32,20 +34,25 @@ public class MainRobot {
 
         if (DEBUG_CLASSES) {
             driveBase = new DebugDriveBase(telemetry);
-            hook = new DebugHook(telemetry);
         } else {
+            // create the drivebase
             DcMotor leftDrive = hardwareMap.dcMotor.get("leftDrive");
             DcMotor rightDrive = hardwareMap.dcMotor.get("rightDrive");
             driveBase = new HybridTankOmni(leftDrive, rightDrive, telemetry);
 
+            // create the elevator
             DcMotor leftElevator = hardwareMap.dcMotor.get("leftElevator");
             DcMotor rightElevator = hardwareMap.dcMotor.get("rightElevator");
             DigitalLimitSwitch limitSwitch = new DigitalLimitSwitch(hardwareMap, "elevatorLimit");
             hook = new ElevatorHook(leftElevator, rightElevator, limitSwitch, telemetry);
 
+            // create the grabber
+
+            // create the imu
             imu = new InertialSensorBNO055(hardwareMap);
 
-            // localization = new VuforiaPositionFinder()
+            // create the vision processor
+            visionProcessor = new VuforiaVisionProcessor(hardwareMap);
         }
     }
 }

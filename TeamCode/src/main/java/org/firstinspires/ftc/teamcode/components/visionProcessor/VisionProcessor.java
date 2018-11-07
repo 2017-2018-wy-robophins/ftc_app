@@ -4,6 +4,6 @@ import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.teamcode.common.SamplingConfiguration;
 
 public interface VisionProcessor {
-    OpenGLMatrix getCurrentPosition() throws InterruptedException;
-    SamplingConfiguration getSamplingConfiguration() throws InterruptedException;
+    OpenGLMatrix getCurrentPosition();
+    SamplingConfiguration getSamplingConfiguration();
 }

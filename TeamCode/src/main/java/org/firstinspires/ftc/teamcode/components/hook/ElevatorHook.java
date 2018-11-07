@@ -1,23 +1,24 @@
 package org.firstinspires.ftc.teamcode.components.hook;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.components.DigitalLimitSwitch;
 
-public class ElevatorHook implements Hook {
+import java.util.Optional;
+
+public class ElevatorHook {
     private DcMotor rightMotor;
     private DcMotor leftMotor;
     private DigitalLimitSwitch limitSwitch;
     private Telemetry telemetry;
-    private State state = State.Contracted;
-    private State nextState = State.Between;
 
-    private boolean startedOnSwitch; // only do this if we started on a switch
+    private State currentState = State.Contracted;
+    private State targetState = State.Contracted;
+
+    private int velocity = 0;
     private boolean previousPressed; // when previous switch state was pressed, now not pressed, then off initial switch
-    private boolean offInitialSwitch; // now when off initial switch, check for if pressed again
 
     public ElevatorHook(DcMotor leftMotor, DcMotor rightMotor, DigitalLimitSwitch limitSwitch, Telemetry telemetry) {
         this.leftMotor = leftMotor;
@@ -43,58 +44,80 @@ public class ElevatorHook implements Hook {
         leftMotor.setPower(power);
     }
 
-    public void latch() {
-        startedOnSwitch = previousPressed = limitSwitch.isPressed();
-        offInitialSwitch = false;
-        setPower(1);
-        /*
-        if (state == State.Contracted) {
-            setPower(1);
-            state = State.Between;
-            nextState = State.Extended;
-            System.out.println("extend");
-        }*/
+    public void goToStateBlocking(State targetState) {
+        goToState(targetState);
+        while (currentState != targetState) {
+            update();
+        }
     }
 
-    public void delatch() {
-        startedOnSwitch = previousPressed = limitSwitch.isPressed();
-        offInitialSwitch = false;
-        setPower(-1);
-        /* if (state == State.Extended) {
-            setPower(-1);
-            state = State.Between;
-            nextState = State.Contracted;
-            System.out.println("contract");
-        }*/
+    public void goToState(State targetState) {
+        this.targetState = targetState;
+        int power = currentState.getDirection(targetState);
+        velocity = power;
+        setPower((float)power);
     }
 
     public void update() {
         boolean pressed = limitSwitch.isPressed();
         telemetry.addData("previous pressed", previousPressed);
         telemetry.addData("pressed", pressed);
-        if (startedOnSwitch) {
-            if (previousPressed && !pressed) {
-                offInitialSwitch = true;
-            } else if (offInitialSwitch && !previousPressed && pressed) {
-                stop();
+        if (previousPressed && !pressed) {
+            if (currentState.isBetweenState()) {
+                currentState = currentState.addVelocity(velocity).orElse(currentState);
             }
-        } else {
-            if (pressed) {
-                stop();
+        } else if (!previousPressed && pressed) {
+            if (!currentState.isBetweenState()) {
+                currentState = currentState.addVelocity(velocity).orElse(currentState);
             }
         }
+
+        if (currentState == targetState) {
+            stop();
+        }
+
         previousPressed = pressed;
     }
 
     public void stop() {
         setPower(0);
-        state = nextState;
-        System.out.println("Stop");
+        velocity = 0;
     }
 
-    enum State {
-        Extended,
-        Contracted,
-        Between
+    public enum State {
+        Contracted(0),
+        ContractedPartialBetween(1),
+        PartiallyExtended(2),
+        PartiallyFullyBetween(3),
+        FullyExtended(4);
+
+        private static State[] map = new State[values().length];
+        static {
+            for (State state: values()) {
+                map[state.height] = state;
+            }
+        }
+
+        private final int height;
+
+        State(int height) {
+            this.height = height;
+        }
+
+        public int getDirection(State targetState) {
+            return (int)Math.signum(targetState.height - height);
+        }
+
+        public Optional<State> addVelocity(int velocity) {
+            if ((height == values().length - 1 && velocity == 1) || (height == 0 && velocity == -1)) {
+                return Optional.empty();
+            } else {
+                return Optional.of(map[height + velocity]);
+            }
+        }
+
+        public boolean isBetweenState() {
+            return (height % 2) == 1;
+        }
     }
 }

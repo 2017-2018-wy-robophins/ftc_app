@@ -68,6 +68,7 @@ public class LimitedRackAndPinionHook implements Hook {
                 stop();
             }
         }
+        previousPressed = pressed;
     }
 
     public void stop() {

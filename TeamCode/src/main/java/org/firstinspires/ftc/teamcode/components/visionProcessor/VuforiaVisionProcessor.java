@@ -63,15 +63,6 @@ public class VuforiaVisionProcessor implements VisionProcessor {
         backSpace.setName("Back-Space");
         backSpace.setLocation(backSpaceLocationOnField);
 
-        /**
-         * To place the RedFootprint target in the middle of the red perimeter wall:
-         * - First we rotate it 90 around the field's X axis to flip it upright.
-         * - Second, we rotate it 180 around the field's Z axis so the image is flat against the red perimeter wall
-         *   and facing inwards to the center of the field.
-         * - Then, we translate it along the negative Y axis to the red perimeter wall.
-         */
-
-
         // For convenience, gather together all the trackable objects in one easily-iterable collection */
         allTrackables = new ArrayList<VuforiaTrackable>();
         allTrackables.addAll(targetsRoverRuckus);
@@ -97,9 +88,7 @@ public class VuforiaVisionProcessor implements VisionProcessor {
     }
 
     // return the transformation matrix and the template type
-    public OpenGLMatrix getCurrentPosition() throws InterruptedException {
-        // we want to wait a second before finding a vumark so that we have a good read of it
-        Thread.sleep(1000);
+    public OpenGLMatrix getCurrentPosition() {
         for (VuforiaTrackable trackable : allTrackables) {
             if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
                 // getUpdatedRobotLocation() will return null if no new information is available since
@@ -115,9 +104,7 @@ public class VuforiaVisionProcessor implements VisionProcessor {
         return null;
     }
 
-    public SamplingConfiguration getSamplingConfiguration() throws InterruptedException {
-        Thread.sleep(1000);
-
+    public SamplingConfiguration getSamplingConfiguration() {
         if (tfod.isPresent()) {
             TFObjectDetector tf = tfod.get();
 
