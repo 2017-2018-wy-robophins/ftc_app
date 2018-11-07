@@ -18,45 +18,24 @@ public class GrabberTester extends LinearOpMode {
         leftGrabber.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightGrabber.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        leftGrabber.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightGrabber.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftGrabber.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightGrabber.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         ControlMode mode = ControlMode.Direct;
         waitForStart();
         while (opModeIsActive()) {
-            if (gamepad1.left_bumper) {
-                mode = mode.toggle();
+            if (gamepad1.a) {
+                leftGrabber.setPower(0);
+                rightGrabber.setPower(0);
             }
 
-            if (gamepad1.right_bumper) {
-                leftGrabber.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                rightGrabber.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            if (gamepad1.x) {
+                leftGrabber.setPower(1);
+                rightGrabber.setPower(1);
             }
 
-            switch (mode) {
-                case Direct:
-                    float y = -gamepad1.right_stick_y;
-                    leftGrabber.setPower(y);
-                    rightGrabber.setPower(y);
-                case Button:
-                    if (gamepad1.a) {
-                        leftGrabber.setPower(0.5);
-                        rightGrabber.setPower(0.5);
-                    }
-
-                    if (gamepad1.b) {
-                        leftGrabber.setPower(-0.5);
-                        rightGrabber.setPower(-0.5);
-                    }
-
-                    if (gamepad1.x) {
-                        leftGrabber.setPower(1);
-                        rightGrabber.setPower(1);
-                    }
-
-                    if (gamepad1.y) {
-                        leftGrabber.setPower(-1);
-                        rightGrabber.setPower(-1);
-                    }
+            if (gamepad1.y) {
+                leftGrabber.setPower(-1);
+                rightGrabber.setPower(-1);
             }
 
             telemetry.addData("Mode", mode);

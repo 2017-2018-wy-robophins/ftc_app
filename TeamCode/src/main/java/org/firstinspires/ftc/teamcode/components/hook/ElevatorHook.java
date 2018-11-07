@@ -19,11 +19,6 @@ public class ElevatorHook implements Hook {
     private boolean previousPressed; // when previous switch state was pressed, now not pressed, then off initial switch
     private boolean offInitialSwitch; // now when off initial switch, check for if pressed again
 
-
-    private static final int extendPosition = 13000;
-    private static final int contractPosition = 0;
-
-
     public ElevatorHook(DcMotor leftMotor, DcMotor rightMotor, DigitalLimitSwitch limitSwitch, Telemetry telemetry) {
         this.leftMotor = leftMotor;
         this.rightMotor = rightMotor;
@@ -51,27 +46,32 @@ public class ElevatorHook implements Hook {
     public void latch() {
         startedOnSwitch = previousPressed = limitSwitch.isPressed();
         offInitialSwitch = false;
+        setPower(1);
+        /*
         if (state == State.Contracted) {
             setPower(1);
             state = State.Between;
             nextState = State.Extended;
             System.out.println("extend");
-        }
+        }*/
     }
 
     public void delatch() {
         startedOnSwitch = previousPressed = limitSwitch.isPressed();
         offInitialSwitch = false;
-        if (state == State.Extended) {
+        setPower(-1);
+        /* if (state == State.Extended) {
             setPower(-1);
             state = State.Between;
             nextState = State.Contracted;
             System.out.println("contract");
-        }
+        }*/
     }
 
     public void update() {
         boolean pressed = limitSwitch.isPressed();
+        telemetry.addData("previous pressed", previousPressed);
+        telemetry.addData("pressed", pressed);
         if (startedOnSwitch) {
             if (previousPressed && !pressed) {
                 offInitialSwitch = true;
@@ -83,6 +83,7 @@ public class ElevatorHook implements Hook {
                 stop();
             }
         }
+        previousPressed = pressed;
     }
 
     public void stop() {
