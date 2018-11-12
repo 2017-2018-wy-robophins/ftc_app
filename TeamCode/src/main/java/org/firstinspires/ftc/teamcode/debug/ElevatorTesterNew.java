@@ -16,7 +16,7 @@ public class ElevatorTesterNew extends LinearOpMode {
         DcMotor rightElevator = hardwareMap.dcMotor.get("rightElevator");
         DigitalLimitSwitch limitSwitch = new DigitalLimitSwitch(hardwareMap, "elevatorSwitch");
 
-        ElevatorHook hook = new ElevatorHook(leftElevator, rightElevator, limitSwitch, telemetry);
+        ElevatorHook hook = new ElevatorHook(leftElevator, rightElevator, limitSwitch, ElevatorHook.State.Contracted, telemetry);
 
         waitForStart();
         while (opModeIsActive()) {

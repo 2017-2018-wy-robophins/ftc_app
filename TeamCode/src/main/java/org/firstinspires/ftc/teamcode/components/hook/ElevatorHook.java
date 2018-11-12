@@ -4,27 +4,30 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.components.Component;
 import org.firstinspires.ftc.teamcode.components.DigitalLimitSwitch;
 
 import java.util.Optional;
 
-public class ElevatorHook {
+public class ElevatorHook extends Component {
     private DcMotor rightMotor;
     private DcMotor leftMotor;
     private DigitalLimitSwitch limitSwitch;
     private Telemetry telemetry;
 
-    private State currentState = State.Contracted;
-    private State targetState = State.Contracted;
+    private State currentState;
+    private State targetState;
 
     private int velocity = 0;
     private boolean previousPressed; // when previous switch state was pressed, now not pressed, then off initial switch
 
-    public ElevatorHook(DcMotor leftMotor, DcMotor rightMotor, DigitalLimitSwitch limitSwitch, Telemetry telemetry) {
+    public ElevatorHook(DcMotor leftMotor, DcMotor rightMotor, DigitalLimitSwitch limitSwitch, State initialState, Telemetry telemetry) {
         this.leftMotor = leftMotor;
         this.rightMotor = rightMotor;
         this.limitSwitch = limitSwitch;
         this.telemetry = telemetry;
+        currentState = initialState;
+        targetState = initialState;
 
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); // TODO: fix until working encoder cable
@@ -82,6 +85,15 @@ public class ElevatorHook {
     public void stop() {
         setPower(0);
         velocity = 0;
+    }
+
+    public void reportInfo(Telemetry telemetry) {
+        telemetry.addData("R Elev Power", rightMotor.getPower());
+        telemetry.addData("L Elev Power", leftMotor.getPower());
+        telemetry.addData("Previous pressed", previousPressed);
+        telemetry.addData("Current State", currentState);
+        telemetry.addData("Target State", targetState);
+        telemetry.addData("Velocity", velocity);
     }
 
     public enum State {

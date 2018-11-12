@@ -74,7 +74,7 @@ public class VuforiaVisionProcessor implements VisionProcessor {
         targetsRoverRuckus.activate();
     }
 
-    private void initTfod() {
+    public void initTfod() {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
             "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
@@ -83,7 +83,7 @@ public class VuforiaVisionProcessor implements VisionProcessor {
         tfod.get().activate();
     }
 
-    private void stopTfod() {
+    public void stopTfod() {
         tfod.map(tf -> {tf.shutdown(); return tf;});
     }
 

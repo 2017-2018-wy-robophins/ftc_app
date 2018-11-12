@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.components.MainRobot;
+import org.firstinspires.ftc.teamcode.components.hook.ElevatorHook;
 
 @TeleOp(name = "Motor Direction Tester", group = "Debug")
 public class MotorDirectionTester extends LinearOpMode {
@@ -17,7 +18,7 @@ public class MotorDirectionTester extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         telemetry.addLine("Init");
         telemetry.update();
-        MainRobot mainRobot = new MainRobot(hardwareMap, telemetry, false);
+        MainRobot mainRobot = new MainRobot(hardwareMap, telemetry, ElevatorHook.State.Contracted,false);
 
         waitForStart();
         telemetry.addLine("start");

@@ -22,4 +22,15 @@ dependencies {
     implementation project(':DogeCV')
     implementation project(':openCVLibrary3')
     implementation project(':FtcRobotController')
+    // Required -- JUnit 4 framework
+    testImplementation 'junit:junit:4.12'
+    testImplementation "org.robolectric:robolectric:4.0.2"
+}
+
+android {
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
 }

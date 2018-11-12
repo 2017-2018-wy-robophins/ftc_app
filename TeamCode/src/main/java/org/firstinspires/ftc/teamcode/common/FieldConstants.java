@@ -32,10 +32,22 @@ public final class FieldConstants {
     public static final OpenGLMatrix frontCraterLocationOnField = OpenGLMatrix
             .translation(0, -mmFTCFieldWidth, mmTargetHeight)
             .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, 180));
+
     public static final OpenGLMatrix phoneLocationOnRobot = OpenGLMatrix
             .translation(0, 0, 0)
-            .multiplied(Orientation.getRotationMatrix(
-                    EXTRINSIC, AxesOrder.ZYX,
-                    DEGREES, -90, 90, 0));
-    // we use the robot pointing to the right as the default axial system here
+            .multiplied(Orientation.getRotationMatrix(EXTRINSIC, AxesOrder.XYZ, DEGREES, 90, 0, -90));
+
+    // robot starts pointing in positive x
+    public static final OpenGLMatrix blueRightStartLocation = OpenGLMatrix
+            .translation(-mmPerBlock / 2, -mmPerBlock / 2, 0)
+            .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 0, 0, 225));
+    public static final OpenGLMatrix redRightStartLocation = OpenGLMatrix
+            .translation(mmPerBlock / 2, mmPerBlock / 2, 0)
+            .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 0, 0, 45));
+    public static final OpenGLMatrix blueLeftStartLocation = OpenGLMatrix
+            .translation(-mmPerBlock / 2, mmPerBlock / 2, 0)
+            .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 0, 0, 135));
+    public static final OpenGLMatrix redLeftStartLocation = OpenGLMatrix
+            .translation(mmPerBlock / 2, -mmPerBlock / 2, 0)
+            .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 0, 0, -45));
 }
