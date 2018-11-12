@@ -6,6 +6,7 @@ import org.firstinspires.ftc.robotcore.external.matrices.MatrixF;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.teamcode.common.ExtendedMath;
+import org.firstinspires.ftc.teamcode.common.SamplingConfiguration;
 
 /**
  * Created by efyang on 1/11/18.
@@ -16,6 +17,8 @@ public class NavigationalState {
     private VectorF position = new VectorF(new float[] {0, 0});
     // in degrees, ccw
     private float heading = 0;
+
+    private SamplingConfiguration detectedSample = SamplingConfiguration.RIGHT;
 
     public NavigationalState(){}
     public NavigationalState(OpenGLMatrix m) {
@@ -39,6 +42,10 @@ public class NavigationalState {
         return ExtendedMath.get_min_rotation(heading, field_target);
     }
 
+    public SamplingConfiguration get_sampling_configuration() {
+        return this.detectedSample;
+    }
+
     public void move(VectorF d) {
         position.add(d);
     }
@@ -57,6 +64,10 @@ public class NavigationalState {
 
     public void set_heading(float heading) {
         this.heading = heading;
+    }
+
+    public void set_sampling_configuration(SamplingConfiguration samplingConfiguration) {
+        this.detectedSample = samplingConfiguration;
     }
 
     public VectorF get_position() {return this.position;}
