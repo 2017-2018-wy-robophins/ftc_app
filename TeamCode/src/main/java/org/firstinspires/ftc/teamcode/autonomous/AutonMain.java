@@ -51,7 +51,7 @@ public class AutonMain {
 
         // create the vision processor
         visionProcessor = new VuforiaVisionProcessor(hardwareMap);
-        visionProcessor.initTfod();
+        //visionProcessor.initTfod();
 
         OpenGLMatrix location = null;
         switch (startLocation) {
@@ -76,6 +76,45 @@ public class AutonMain {
     void runOnce() throws InterruptedException {
         mainRobot.hook.goToStateBlocking(ElevatorHook.State.FullyExtended);
 
+        switch (startLocation) {
+            case RED_LEFT:
+            case BLUE_LEFT:
+                // 2
+                mainRobot.driveBase.forward_move(862f);
+                mainRobot.hook.goToState(ElevatorHook.State.Contracted);
+                // 3
+                mainRobot.driveBase.forward_move(-431f);
+                // 4
+                mainRobot.driveBase.turn(90);
+                mainRobot.driveBase.forward_move(1300);
+                // 5
+                mainRobot.driveBase.turn(45);
+                mainRobot.driveBase.forward_move(914.4f);
+                mainRobot.grabber.activate_outtake();
+                Thread.sleep(500);
+                mainRobot.grabber.stop_intake();
+                // 6
+                mainRobot.driveBase.turn(180);
+                mainRobot.driveBase.forward_move(1828.8f);
+                mainRobot.grabber.deploy();
+                break;
+            case RED_RIGHT:
+            case BLUE_RIGHT:
+                // 2
+                mainRobot.driveBase.forward_move(1300);
+                mainRobot.hook.goToState(ElevatorHook.State.Contracted);
+                mainRobot.grabber.activate_outtake();
+                Thread.sleep(500);
+                mainRobot.grabber.stop_intake();
+                // 3
+                mainRobot.driveBase.turn(45);
+                mainRobot.driveBase.forward_move(431);
+                // 4
+                mainRobot.driveBase.turn(45);
+                mainRobot.driveBase.forward_move(900);
+                mainRobot.grabber.deploy();
+                break;
+        }
     }
     // true to continue, false to stop
     boolean mainLoop() throws InterruptedException {

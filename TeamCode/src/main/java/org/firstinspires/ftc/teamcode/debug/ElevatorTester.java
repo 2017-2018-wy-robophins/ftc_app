@@ -23,7 +23,7 @@ public class ElevatorTester extends LinearOpMode {
         leftGrabber.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightGrabber.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        DigitalLimitSwitch limitSwitch = new DigitalLimitSwitch(hardwareMap, "elevatorSwitch");
+        DigitalLimitSwitch limitSwitch = new DigitalLimitSwitch(hardwareMap, "elevatorLimit");
 
         waitForStart();
         while (opModeIsActive()) {

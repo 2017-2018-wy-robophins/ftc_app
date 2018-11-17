@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -11,8 +12,12 @@ import org.firstinspires.ftc.teamcode.components.hook.ElevatorHook;
 
 import java.util.ResourceBundle;
 
+@Config
 @TeleOp(name = "Main Op Mode", group = "main")
 public class MainOpMode extends LinearOpMode {
+    static float DRIVE_FORWARD_SCALE = 1;
+    static float DRIVE_ROTATION_SCALE = 1;
+
     @Override
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -63,7 +68,7 @@ public class MainOpMode extends LinearOpMode {
                         forward = righty;
                         turn = rightx;
                     }
-                    mainRobot.driveBase.direct_move_and_turn(forward, turn);
+                    mainRobot.driveBase.direct_move_and_turn(forward * DRIVE_FORWARD_SCALE, turn * DRIVE_ROTATION_SCALE);
 
                     // elevator controls
                     if (!toggling) {
@@ -78,13 +83,14 @@ public class MainOpMode extends LinearOpMode {
                         }
                     }
 
+                    float rotatePower = 0.8f;
                     // intake controls
                     if (gamepad1.dpad_up) {
                         // rotate up
-                        mainRobot.grabber.rotate(1);
+                        mainRobot.grabber.rotate(rotatePower);
                     } else if (gamepad1.dpad_down) {
                         // rotate down
-                        mainRobot.grabber.rotate(-1);
+                        mainRobot.grabber.rotate(-rotatePower);
                     } else {
                         mainRobot.grabber.rotate(0);
                     }
@@ -125,7 +131,10 @@ public class MainOpMode extends LinearOpMode {
                     break;
             }
 
+            mainRobot.sampler.contractAll();
+            mainRobot.hook.update();
             // send out info
+            mainRobot.sampler.reportInfo(telemetry);
             mainRobot.driveBase.report_encoder_ticks();
             telemetry.addData("heading", heading);
             telemetry.addData("Control Mode", controlMode);

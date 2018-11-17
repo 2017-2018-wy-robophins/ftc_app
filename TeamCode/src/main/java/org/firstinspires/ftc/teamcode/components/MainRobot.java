@@ -22,9 +22,10 @@ import org.firstinspires.ftc.teamcode.components.visionProcessor.VuforiaVisionPr
 
 
 public class MainRobot {
-    public DriveBase driveBase;
+    public HybridTankOmni driveBase;
     public ElevatorHook hook;
     public TwoDOFGrabber grabber;
+    public Sampler sampler;
     public InertialSensor imu;
     public VisionProcessor visionProcessor;
     boolean DEBUG_CLASSES;
@@ -49,7 +50,6 @@ public class MainRobot {
         this.DEBUG_CLASSES = DEBUG_CLASSES;
 
         if (DEBUG_CLASSES) {
-            driveBase = new DebugDriveBase(telemetry);
         } else {
             // create the drivebase
             leftDrive = hardwareMap.dcMotor.get("leftDrive");
@@ -70,6 +70,12 @@ public class MainRobot {
             grabDeployServo = hardwareMap.servo.get("grabDeployServo");
             grabber = new TwoDOFGrabber(rightGrabber, leftGrabber, armRotate, armExtend, grabDeployServo, telemetry);
 
+            imu = new InertialSensorBNO055(hardwareMap);
+
+            // create the sampler
+            rightSampler = hardwareMap.servo.get("rightSampler");
+            leftSampler = hardwareMap.servo.get("leftSampler");
+            sampler = new Sampler(rightSampler, leftSampler);
         }
     }
 }

@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode.debug;
  * Created by efyang on 1/25/18.
  */
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -12,6 +13,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import org.firstinspires.ftc.teamcode.components.MainRobot;
 import org.firstinspires.ftc.teamcode.components.hook.ElevatorHook;
 
+@Disabled
 @TeleOp(name = "Motor Direction Tester", group = "Debug")
 public class MotorDirectionTester extends LinearOpMode {
     @Override

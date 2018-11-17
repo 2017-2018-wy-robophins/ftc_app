@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.components.Component;
@@ -26,7 +27,7 @@ public class TwoDOFGrabber extends Component {
 
         leftMotor.setDirection(DcMotor.Direction.FORWARD);
         rightMotor.setDirection(DcMotor.Direction.REVERSE);
-        rotationMotor.setDirection(DcMotor.Direction.FORWARD);
+        rotationMotor.setDirection(DcMotor.Direction.REVERSE);
         extensionMotor.setDirection(DcMotor.Direction.FORWARD);
         deploymentServo.setDirection(Servo.Direction.FORWARD);
 
@@ -40,10 +41,20 @@ public class TwoDOFGrabber extends Component {
 
         rotationMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         extensionMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rotationMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        extensionMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
-    public void deploy() {
+    public void deploy() throws InterruptedException {
+        int targetRotation = -400;
+        rotationMotor.setTargetPosition(-400);
+        while (Math.abs(rotationMotor.getCurrentPosition() - targetRotation) > 20) {
+            Thread.sleep(5);
+        }
+
         deploymentServo.setPosition(1);
+
+        ((ServoImplEx)deploymentServo).setPwmDisable();
     }
 
     public void activate_intake() {
