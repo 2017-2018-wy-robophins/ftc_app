@@ -17,6 +17,8 @@ public class NavigationalState {
     private VectorF position = new VectorF(new float[] {0, 0});
     // in degrees, ccw
     private float heading = 0;
+    // TODO: set this based on starting position
+    public float imuOffset = 0;
 
     private SamplingConfiguration detectedSample = SamplingConfiguration.RIGHT;
 

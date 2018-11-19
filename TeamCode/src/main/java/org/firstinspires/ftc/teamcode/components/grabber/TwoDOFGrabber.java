@@ -46,15 +46,16 @@ public class TwoDOFGrabber extends Component {
     }
 
     public void deploy() throws InterruptedException {
+        /*
         int targetRotation = -400;
         rotationMotor.setTargetPosition(-400);
         while (Math.abs(rotationMotor.getCurrentPosition() - targetRotation) > 20) {
             Thread.sleep(5);
-        }
+        }*/
 
         deploymentServo.setPosition(1);
 
-        ((ServoImplEx)deploymentServo).setPwmDisable();
+        //((ServoImplEx)deploymentServo).setPwmDisable();
     }
 
     public void activate_intake() {

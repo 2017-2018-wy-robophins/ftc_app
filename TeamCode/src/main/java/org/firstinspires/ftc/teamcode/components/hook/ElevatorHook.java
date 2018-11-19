@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.common.Globals;
 import org.firstinspires.ftc.teamcode.components.Component;
 import org.firstinspires.ftc.teamcode.components.DigitalLimitSwitch;
 
@@ -49,7 +50,7 @@ public class ElevatorHook extends Component {
 
     public void goToStateBlocking(State targetState) {
         goToState(targetState);
-        while (currentState != targetState) {
+        while (Globals.OPMODE_ACTIVE && currentState != targetState) {
             update();
         }
     }

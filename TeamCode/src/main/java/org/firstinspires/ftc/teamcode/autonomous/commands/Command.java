@@ -11,8 +11,9 @@ public abstract class Command {
         return this.getClass().getSimpleName();
     }
 
-    void execute(NavigationalState navigationalState, InertialSensor imu, VisionProcessor visionProcessor, MainRobot mainRobot, Telemetry telemetry) {
+    final void execute(NavigationalState navigationalState, InertialSensor imu, VisionProcessor visionProcessor, MainRobot mainRobot, Telemetry telemetry) {
         telemetry.addData("Executing Command", name());
+        telemetry.update();
         executeCommand(navigationalState, imu, visionProcessor, mainRobot, telemetry);
     }
 

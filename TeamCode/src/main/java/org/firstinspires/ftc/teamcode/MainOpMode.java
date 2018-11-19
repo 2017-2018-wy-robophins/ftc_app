@@ -79,6 +79,7 @@ public class MainOpMode extends LinearOpMode {
                         } else if (gamepad1.b) {
                             mainRobot.hook.goToState(ElevatorHook.State.FullyExtended);
                         } else if (gamepad1.y) {
+                            mainRobot.grabber.deploy();
                             // flapper
                         }
                     }

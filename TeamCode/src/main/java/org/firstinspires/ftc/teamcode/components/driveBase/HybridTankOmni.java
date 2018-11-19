@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.teamcode.common.ExtendedMath;
+import org.firstinspires.ftc.teamcode.common.Globals;
 import org.firstinspires.ftc.teamcode.components.inertialSensor.InertialSensor;
 
 import static org.firstinspires.ftc.teamcode.common.RobotConstants.ENCODER_TICKS_TIMEOUT_THRESHOLD;
@@ -23,8 +24,8 @@ public class HybridTankOmni extends DriveBase {
     float MAX_FORWARD_TURN_ADJUST_POWER = 0.1f;
     float FORWARD_CLAMP_CUTOFF_TICKS = 100;
     int ENCODER_EPSILON = 20;
-    float TICKS_PER_MM = 1/100; // TODO: SET
-    private float TICKS_PER_DEGREE = 500;
+    float TICKS_PER_MM = -2; // TODO: SET
+    private float TICKS_PER_DEGREE = 6;
     int ANGLE_EPSILON = 1;
     int MOTOR_TIMEOUT_MS = 1000;
 
@@ -57,7 +58,7 @@ public class HybridTankOmni extends DriveBase {
             float v = ExtendedMath.clamp(-MAX_TURN_POWER, MAX_TURN_POWER, headingError * (MAX_TURN_POWER / GYRO_TURN_CLAMP_CUTOFF_DEGREES));
             left.setPower(-v);
             right.setPower(v);
-        } while (Math.abs(headingError) > ANGLE_EPSILON);
+        } while (Globals.OPMODE_ACTIVE && Math.abs(headingError) > ANGLE_EPSILON);
         stop();
     }
 
@@ -69,6 +70,8 @@ public class HybridTankOmni extends DriveBase {
         int left_target = left.getCurrentPosition() - ticks;
         int right_target = right.getCurrentPosition() + ticks;
 
+        left.setTargetPosition(left_target);
+        right.setTargetPosition(right_target);
         left.setPower(MAX_TURN_POWER);
         right.setPower(MAX_TURN_POWER);
         long timeout = 1000;
@@ -77,9 +80,14 @@ public class HybridTankOmni extends DriveBase {
         int last_left = left.getCurrentPosition();
         long next_check_timestamp = System.currentTimeMillis() + timeout;
 
-        while (right.isBusy() || left.isBusy()) {
+        while (Globals.OPMODE_ACTIVE && right.isBusy() || left.isBusy()) {
             int right_current = right.getCurrentPosition();
             int left_current = left.getCurrentPosition();
+            telemetry.addData("Left Target", left_target);
+            telemetry.addData("Right Target", right_target);
+            telemetry.addData("Left Current", left_current);
+            telemetry.addData("Right Current", right_current);
+            telemetry.update();
 
             if ((Math.abs(right_current - right_target) < ENCODER_EPSILON) &&
                     (Math.abs(left_current - left_target) < ENCODER_EPSILON)) {
@@ -127,7 +135,7 @@ public class HybridTankOmni extends DriveBase {
                     leftError * (MAX_FORWARD_POWER / FORWARD_CLAMP_CUTOFF_TICKS));
             left.setPower(left_v - heading_adjust_v);
             right.setPower(right_v + heading_adjust_v);
-        } while (Math.abs(rightError) > ENCODER_EPSILON || Math.abs(leftError) > ENCODER_EPSILON);
+        } while (Globals.OPMODE_ACTIVE && Math.abs(rightError) > ENCODER_EPSILON || Math.abs(leftError) > ENCODER_EPSILON);
         stop();
     }
 
@@ -137,6 +145,8 @@ public class HybridTankOmni extends DriveBase {
         int ticks = (int)(x * TICKS_PER_MM);
         int left_target = left.getCurrentPosition() + ticks;
         int right_target = right.getCurrentPosition() + ticks;
+        left.setTargetPosition(left_target);
+        right.setTargetPosition(right_target);
 
         left.setPower(MAX_FORWARD_POWER);
         right.setPower(MAX_FORWARD_POWER);
@@ -146,7 +156,7 @@ public class HybridTankOmni extends DriveBase {
         int last_left = left.getCurrentPosition();
         long next_check_timestamp = System.currentTimeMillis() + timeout;
 
-        while (right.isBusy() || left.isBusy()) {
+        while (Globals.OPMODE_ACTIVE && right.isBusy() || left.isBusy()) {
             int right_current = right.getCurrentPosition();
             int left_current = left.getCurrentPosition();
 

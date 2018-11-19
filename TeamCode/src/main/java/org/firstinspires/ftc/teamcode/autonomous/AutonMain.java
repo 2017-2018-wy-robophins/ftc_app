@@ -23,6 +23,7 @@ import org.firstinspires.ftc.teamcode.components.visionProcessor.VisionProcessor
 import org.firstinspires.ftc.teamcode.components.visionProcessor.VuforiaVisionProcessor;
 
 import java.lang.reflect.Field;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Created by nico on 11/14/17.
@@ -43,15 +44,15 @@ public class AutonMain {
         this.telemetry = telemetry;
         this.startLocation = startLocation;
         mainRobot = new MainRobot(hardwareMap, telemetry, ElevatorHook.State.Contracted, DEBUG_CLASSES);
+        mainRobot.armRotate.setPower(0);
         // instantiate hardware variables
 
-        // TODO: Determine if we always want this in mainrobot - it only gets used in auton really - have it specific to auton
         // create the imu
         imu = new InertialSensorBNO055(hardwareMap);
 
         // create the vision processor
         visionProcessor = new VuforiaVisionProcessor(hardwareMap);
-        //visionProcessor.initTfod();
+        visionProcessor.initTfod();
 
         OpenGLMatrix location = null;
         switch (startLocation) {
@@ -69,13 +70,19 @@ public class AutonMain {
                 break;
         }
         navinfo = new NavigationalState(location);
+        navinfo.imuOffset = ExtendedMath.extract_z_rot(location);
 
         telemetry.addData("Start Location", startLocation);
         telemetry.update();
     }
+
     void runOnce() throws InterruptedException {
+        telemetry.addLine("Starting Elevator");
+        telemetry.update();
         mainRobot.hook.goToStateBlocking(ElevatorHook.State.FullyExtended);
 
+        telemetry.addLine("Starting movement code");
+        telemetry.update();
         switch (startLocation) {
             case RED_LEFT:
             case BLUE_LEFT:
@@ -121,23 +128,4 @@ public class AutonMain {
         return false;
     }
     void finish() throws InterruptedException {}
-
-    private void goToLocationWithHeading(VectorF targetPosition, float targetHeading) {
-        telemetry.addData("Moving to target position", targetPosition);
-        telemetry.addData("Moving to target heading", targetHeading);
-        telemetry.update();
-
-        // get the angle we need to rotate to first to move correctly
-        VectorF movement_vector = targetPosition.subtracted(navinfo.get_position());
-        float movement_angle = (float)Math.toDegrees(Math.atan2(movement_vector.get(1), movement_vector.get(0)));
-        float initial_rotation = navinfo.get_robot_rotation(movement_angle);
-        navinfo.set_heading(movement_angle);
-        float final_rotation = navinfo.get_robot_rotation(targetHeading);
-        float movement_amount = movement_vector.magnitude();
-        mainRobot.driveBase.imu_turn(initial_rotation, imu);
-        mainRobot.driveBase.imu_forward_move(movement_amount, imu);
-        mainRobot.driveBase.imu_turn(final_rotation, imu);
-        navinfo.set_position(targetPosition);
-        navinfo.set_heading(targetHeading);
-    }
 }
