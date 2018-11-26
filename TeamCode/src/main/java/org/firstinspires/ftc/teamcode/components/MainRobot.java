@@ -62,6 +62,7 @@ public class MainRobot {
             DigitalLimitSwitch limitSwitch = new DigitalLimitSwitch(hardwareMap, "elevatorLimit");
             hook = new ElevatorHook(leftElevator, rightElevator, limitSwitch, initialElevatorState, telemetry);
 
+            /*
             // create the grabber
             rightGrabber = hardwareMap.dcMotor.get("rightGrabber");
             leftGrabber = hardwareMap.dcMotor.get("leftGrabber");
@@ -69,6 +70,7 @@ public class MainRobot {
             armExtend = hardwareMap.dcMotor.get("armExtend");
             grabDeployServo = hardwareMap.servo.get("grabDeployServo");
             grabber = new TwoDOFGrabber(rightGrabber, leftGrabber, armRotate, armExtend, grabDeployServo, telemetry);
+            */
 
             imu = new InertialSensorBNO055(hardwareMap);
 

@@ -28,11 +28,14 @@ public class TurnTester extends LinearOpMode {
         Thread.sleep(3000);
         telemetry.addLine("180 turn");
         telemetry.update();
+        mainRobot.driveBase.imu_turn(180, mainRobot.imu);
         Thread.sleep(3000);
         telemetry.addLine("-180 turn");
         telemetry.update();
+        mainRobot.driveBase.imu_turn(-179, mainRobot.imu);
         Thread.sleep(3000);
         telemetry.addLine("-90 turn");
         telemetry.update();
+        mainRobot.driveBase.imu_turn(-90, mainRobot.imu);
     }
 }

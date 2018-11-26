@@ -18,7 +18,6 @@ public class InertialSensorBNO055 implements InertialSensor {
 
     // State used for updating telemetry
     Orientation angles;
-    Acceleration gravity;
 
 
     public InertialSensorBNO055(HardwareMap hardwareMap) {
@@ -32,14 +31,10 @@ public class InertialSensorBNO055 implements InertialSensor {
 
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
-
-        // Start the logging of measured acceleration
-        imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
     }
 
     public float getHeading() {
         angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        gravity  = imu.getGravity();
         return angles.firstAngle;
     }
 }

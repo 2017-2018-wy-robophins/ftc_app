@@ -8,6 +8,11 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.teamcode.autonomous.commands.BeginCommand;
+import org.firstinspires.ftc.teamcode.autonomous.commands.CommandTree;
+import org.firstinspires.ftc.teamcode.autonomous.commands.CommandTreeBuilder;
+import org.firstinspires.ftc.teamcode.autonomous.commands.HookControlCommand;
+import org.firstinspires.ftc.teamcode.autonomous.commands.MovementCommand;
 import org.firstinspires.ftc.teamcode.common.FieldConstants;
 import org.firstinspires.ftc.teamcode.components.MainRobot;
 import org.firstinspires.ftc.teamcode.common.ExtendedMath;
@@ -24,6 +29,7 @@ import org.firstinspires.ftc.teamcode.components.visionProcessor.VuforiaVisionPr
 
 import java.lang.reflect.Field;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by nico on 11/14/17.
@@ -76,7 +82,39 @@ public class AutonMain {
         telemetry.update();
     }
 
+    private void runCommandTree(CommandTree commandTree) {
+        try {
+            commandTree.toFuture(navinfo, imu, visionProcessor, mainRobot, telemetry).get();
+        } catch (ExecutionException e) {
+            telemetry.addLine("Failed on commandtree execution");
+            telemetry.update();
+        } catch (InterruptedException e) {
+            telemetry.addLine("CommandTree execution interrupted");
+            telemetry.update();
+        }
+    }
+
     void runOnce() throws InterruptedException {
+        CommandTree leftCommandTree = new CommandTreeBuilder(new BeginCommand())
+                .addChildCommand(new CommandTreeBuilder(new HookControlCommand(ElevatorHook.State.FullyExtended))
+                        .create())
+                .create();
+        CommandTree rightCommandTree = new CommandTreeBuilder(new BeginCommand())
+                .addChildCommand(new CommandTreeBuilder(new HookControlCommand(ElevatorHook.State.FullyExtended))
+                        .create())
+                .create();
+
+        switch (startLocation) {
+            case RED_LEFT:
+            case BLUE_LEFT:
+                runCommandTree(leftCommandTree);
+                break;
+            case RED_RIGHT:
+            case BLUE_RIGHT:
+                runCommandTree(rightCommandTree);
+                break;
+        }
+        /*
         telemetry.addLine("Starting Elevator");
         telemetry.update();
         mainRobot.hook.goToStateBlocking(ElevatorHook.State.FullyExtended);
@@ -122,6 +160,7 @@ public class AutonMain {
                 mainRobot.grabber.deploy();
                 break;
         }
+        */
     }
     // true to continue, false to stop
     boolean mainLoop() throws InterruptedException {

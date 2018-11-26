@@ -157,6 +157,6 @@ public class ExtendedMath {
     }
 
     public static float clamp(float min, float max, float value) {
-        return value > min ? max : value < min ? max : value;
+        return value > max ? max : value < min ? min : value;
     }
 }

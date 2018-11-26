@@ -18,9 +18,9 @@ public class HybridTankOmni extends DriveBase {
     DcMotor right;
     Telemetry telemetry;
 
-    float MAX_TURN_POWER = 0.2f;
-    float GYRO_TURN_CLAMP_CUTOFF_DEGREES = 20;
-    float MAX_FORWARD_POWER = 0.2f;
+    float MAX_TURN_POWER = 0.4f;
+    float GYRO_TURN_CLAMP_CUTOFF_DEGREES = 70;
+    float MAX_FORWARD_POWER = 1f;
     float MAX_FORWARD_TURN_ADJUST_POWER = 0.1f;
     float FORWARD_CLAMP_CUTOFF_TICKS = 100;
     int ENCODER_EPSILON = 20;
@@ -50,14 +50,21 @@ public class HybridTankOmni extends DriveBase {
 
     // r in degrees - relative turn
     public void imu_turn(float r, InertialSensor imu) {
-        set_mode_motors(DcMotor.RunMode.RUN_USING_ENCODER);
+        set_mode_motors(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         float targetHeading = imu.getHeading() + r;
         float headingError;
         do {
-            headingError = targetHeading - imu.getHeading();
-            float v = ExtendedMath.clamp(-MAX_TURN_POWER, MAX_TURN_POWER, headingError * (MAX_TURN_POWER / GYRO_TURN_CLAMP_CUTOFF_DEGREES));
+            headingError = -getHeadingError(targetHeading, imu);
+            telemetry.addData("Heading", imu.getHeading());
+            telemetry.addData("Target Heading", targetHeading);
+            telemetry.addData("heading error", headingError);
+            telemetry.addData("LEFT ticks", left.getCurrentPosition());
+            telemetry.addData("RIGHT ticks", right.getCurrentPosition());
+            float v = ExtendedMath.clamp(-MAX_TURN_POWER, MAX_TURN_POWER,  Math.signum(headingError) * 0.25f + headingError * (MAX_TURN_POWER / GYRO_TURN_CLAMP_CUTOFF_DEGREES));
+            telemetry.addData("v", v);
             left.setPower(-v);
             right.setPower(v);
+            telemetry.update();
         } while (Globals.OPMODE_ACTIVE && Math.abs(headingError) > ANGLE_EPSILON);
         stop();
     }
@@ -112,6 +119,12 @@ public class HybridTankOmni extends DriveBase {
         left.setPower(0);
     }
 
+    private float getHeadingError(float targetHeading, InertialSensor imu) {
+        float positiveError = ExtendedMath.get_min_rotation(imu.getHeading(), targetHeading);
+        // now normalize to +-180 for convenience
+        return positiveError + (positiveError > 180 ? -360 : 0);
+    }
+
     // x in mm
     public void imu_forward_move(float x, InertialSensor imu) {
         set_mode_motors(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -121,7 +134,7 @@ public class HybridTankOmni extends DriveBase {
         float targetHeading = imu.getHeading();
         float rightError, leftError, headingError;
         do {
-            headingError = targetHeading - imu.getHeading();
+            headingError = getHeadingError(targetHeading, imu);
             rightError = rightTarget - right.getCurrentPosition();
             leftError = leftTarget - left.getCurrentPosition();
             float heading_adjust_v = ExtendedMath.clamp(-MAX_FORWARD_TURN_ADJUST_POWER,
@@ -186,7 +199,7 @@ public class HybridTankOmni extends DriveBase {
     // direct control functions
     // x = [-1, 1], r = [-1, 1]
     public void direct_move_and_turn(float x, float r) {
-        set_mode_motors(DcMotor.RunMode.RUN_USING_ENCODER);
+        set_mode_motors(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         double turn_contrib = Math.abs(r);
         double throttle_contrib = 1 - turn_contrib;
         left.setPower(MAX_FORWARD_POWER * (x * throttle_contrib - r));
@@ -202,6 +215,8 @@ public class HybridTankOmni extends DriveBase {
     public void report_encoder_ticks() {
         telemetry.addData("DRIVE LEFT TICKS", left.getCurrentPosition());
         telemetry.addData("DRIVE RIGHT TICKS", right.getCurrentPosition());
+        telemetry.addData("DRIVE LEFT POWER", left.getPower());
+        telemetry.addData("DRIVE RIGHT POWER", right.getPower());
     }
 
     private void set_mode_motors(DcMotor.RunMode mode) {

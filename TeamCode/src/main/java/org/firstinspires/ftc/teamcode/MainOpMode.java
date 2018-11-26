@@ -84,6 +84,7 @@ public class MainOpMode extends LinearOpMode {
                         }
                     }
 
+                    /*
                     float rotatePower = 0.8f;
                     // intake controls
                     if (gamepad1.dpad_up) {
@@ -94,8 +95,9 @@ public class MainOpMode extends LinearOpMode {
                         mainRobot.grabber.rotate(-rotatePower);
                     } else {
                         mainRobot.grabber.rotate(0);
-                    }
+                    }*/
 
+                    /*
                     if (gamepad1.right_bumper) {
                         // contract
                         mainRobot.grabber.extend(-1);
@@ -114,20 +116,24 @@ public class MainOpMode extends LinearOpMode {
                         // TODO: not sure if this should be done
                         mainRobot.grabber.stop_intake();
                     }
+                    */
 
                     break;
                 case Manual:
                     mainRobot.rightDrive.setPower(righty);
                     mainRobot.leftDrive.setPower(lefty);
 
+                    /*
                     conditionalPower(mainRobot.armRotate, gamepad1.dpad_up, gamepad1.dpad_down);
                     conditionalPower(mainRobot.armExtend, gamepad1.dpad_left, gamepad1.dpad_right);
-
+                    */
                     conditionalPower(mainRobot.leftElevator, gamepad1.y, gamepad1.x);
                     conditionalPower(mainRobot.rightElevator, gamepad1.b, gamepad1.a);
 
+                    /*
                     conditionalPower(mainRobot.rightGrabber, gamepad1.right_bumper, gamepad1.right_trigger > TRIGGER_THRESHOLD);
                     conditionalPower(mainRobot.leftGrabber, gamepad1.left_bumper, gamepad1.left_trigger > TRIGGER_THRESHOLD);
+                    */
                     // TODO: FINISH
                     break;
             }
@@ -139,7 +145,7 @@ public class MainOpMode extends LinearOpMode {
             mainRobot.driveBase.report_encoder_ticks();
             telemetry.addData("heading", heading);
             telemetry.addData("Control Mode", controlMode);
-            mainRobot.grabber.reportInfo(telemetry);
+            // mainRobot.grabber.reportInfo(telemetry);
             telemetry.update();
         }
     }
