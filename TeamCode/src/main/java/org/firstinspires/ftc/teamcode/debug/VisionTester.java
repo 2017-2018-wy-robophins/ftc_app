@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.teamcode.autonomous.NavigationalState;
 import org.firstinspires.ftc.teamcode.common.FieldConstants;
+import org.firstinspires.ftc.teamcode.common.StartLocation;
 import org.firstinspires.ftc.teamcode.components.visionProcessor.VisionProcessor;
 import org.firstinspires.ftc.teamcode.components.visionProcessor.VuforiaVisionProcessor;
 import com.acmerobotics.dashboard.FtcDashboard;
@@ -71,12 +72,12 @@ public class VisionTester extends LinearOpMode {
         waitForStart();
         telemetry.addLine("start");
         telemetry.update();
-        NavigationalState nav = new NavigationalState();
+        NavigationalState nav = new NavigationalState(StartLocation.BLUE_LEFT);
         while (opModeIsActive()) {
             telemetry.addLine("Running");
             OpenGLMatrix m = vision.getCurrentPosition();
             if (m != null) {
-                nav = new NavigationalState(m);
+                nav = new NavigationalState(m, StartLocation.BLUE_LEFT);
             }
             double inx = nav.get_position().get(0) / FieldConstants.mmPerInch;
             double iny = nav.get_position().get(1) / FieldConstants.mmPerInch;

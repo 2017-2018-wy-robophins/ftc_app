@@ -15,8 +15,10 @@ import java.util.ResourceBundle;
 @Config
 @TeleOp(name = "Main Op Mode", group = "main")
 public class MainOpMode extends LinearOpMode {
-    static float DRIVE_FORWARD_SCALE = 1;
-    static float DRIVE_ROTATION_SCALE = 1;
+    // need double to be tuned with ftc dashboard
+    public static double DRIVE_FORWARD_SCALE = 1;
+    public static double DRIVE_ROTATION_SCALE = 0.7;
+    public static double ROTATE_POWER = 0.6;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -26,7 +28,7 @@ public class MainOpMode extends LinearOpMode {
         telemetry.update();
         final double ARM_JOYSTICK_MOVEMENT_THRESHOLD = 0.05;
         gamepad1.setJoystickDeadzone((float)ARM_JOYSTICK_MOVEMENT_THRESHOLD);
-        float TRIGGER_THRESHOLD = 0.5f;
+        float TRIGGER_THRESHOLD = 0.3f;
 
         MainRobot mainRobot = new MainRobot(hardwareMap, telemetry, ElevatorHook.State.Contracted,false);
 
@@ -35,6 +37,8 @@ public class MainOpMode extends LinearOpMode {
         telemetry.update();
 
         ControlMode controlMode = ControlMode.Improved;
+        boolean containerServoToggle = false;
+        long previousServoCheck = System.currentTimeMillis();
 
         while (opModeIsActive()) {
             // prep the values
@@ -68,7 +72,7 @@ public class MainOpMode extends LinearOpMode {
                         forward = righty;
                         turn = rightx;
                     }
-                    mainRobot.driveBase.direct_move_and_turn(forward * DRIVE_FORWARD_SCALE, turn * DRIVE_ROTATION_SCALE);
+                    mainRobot.driveBase.direct_move_and_turn(forward * (float)DRIVE_FORWARD_SCALE, turn * (float)DRIVE_ROTATION_SCALE);
 
                     // elevator controls
                     if (!toggling) {
@@ -79,25 +83,43 @@ public class MainOpMode extends LinearOpMode {
                         } else if (gamepad1.b) {
                             mainRobot.hook.goToState(ElevatorHook.State.FullyExtended);
                         } else if (gamepad1.y) {
-                            mainRobot.grabber.deploy();
-                            // flapper
+                            // toggle servo
+                            if (System.currentTimeMillis() > previousServoCheck + 500) {
+                                if (containerServoToggle) {
+                                    mainRobot.grabber.openContainer();
+                                } else {
+                                    mainRobot.grabber.closeContainer();
+                                }
+                                containerServoToggle = !containerServoToggle;
+                                previousServoCheck = System.currentTimeMillis();
+                            }
                         }
                     }
 
-                    /*
-                    float rotatePower = 0.8f;
+                    if (gamepad1.dpad_up) {
+                        // rotate up
+                        mainRobot.leftRotate.setPower(ROTATE_POWER);
+                        mainRobot.rightRotate.setPower(ROTATE_POWER);
+                    } else if (gamepad1.dpad_down) {
+                        // rotate down
+                        mainRobot.leftRotate.setPower(-ROTATE_POWER);
+                        mainRobot.rightRotate.setPower(-ROTATE_POWER);
+                    } else {
+                        mainRobot.leftRotate.setPower(0);
+                        mainRobot.rightRotate.setPower(0);
+                    }
+
                     // intake controls
                     if (gamepad1.dpad_up) {
                         // rotate up
-                        mainRobot.grabber.rotate(rotatePower);
+                        mainRobot.grabber.rotate((float)ROTATE_POWER);
                     } else if (gamepad1.dpad_down) {
                         // rotate down
-                        mainRobot.grabber.rotate(-rotatePower);
+                        mainRobot.grabber.rotate(-(float)ROTATE_POWER);
                     } else {
                         mainRobot.grabber.rotate(0);
-                    }*/
+                    }
 
-                    /*
                     if (gamepad1.right_bumper) {
                         // contract
                         mainRobot.grabber.extend(-1);
@@ -109,31 +131,27 @@ public class MainOpMode extends LinearOpMode {
                     }
 
                     if (gamepad1.right_trigger > TRIGGER_THRESHOLD) {
-                        mainRobot.grabber.activate_intake();
+                        mainRobot.intake.setPower(gamepad1.right_trigger);
                     } else if (gamepad1.left_trigger > TRIGGER_THRESHOLD) {
-                        mainRobot.grabber.activate_outtake();
+                        mainRobot.intake.setPower(-gamepad1.left_trigger);
                     } else {
                         // TODO: not sure if this should be done
                         mainRobot.grabber.stop_intake();
                     }
-                    */
 
                     break;
                 case Manual:
                     mainRobot.rightDrive.setPower(righty);
                     mainRobot.leftDrive.setPower(lefty);
 
-                    /*
-                    conditionalPower(mainRobot.armRotate, gamepad1.dpad_up, gamepad1.dpad_down);
+                    conditionalPower(mainRobot.leftRotate, gamepad1.dpad_up, gamepad1.dpad_down);
+                    conditionalPower(mainRobot.rightRotate, gamepad1.dpad_up, gamepad1.dpad_down);
                     conditionalPower(mainRobot.armExtend, gamepad1.dpad_left, gamepad1.dpad_right);
-                    */
+                    conditionalPower(mainRobot.intake, gamepad1.right_bumper, gamepad1.right_trigger > TRIGGER_THRESHOLD);
+
                     conditionalPower(mainRobot.leftElevator, gamepad1.y, gamepad1.x);
                     conditionalPower(mainRobot.rightElevator, gamepad1.b, gamepad1.a);
 
-                    /*
-                    conditionalPower(mainRobot.rightGrabber, gamepad1.right_bumper, gamepad1.right_trigger > TRIGGER_THRESHOLD);
-                    conditionalPower(mainRobot.leftGrabber, gamepad1.left_bumper, gamepad1.left_trigger > TRIGGER_THRESHOLD);
-                    */
                     // TODO: FINISH
                     break;
             }
@@ -145,7 +163,7 @@ public class MainOpMode extends LinearOpMode {
             mainRobot.driveBase.report_encoder_ticks();
             telemetry.addData("heading", heading);
             telemetry.addData("Control Mode", controlMode);
-            // mainRobot.grabber.reportInfo(telemetry);
+            mainRobot.grabber.reportInfo(telemetry);
             telemetry.update();
         }
     }

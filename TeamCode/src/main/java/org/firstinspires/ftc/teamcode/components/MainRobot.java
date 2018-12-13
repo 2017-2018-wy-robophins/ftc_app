@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.components;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -35,11 +36,11 @@ public class MainRobot {
     public DcMotor leftElevator;
     public DcMotor rightElevator;
 
-    public DcMotor rightGrabber;
-    public DcMotor leftGrabber;
-    public DcMotor armRotate;
+    public DcMotor rightRotate;
+    public DcMotor leftRotate;
     public DcMotor armExtend;
-    public Servo grabDeployServo;
+    public DcMotor intake;
+    public Servo grabContainerServo;
 
     public Servo rightSampler;
     public Servo leftSampler;
@@ -62,16 +63,16 @@ public class MainRobot {
             DigitalLimitSwitch limitSwitch = new DigitalLimitSwitch(hardwareMap, "elevatorLimit");
             hook = new ElevatorHook(leftElevator, rightElevator, limitSwitch, initialElevatorState, telemetry);
 
-            /*
             // create the grabber
-            rightGrabber = hardwareMap.dcMotor.get("rightGrabber");
-            leftGrabber = hardwareMap.dcMotor.get("leftGrabber");
-            armRotate = hardwareMap.dcMotor.get("armRotate");
+            rightRotate = hardwareMap.dcMotor.get("rightRotate");
+            leftRotate = hardwareMap.dcMotor.get("leftRotate");
+            leftRotate.setDirection(DcMotorSimple.Direction.REVERSE);
             armExtend = hardwareMap.dcMotor.get("armExtend");
-            grabDeployServo = hardwareMap.servo.get("grabDeployServo");
-            grabber = new TwoDOFGrabber(rightGrabber, leftGrabber, armRotate, armExtend, grabDeployServo, telemetry);
-            */
+            intake = hardwareMap.dcMotor.get("intake");
+            grabContainerServo = hardwareMap.servo.get("grabContainerServo");
+            grabber = new TwoDOFGrabber(rightRotate, leftRotate, armExtend, intake, grabContainerServo, telemetry);
 
+            // create the imu
             imu = new InertialSensorBNO055(hardwareMap);
 
             // create the sampler

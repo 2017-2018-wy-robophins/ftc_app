@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.components.grabber;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -9,53 +10,54 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.components.Component;
 
+@Config
 public class TwoDOFGrabber extends Component {
-    public Servo deploymentServo;
-    public DcMotor rightMotor;
-    public DcMotor leftMotor;
-    public DcMotor rotationMotor;
+    public DcMotor rightRotate;
+    public DcMotor leftRotate;
     public DcMotor extensionMotor;
+    public DcMotor intakeMotor;
+    public Servo containerServo;
+    public static double RIGHT_POSITION = 0.2;
+    public static double LEFT_POSITION = 0;
     Telemetry telemetry;
 
-    public TwoDOFGrabber(DcMotor rightMotor, DcMotor leftMotor, DcMotor rotationMotor, DcMotor extensionMotor, Servo deploymentServo, Telemetry telemetry) {
-        this.rightMotor = rightMotor;
-        this.leftMotor = leftMotor;
-        this.rotationMotor = rotationMotor;
+    public TwoDOFGrabber(DcMotor rightRotate, DcMotor leftRotate, DcMotor extensionMotor, DcMotor intakeMotor, Servo containerServo, Telemetry telemetry) {
+        this.rightRotate = rightRotate;
+        this.leftRotate = leftRotate;
         this.extensionMotor = extensionMotor;
-        this.deploymentServo = deploymentServo;
+        this.intakeMotor = intakeMotor;
+        this.containerServo = containerServo;
         this.telemetry = telemetry;
 
-        leftMotor.setDirection(DcMotor.Direction.FORWARD);
-        rightMotor.setDirection(DcMotor.Direction.REVERSE);
-        rotationMotor.setDirection(DcMotor.Direction.REVERSE);
+        leftRotate.setDirection(DcMotor.Direction.REVERSE);
+        rightRotate.setDirection(DcMotor.Direction.FORWARD);
+        intakeMotor.setDirection(DcMotor.Direction.FORWARD);
         extensionMotor.setDirection(DcMotor.Direction.FORWARD);
-        deploymentServo.setDirection(Servo.Direction.FORWARD);
 
-        leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rotationMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftRotate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightRotate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        intakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         extensionMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-        rotationMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftRotate.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightRotate.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         extensionMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rotationMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        leftRotate.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightRotate.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         extensionMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        containerServo.setDirection(Servo.Direction.FORWARD);
     }
 
-    public void deploy() throws InterruptedException {
-        /*
-        int targetRotation = -400;
-        rotationMotor.setTargetPosition(-400);
-        while (Math.abs(rotationMotor.getCurrentPosition() - targetRotation) > 20) {
-            Thread.sleep(5);
-        }*/
+    public void openContainer() {
+        containerServo.setPosition(RIGHT_POSITION);
+    }
 
-        deploymentServo.setPosition(1);
-
-        //((ServoImplEx)deploymentServo).setPwmDisable();
+    public void closeContainer() {
+        containerServo.setPosition(LEFT_POSITION);
     }
 
     public void activate_intake() {
@@ -71,8 +73,7 @@ public class TwoDOFGrabber extends Component {
     }
 
     private void setIntakePower(float power) {
-        rightMotor.setPower(power);
-        leftMotor.setPower(power);
+        intakeMotor.setPower(power);
     }
 
     public void extend(float extendPower) {
@@ -80,16 +81,15 @@ public class TwoDOFGrabber extends Component {
     }
 
     public void rotate(float rotatePower) {
-        rotationMotor.setPower(rotatePower);
+        leftRotate.setPower(rotatePower);
+        rightRotate.setPower(rotatePower);
     }
 
     public void reportInfo(Telemetry telemetry) {
-        telemetry.addData("Right Grabber Power", rightMotor.getPower());
-        telemetry.addData("Left Grabber Power", leftMotor.getPower());
+        telemetry.addData("Right Rotate Power", rightRotate.getPower());
+        telemetry.addData("Left Rotate Power", leftRotate.getPower());
         telemetry.addData("Extension Power", extensionMotor.getPower());
         telemetry.addData("Extension ticks", extensionMotor.getCurrentPosition());
-        telemetry.addData("Rotation Power", rotationMotor.getPower());
-        telemetry.addData("Rotation ticks", rotationMotor.getCurrentPosition());
-        telemetry.addData("Servo Position", deploymentServo.getPortNumber());
+        telemetry.addData("Intake Power", intakeMotor.getPower());
     }
 }

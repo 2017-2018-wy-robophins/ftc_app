@@ -11,6 +11,10 @@ public class MovementCommand extends Command {
     private VectorF targetPosition;
     private float targetHeading;
 
+    public MovementCommand(float x, float y, float targetHeading) {
+        new MovementCommand(new VectorF(x, y), targetHeading);
+    }
+
     public MovementCommand(VectorF targetPosition, float targetHeading) {
         this.targetPosition = targetPosition;
         this.targetHeading = targetHeading;

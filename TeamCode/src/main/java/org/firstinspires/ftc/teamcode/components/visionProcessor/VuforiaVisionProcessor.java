@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.components.visionProcessor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
@@ -102,6 +103,47 @@ public class VuforiaVisionProcessor implements VisionProcessor {
         }
 
         return null;
+    }
+
+    // phone mounted on the right side of the robot, vertically
+    public SamplingConfiguration getSamplingConfigurationPhoneRight() {
+        if (tfod.isPresent()) {
+            TFObjectDetector tf = tfod.get();
+
+            List<Recognition> updatedRecognitions = tf.getUpdatedRecognitions();
+            if (updatedRecognitions != null) {
+                if (updatedRecognitions.size() == 2) {
+                    int goldMineralX = -1;
+                    int silverMineral1X = -1;
+                    for (Recognition recognition : updatedRecognitions) {
+                        if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
+                            goldMineralX = (int) recognition.getRight();
+                        } else if (silverMineral1X == -1) {
+                            silverMineral1X = (int) recognition.getRight();
+                        }
+                    }
+
+                    if (goldMineralX != -1) {
+                        // there was a gold
+                        if (silverMineral1X > goldMineralX) {
+                            return SamplingConfiguration.CENTER;
+                        } else {
+                            return SamplingConfiguration.RIGHT;
+                        }
+                    } else {
+                        // no gold - must be to the very left
+                        return SamplingConfiguration.LEFT;
+                    }
+                } else {
+                    return null;
+                }
+            } else {
+                return null;
+            }
+        } else {
+            System.out.println("TRIED TO SAMPLE WITHOUT TFOD");
+            return null;
+        }
     }
 
     public SamplingConfiguration getSamplingConfiguration() {

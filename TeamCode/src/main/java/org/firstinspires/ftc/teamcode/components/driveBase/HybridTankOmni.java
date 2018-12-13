@@ -55,11 +55,6 @@ public class HybridTankOmni extends DriveBase {
         float headingError;
         do {
             headingError = -getHeadingError(targetHeading, imu);
-            telemetry.addData("Heading", imu.getHeading());
-            telemetry.addData("Target Heading", targetHeading);
-            telemetry.addData("heading error", headingError);
-            telemetry.addData("LEFT ticks", left.getCurrentPosition());
-            telemetry.addData("RIGHT ticks", right.getCurrentPosition());
             float v = ExtendedMath.clamp(-MAX_TURN_POWER, MAX_TURN_POWER,  Math.signum(headingError) * 0.25f + headingError * (MAX_TURN_POWER / GYRO_TURN_CLAMP_CUTOFF_DEGREES));
             telemetry.addData("v", v);
             left.setPower(-v);
@@ -69,6 +64,38 @@ public class HybridTankOmni extends DriveBase {
         stop();
     }
 
+    private float getHeadingError(float targetHeading, InertialSensor imu) {
+        float positiveError = ExtendedMath.get_min_rotation(imu.getHeading(), targetHeading);
+        // now normalize to +-180 for convenience
+        return positiveError + (positiveError > 180 ? -360 : 0);
+    }
+
+    // x in mm
+    public void imu_forward_move(float x, InertialSensor imu) {
+        set_mode_motors(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        int targetMovement = (int)(x * TICKS_PER_MM);
+        int rightTarget = right.getCurrentPosition() + targetMovement;
+        int leftTarget = left.getCurrentPosition() + targetMovement;
+        float targetHeading = imu.getHeading();
+        float rightError, leftError, headingError;
+        do {
+            headingError = getHeadingError(targetHeading, imu);
+            rightError = rightTarget - right.getCurrentPosition();
+            leftError = leftTarget - left.getCurrentPosition();
+            float heading_adjust_v = ExtendedMath.clamp(-MAX_FORWARD_TURN_ADJUST_POWER,
+                    MAX_FORWARD_TURN_ADJUST_POWER,
+                    headingError * (MAX_FORWARD_TURN_ADJUST_POWER / GYRO_TURN_CLAMP_CUTOFF_DEGREES));
+            float right_v = ExtendedMath.clamp(-MAX_FORWARD_POWER,
+                    MAX_FORWARD_POWER,
+                    rightError * (MAX_FORWARD_POWER / FORWARD_CLAMP_CUTOFF_TICKS));
+            float left_v = ExtendedMath.clamp(-MAX_FORWARD_POWER,
+                    MAX_FORWARD_POWER,
+                    leftError * (MAX_FORWARD_POWER / FORWARD_CLAMP_CUTOFF_TICKS));
+            left.setPower(left_v - heading_adjust_v);
+            right.setPower(right_v + heading_adjust_v);
+        } while (Globals.OPMODE_ACTIVE && Math.abs(rightError) > ENCODER_EPSILON || Math.abs(leftError) > ENCODER_EPSILON);
+        stop();
+    }
 
     public void turn(float r) throws InterruptedException {
         set_mode_motors(DcMotor.RunMode.RUN_TO_POSITION);
@@ -117,39 +144,6 @@ public class HybridTankOmni extends DriveBase {
 
         right.setPower(0);
         left.setPower(0);
-    }
-
-    private float getHeadingError(float targetHeading, InertialSensor imu) {
-        float positiveError = ExtendedMath.get_min_rotation(imu.getHeading(), targetHeading);
-        // now normalize to +-180 for convenience
-        return positiveError + (positiveError > 180 ? -360 : 0);
-    }
-
-    // x in mm
-    public void imu_forward_move(float x, InertialSensor imu) {
-        set_mode_motors(DcMotor.RunMode.RUN_USING_ENCODER);
-        int targetMovement = (int)(x * TICKS_PER_MM);
-        int rightTarget = right.getCurrentPosition() + targetMovement;
-        int leftTarget = left.getCurrentPosition() + targetMovement;
-        float targetHeading = imu.getHeading();
-        float rightError, leftError, headingError;
-        do {
-            headingError = getHeadingError(targetHeading, imu);
-            rightError = rightTarget - right.getCurrentPosition();
-            leftError = leftTarget - left.getCurrentPosition();
-            float heading_adjust_v = ExtendedMath.clamp(-MAX_FORWARD_TURN_ADJUST_POWER,
-                    MAX_FORWARD_TURN_ADJUST_POWER,
-                    headingError * (MAX_FORWARD_TURN_ADJUST_POWER / GYRO_TURN_CLAMP_CUTOFF_DEGREES));
-            float right_v = ExtendedMath.clamp(-MAX_FORWARD_POWER,
-                    MAX_FORWARD_POWER,
-                    rightError * (MAX_FORWARD_POWER / FORWARD_CLAMP_CUTOFF_TICKS));
-            float left_v = ExtendedMath.clamp(-MAX_FORWARD_POWER,
-                    MAX_FORWARD_POWER,
-                    leftError * (MAX_FORWARD_POWER / FORWARD_CLAMP_CUTOFF_TICKS));
-            left.setPower(left_v - heading_adjust_v);
-            right.setPower(right_v + heading_adjust_v);
-        } while (Globals.OPMODE_ACTIVE && Math.abs(rightError) > ENCODER_EPSILON || Math.abs(leftError) > ENCODER_EPSILON);
-        stop();
     }
 
     public void forward_move(float x) throws InterruptedException {

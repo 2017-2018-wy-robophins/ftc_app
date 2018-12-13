@@ -21,6 +21,5 @@ public class LocalizeCommand extends Command {
         Pair<VectorF, MatrixF> decomposed = ExtendedMath.decompose_opengl_matrix(info);
         navigationalState.set_heading(extract_z_rot(info));
         navigationalState.set_position(decomposed.first);
-        navigationalState.imuOffset = navigationalState.get_heading() - imu.getHeading();
     }
 }

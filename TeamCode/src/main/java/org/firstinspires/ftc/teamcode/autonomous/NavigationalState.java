@@ -7,23 +7,26 @@ import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.teamcode.common.ExtendedMath;
 import org.firstinspires.ftc.teamcode.common.SamplingConfiguration;
+import org.firstinspires.ftc.teamcode.common.StartLocation;
 
 /**
  * Created by efyang on 1/11/18.
  */
 
 public class NavigationalState {
+    public StartLocation startLocation;
     // 2d vector
     private VectorF position = new VectorF(new float[] {0, 0});
     // in degrees, ccw
     private float heading = 0;
-    // TODO: set this based on starting position
-    public float imuOffset = 0;
 
     private SamplingConfiguration detectedSample = SamplingConfiguration.RIGHT;
 
-    public NavigationalState(){}
-    public NavigationalState(OpenGLMatrix m) {
+    public NavigationalState(StartLocation startLocation){
+        this.startLocation = startLocation;
+    }
+    public NavigationalState(OpenGLMatrix m, StartLocation startLocation) {
+        this.startLocation = startLocation;
         Pair<VectorF, MatrixF> decomp = ExtendedMath.decompose_opengl_matrix(m);
         this.position = ExtendedMath.convert_3d_to_2d(decomp.first);
         this.heading = ExtendedMath.extract_z_rot(m);
