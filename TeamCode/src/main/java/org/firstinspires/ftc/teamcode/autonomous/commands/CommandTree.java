@@ -26,7 +26,13 @@ public class CommandTree {
                     .map((c) -> c.toFuture(navigationalState, imu, vision, mainRobot, telemetry))
                     .toArray(CompletableFuture[]::new);
             return CompletableFuture.runAsync(
-                    () -> value.execute(navigationalState, imu, vision, mainRobot, telemetry))
+                    () -> {
+                        try {
+                            value.execute(navigationalState, imu, vision, mainRobot, telemetry);
+                        } catch (InterruptedException e) {
+
+                        }
+                    })
                     .thenRunAsync(() -> CompletableFuture.allOf(childFutures));
         } else {
             return CompletableFuture.completedFuture(null);

@@ -131,9 +131,9 @@ public class MainOpMode extends LinearOpMode {
                     }
 
                     if (gamepad1.right_trigger > TRIGGER_THRESHOLD) {
-                        mainRobot.intake.setPower(gamepad1.right_trigger);
+                        mainRobot.intake.setPower(Math.pow(gamepad1.right_trigger, 5));
                     } else if (gamepad1.left_trigger > TRIGGER_THRESHOLD) {
-                        mainRobot.intake.setPower(-gamepad1.left_trigger);
+                        mainRobot.intake.setPower(-Math.pow(gamepad1.left_trigger, 5));
                     } else {
                         // TODO: not sure if this should be done
                         mainRobot.grabber.stop_intake();

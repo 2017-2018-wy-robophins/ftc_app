@@ -11,11 +11,11 @@ public abstract class Command {
         return this.getClass().getSimpleName();
     }
 
-    public final void execute(NavigationalState navigationalState, InertialSensor imu, VisionProcessor visionProcessor, MainRobot mainRobot, Telemetry telemetry) {
+    public final void execute(NavigationalState navigationalState, InertialSensor imu, VisionProcessor visionProcessor, MainRobot mainRobot, Telemetry telemetry) throws InterruptedException {
         telemetry.addData("Executing Command", name());
         telemetry.update();
         executeCommand(navigationalState, imu, visionProcessor, mainRobot, telemetry);
     }
 
-    abstract void executeCommand(NavigationalState navigationalState, InertialSensor imu, VisionProcessor visionProcessor, MainRobot mainRobot, Telemetry telemetry);
+    abstract void executeCommand(NavigationalState navigationalState, InertialSensor imu, VisionProcessor visionProcessor, MainRobot mainRobot, Telemetry telemetry) throws InterruptedException;
 }

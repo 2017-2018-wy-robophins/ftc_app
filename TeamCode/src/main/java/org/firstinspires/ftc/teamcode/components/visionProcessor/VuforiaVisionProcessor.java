@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.components.visionProcessor;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.vuforia.CameraDevice;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -75,16 +76,21 @@ public class VuforiaVisionProcessor implements VisionProcessor {
         targetsRoverRuckus.activate();
     }
 
-    public void initTfod() {
+    public void initTfod() throws InterruptedException {
+        CameraDevice.getInstance().setFlashTorchMode(true);
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
             "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
         tfod = Optional.of(ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia));
         tfod.get().loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
         tfod.get().activate();
+        while (!tfod.isPresent()) {
+            Thread.sleep(20);
+        }
     }
 
     public void stopTfod() {
+        CameraDevice.getInstance().setFlashTorchMode(false);
         tfod.map(tf -> {tf.shutdown(); return tf;});
     }
 
@@ -103,6 +109,69 @@ public class VuforiaVisionProcessor implements VisionProcessor {
         }
 
         return null;
+    }
+
+    public SamplingConfiguration getSamplingConfigurationPhoneRightOnlyGold() {
+         if (tfod.isPresent()) {
+            TFObjectDetector tf = tfod.get();
+
+            List<Recognition> updatedRecognitions = tf.getUpdatedRecognitions();
+            if (updatedRecognitions != null) {
+                if (updatedRecognitions.size() == 2) {
+                    int goldMineralX = -1;
+                    int silverMineral1X = -1;
+                    for (Recognition recognition : updatedRecognitions) {
+                        if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
+                            goldMineralX = (int) recognition.getTop() + (int)recognition.getHeight()/2;
+                        } else if (silverMineral1X == -1) {
+                            silverMineral1X = (int) recognition.getTop() + (int)recognition.getHeight()/2;
+                        }
+                    }
+
+                    if (goldMineralX != -1) {
+                        // there was a gold
+                        if (silverMineral1X < goldMineralX) {
+                            return SamplingConfiguration.CENTER;
+                        } else {
+                            return SamplingConfiguration.RIGHT;
+                        }
+                    } else {
+                        // no gold - must be to the very left
+                        return SamplingConfiguration.LEFT;
+                    }
+                } else {
+                    int goldMineralX = -1;
+                    int imageHeight = -1;
+                    for (Recognition recognition : updatedRecognitions) {
+                        if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
+                            imageHeight = recognition.getImageHeight();
+                            goldMineralX = (int) recognition.getTop() + (int)recognition.getHeight()/2;
+                        }
+                    }
+
+                    if (goldMineralX != -1) {
+                        // there is a gold
+                        System.out.println("Gold x " + goldMineralX);
+                        System.out.println("thres " + imageHeight/2);
+                        if (goldMineralX < imageHeight/2) {
+                            System.out.println("right");
+                            return SamplingConfiguration.RIGHT;
+                        } else {
+                            System.out.println("Center");
+                            return SamplingConfiguration.CENTER;
+                        }
+                    } else {
+                        return SamplingConfiguration.LEFT;
+                    }
+                }
+            } else {
+                return null;
+            }
+        } else {
+            System.out.println("TRIED TO SAMPLE WITHOUT TFOD");
+            // return null;
+            return null;
+        }
     }
 
     // phone mounted on the right side of the robot, vertically

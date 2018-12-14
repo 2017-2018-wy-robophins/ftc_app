@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.components.driveBase;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
@@ -13,6 +14,7 @@ import static org.firstinspires.ftc.teamcode.common.RobotConstants.ENCODER_TICKS
 import static org.firstinspires.ftc.teamcode.common.RobotConstants.TICK_ALLOWED_ABS_ERROR;
 
 // keep in mind that the center of rotation/the robot will be considered as in between the drive wheels
+@Config
 public class HybridTankOmni extends DriveBase {
     DcMotor left;
     DcMotor right;
@@ -20,11 +22,12 @@ public class HybridTankOmni extends DriveBase {
 
     float MAX_TURN_POWER = 0.4f;
     float GYRO_TURN_CLAMP_CUTOFF_DEGREES = 70;
-    float MAX_FORWARD_POWER = 1f;
+    float MAX_FORWARD_POWER = 0.4f;
+    float MAX_FORWARD_POWER_DIRECT = 0.9f;
     float MAX_FORWARD_TURN_ADJUST_POWER = 0.1f;
     float FORWARD_CLAMP_CUTOFF_TICKS = 100;
     int ENCODER_EPSILON = 20;
-    float TICKS_PER_MM = -2; // TODO: SET
+    public static double TICKS_PER_MM = -2.15; // TODO: SET
     private float TICKS_PER_DEGREE = 6;
     int ANGLE_EPSILON = 1;
     int MOTOR_TIMEOUT_MS = 1000;
@@ -80,8 +83,8 @@ public class HybridTankOmni extends DriveBase {
         float rightError, leftError, headingError;
         do {
             headingError = getHeadingError(targetHeading, imu);
-            rightError = rightTarget - right.getCurrentPosition();
-            leftError = leftTarget - left.getCurrentPosition();
+            rightError = right.getCurrentPosition() - rightTarget;
+            leftError = left.getCurrentPosition() - leftTarget;
             float heading_adjust_v = ExtendedMath.clamp(-MAX_FORWARD_TURN_ADJUST_POWER,
                     MAX_FORWARD_TURN_ADJUST_POWER,
                     headingError * (MAX_FORWARD_TURN_ADJUST_POWER / GYRO_TURN_CLAMP_CUTOFF_DEGREES));
@@ -91,6 +94,13 @@ public class HybridTankOmni extends DriveBase {
             float left_v = ExtendedMath.clamp(-MAX_FORWARD_POWER,
                     MAX_FORWARD_POWER,
                     leftError * (MAX_FORWARD_POWER / FORWARD_CLAMP_CUTOFF_TICKS));
+            telemetry.addData("heading adjust", heading_adjust_v);
+            telemetry.addData("right v", right_v);
+            telemetry.addData("left v", left_v);
+            telemetry.addData("right error", rightError);
+            telemetry.addData("left error", leftError);
+            telemetry.update();
+
             left.setPower(left_v - heading_adjust_v);
             right.setPower(right_v + heading_adjust_v);
         } while (Globals.OPMODE_ACTIVE && Math.abs(rightError) > ENCODER_EPSILON || Math.abs(leftError) > ENCODER_EPSILON);
@@ -196,8 +206,8 @@ public class HybridTankOmni extends DriveBase {
         set_mode_motors(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         double turn_contrib = Math.abs(r);
         double throttle_contrib = 1 - turn_contrib;
-        left.setPower(MAX_FORWARD_POWER * (x * throttle_contrib - r));
-        right.setPower(MAX_FORWARD_POWER * (x * throttle_contrib + r));
+        left.setPower(MAX_FORWARD_POWER_DIRECT * (x * throttle_contrib - r));
+        right.setPower(MAX_FORWARD_POWER_DIRECT * (x * throttle_contrib + r));
     }
 
     // shared

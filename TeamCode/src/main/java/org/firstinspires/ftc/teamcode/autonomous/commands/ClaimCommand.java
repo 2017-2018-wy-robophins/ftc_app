@@ -8,6 +8,5 @@ import org.firstinspires.ftc.teamcode.components.visionProcessor.VisionProcessor
 
 public class ClaimCommand extends Command {
     void executeCommand(NavigationalState navigationalState, InertialSensor imu, VisionProcessor visionProcessor, MainRobot mainRobot, Telemetry telemetry) {
-
     }
 }

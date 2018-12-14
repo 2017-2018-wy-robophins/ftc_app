@@ -44,6 +44,7 @@ public class MainRobot {
 
     public Servo rightSampler;
     public Servo leftSampler;
+    public Servo centerSampler;
 
 
     //runs on press of the "init" button. Maps engines from the robot to variables,
@@ -78,7 +79,8 @@ public class MainRobot {
             // create the sampler
             rightSampler = hardwareMap.servo.get("rightSampler");
             leftSampler = hardwareMap.servo.get("leftSampler");
-            sampler = new Sampler(rightSampler, leftSampler);
+            centerSampler = hardwareMap.servo.get("centerSampler");
+            sampler = new Sampler(rightSampler, leftSampler, centerSampler);
         }
     }
 }

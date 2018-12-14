@@ -50,6 +50,8 @@ public class TwoDOFGrabber extends Component {
         intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         containerServo.setDirection(Servo.Direction.FORWARD);
+        openContainer();
+        closeContainer();
     }
 
     public void openContainer() {

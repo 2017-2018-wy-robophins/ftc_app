@@ -6,4 +6,5 @@ import org.firstinspires.ftc.teamcode.common.SamplingConfiguration;
 public interface VisionProcessor {
     OpenGLMatrix getCurrentPosition();
     SamplingConfiguration getSamplingConfiguration();
+    void stopTfod();
 }
