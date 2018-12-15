@@ -16,8 +16,8 @@ public class ElevatorHook extends Component {
     private DigitalLimitSwitch limitSwitch;
     private Telemetry telemetry;
 
-    private State currentState;
-    private State targetState;
+    public State currentState;
+    public State targetState;
 
     private int velocity = 0;
     private boolean previousPressed; // when previous switch state was pressed, now not pressed, then off initial switch
@@ -43,13 +43,14 @@ public class ElevatorHook extends Component {
         leftMotor.setMode(mode);
     }
 
-    private void setPowerDirectControl(float power) {
+    public void setPowerDirectControl(float power) {
         velocity = (int)Math.signum(power);
         if (velocity == 1) {
             targetState = State.FullyExtended;
         } else if (velocity == -1) {
             targetState = State.Contracted;
         }
+        System.out.println(power);
         rightMotor.setPower(power);
         leftMotor.setPower(power);
     }
@@ -62,6 +63,8 @@ public class ElevatorHook extends Component {
     public void goToStateBlocking(State targetState) {
         goToState(targetState);
         while (Globals.OPMODE_ACTIVE && currentState != targetState) {
+            telemetry.addLine("blocking update");
+            telemetry.update();
             update();
         }
     }
@@ -70,13 +73,19 @@ public class ElevatorHook extends Component {
         this.targetState = targetState;
         int power = currentState.getDirection(targetState);
         velocity = power;
-        setPower((float)power);
+        setPower(-(float)power);
     }
 
     public void update() {
         boolean pressed = limitSwitch.isPressed();
+        telemetry.addData("current state", currentState);
+        telemetry.addData("target state", targetState);
         telemetry.addData("previous pressed", previousPressed);
         telemetry.addData("pressed", pressed);
+        telemetry.addData("velocity", velocity);
+        telemetry.addData("r s", rightMotor.getPower());
+        telemetry.addData("l s ", leftMotor.getPower());
+        telemetry.update();
         if (previousPressed && !pressed) {
             if (!currentState.isBetweenState()) {
                 currentState = currentState.addVelocity(velocity).orElse(currentState);
@@ -95,6 +104,8 @@ public class ElevatorHook extends Component {
     }
 
     public void stop() {
+        telemetry.addLine("Stop elevator");
+        telemetry.update();
         setPower(0);
         velocity = 0;
     }

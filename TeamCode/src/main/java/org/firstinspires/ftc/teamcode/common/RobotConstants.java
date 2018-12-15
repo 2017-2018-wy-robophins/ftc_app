@@ -5,7 +5,6 @@ package org.firstinspires.ftc.teamcode.common;
  */
 
 public final class RobotConstants {
-    public static final float ENCODER_TICKS_TIMEOUT_THRESHOLD = 10;
     public static final int MOTOR_TIMEOUT_MILLIS = 1000;
     public static final int TICK_ALLOWED_ABS_ERROR = 10;
 

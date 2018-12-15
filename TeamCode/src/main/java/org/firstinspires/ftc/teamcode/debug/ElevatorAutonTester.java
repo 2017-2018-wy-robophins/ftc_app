@@ -9,8 +9,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.components.MainRobot;
 import org.firstinspires.ftc.teamcode.components.hook.ElevatorHook;
 
-@TeleOp(name = "IMU Forward Tester", group = "Debug")
-public class ForwardTester extends LinearOpMode {
+@TeleOp(name = "Elevator Auton Tester", group = "Debug")
+public class ElevatorAutonTester extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry(), telemetry);
@@ -18,19 +18,12 @@ public class ForwardTester extends LinearOpMode {
         telemetry.addLine("Init");
         telemetry.update();
         waitForStart();
-        telemetry.addLine("Start");
-        telemetry.update();
 
-        telemetry.addLine("forward 4 feet");
-        telemetry.update();
-
-        //mainRobot.driveBase.imu_forward_move(6000f, mainRobot.imu);
-        mainRobot.driveBase.imu_forward_move(1219.2f, mainRobot.imu);
-
-        telemetry.addLine("backward 4 feet");
-        telemetry.update();
-
-        //mainRobot.driveBase.imu_forward_move(6000f, mainRobot.imu);
-        mainRobot.driveBase.imu_forward_move(-1219.2f, mainRobot.imu);
+        mainRobot.hook.goToState(ElevatorHook.State.FullyExtended);
+        mainRobot.hook.update();
+        // while (mainRobot.hook.currentState != mainRobot.hook.targetState) {
+        while (opModeIsActive()) {
+            mainRobot.hook.update();
+        }
     }
 }

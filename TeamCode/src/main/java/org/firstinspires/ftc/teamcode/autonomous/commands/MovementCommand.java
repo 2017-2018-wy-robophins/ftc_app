@@ -12,7 +12,7 @@ public class MovementCommand extends Command {
     private float targetHeading;
 
     public MovementCommand(float x, float y, float targetHeading) {
-        new MovementCommand(new VectorF(x, y), targetHeading);
+        this(new VectorF(x, y), targetHeading);
     }
 
     public MovementCommand(VectorF targetPosition, float targetHeading) {
@@ -21,6 +21,9 @@ public class MovementCommand extends Command {
     }
 
     void executeCommand(NavigationalState navigationalState, InertialSensor imu, VisionProcessor visionProcessor, MainRobot mainRobot, Telemetry telemetry) {
+        System.out.println(navigationalState);
+        System.out.println(targetPosition);
+        System.out.println(targetHeading);
         telemetry.addData("Moving to target position", targetPosition);
         telemetry.addData("Moving to target heading", targetHeading);
         telemetry.update();

@@ -8,5 +8,6 @@ import org.firstinspires.ftc.teamcode.components.visionProcessor.VisionProcessor
 
 public class BeginCommand extends Command {
     @Override
-    void executeCommand(NavigationalState navigationalState, InertialSensor imu, VisionProcessor visionProcessor, MainRobot mainRobot, Telemetry telemetry) {}
+    void executeCommand(NavigationalState navigationalState, InertialSensor imu, VisionProcessor visionProcessor, MainRobot mainRobot, Telemetry telemetry) {
+    }
 }

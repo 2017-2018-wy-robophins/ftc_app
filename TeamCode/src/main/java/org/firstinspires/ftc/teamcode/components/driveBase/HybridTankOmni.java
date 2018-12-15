@@ -10,9 +10,6 @@ import org.firstinspires.ftc.teamcode.common.ExtendedMath;
 import org.firstinspires.ftc.teamcode.common.Globals;
 import org.firstinspires.ftc.teamcode.components.inertialSensor.InertialSensor;
 
-import static org.firstinspires.ftc.teamcode.common.RobotConstants.ENCODER_TICKS_TIMEOUT_THRESHOLD;
-import static org.firstinspires.ftc.teamcode.common.RobotConstants.TICK_ALLOWED_ABS_ERROR;
-
 // keep in mind that the center of rotation/the robot will be considered as in between the drive wheels
 @Config
 public class HybridTankOmni extends DriveBase {
@@ -20,17 +17,19 @@ public class HybridTankOmni extends DriveBase {
     DcMotor right;
     Telemetry telemetry;
 
-    float MAX_TURN_POWER = 0.4f;
+    float MAX_TURN_POWER = 0.6f;
     float GYRO_TURN_CLAMP_CUTOFF_DEGREES = 70;
-    public static double MAX_FORWARD_POWER = 0.7f;
+    public static double MAX_FORWARD_POWER = 0.4f;
     float MAX_FORWARD_POWER_DIRECT = 0.9f;
     public static double MAX_FORWARD_TURN_ADJUST_POWER = 0.8f;
     public static double FORWARD_CLAMP_CUTOFF_TICKS = 200;
-    int ENCODER_EPSILON = 20;
+    int ENCODER_EPSILON = 30;
     public static double TICKS_PER_MM = -2.15; // TODO: SET
     private float TICKS_PER_DEGREE = 6;
     int ANGLE_EPSILON = 1;
+
     int MOTOR_TIMEOUT_MS = 1000;
+    int ENCODER_TICKS_TIMEOUT_THRESHOLD = 10;
 
     public HybridTankOmni(DcMotor left, DcMotor right, Telemetry telemetry) {
         this.telemetry = telemetry;
@@ -56,6 +55,11 @@ public class HybridTankOmni extends DriveBase {
         set_mode_motors(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         float targetHeading = imu.getHeading() + r;
         float headingError;
+
+        int last_right = right.getCurrentPosition();
+        int last_left = left.getCurrentPosition();
+        long next_check_timestamp = System.currentTimeMillis() + MOTOR_TIMEOUT_MS;
+
         do {
             headingError = -getHeadingError(targetHeading, imu);
             float v = ExtendedMath.clamp(-MAX_TURN_POWER, MAX_TURN_POWER,  Math.signum(headingError) * 0.25f + headingError * (MAX_TURN_POWER / GYRO_TURN_CLAMP_CUTOFF_DEGREES));
@@ -63,6 +67,22 @@ public class HybridTankOmni extends DriveBase {
             left.setPower(-v);
             right.setPower(v);
             telemetry.update();
+
+
+            if (System.currentTimeMillis() >= next_check_timestamp) {
+                int right_current = right.getCurrentPosition();
+                int left_current = left.getCurrentPosition();
+                if ((Math.abs(right_current - last_right) < ENCODER_TICKS_TIMEOUT_THRESHOLD) &&
+                        (Math.abs(left_current - last_left) < ENCODER_TICKS_TIMEOUT_THRESHOLD)) {
+                    telemetry.addLine("Turn timeout");
+                    telemetry.update();
+                    break;
+                }
+
+                last_right = right_current;
+                last_left = left_current;
+                next_check_timestamp = System.currentTimeMillis() + MOTOR_TIMEOUT_MS;
+            }
         } while (Globals.OPMODE_ACTIVE && Math.abs(headingError) > ANGLE_EPSILON);
         stop();
     }
@@ -81,6 +101,11 @@ public class HybridTankOmni extends DriveBase {
         int leftTarget = left.getCurrentPosition() + targetMovement;
         float targetHeading = imu.getHeading();
         float rightError, leftError, headingError;
+
+        int last_right = right.getCurrentPosition();
+        int last_left = left.getCurrentPosition();
+        long next_check_timestamp = System.currentTimeMillis() + MOTOR_TIMEOUT_MS;
+
         do {
             headingError = getHeadingError(targetHeading, imu);
             rightError = right.getCurrentPosition() - rightTarget;
@@ -101,8 +126,26 @@ public class HybridTankOmni extends DriveBase {
             telemetry.addData("left error", leftError);
             telemetry.update();
 
-            left.setPower(left_v + heading_adjust_v);
-            right.setPower(right_v - heading_adjust_v);
+            float left_power = left_v + heading_adjust_v;
+            float right_power = right_v - heading_adjust_v;
+            left.setPower(left_power + 0.25f * Math.signum(left_power));
+            right.setPower(right_power + 0.25f * Math.signum(right_power));
+
+            if (System.currentTimeMillis() >= next_check_timestamp) {
+                int right_current = right.getCurrentPosition();
+                int left_current = left.getCurrentPosition();
+                if ((Math.abs(right_current - last_right) < ENCODER_TICKS_TIMEOUT_THRESHOLD) &&
+                        (Math.abs(left_current - last_left) < ENCODER_TICKS_TIMEOUT_THRESHOLD)) {
+                    telemetry.addLine("Forward move timeout");
+                    telemetry.update();
+                    break;
+                }
+
+                last_right = right_current;
+                last_left = left_current;
+                next_check_timestamp = System.currentTimeMillis() + MOTOR_TIMEOUT_MS;
+            }
+
         } while (Globals.OPMODE_ACTIVE && Math.abs(rightError) > ENCODER_EPSILON || Math.abs(leftError) > ENCODER_EPSILON);
         stop();
     }

@@ -77,11 +77,13 @@ public class MainOpMode extends LinearOpMode {
                     // elevator controls
                     if (!toggling) {
                         if (gamepad1.x) {
-                            mainRobot.hook.goToState(ElevatorHook.State.Contracted);
+                           //  mainRobot.hook.goToState(ElevatorHook.State.Contracted);
                         } else if (gamepad1.a) {
-                            mainRobot.hook.goToState(ElevatorHook.State.PartiallyExtended);
+                            // mainRobot.hook.goToState(ElevatorHook.State.PartiallyExtended);
+                            mainRobot.hook.setPowerDirectControl(1);
                         } else if (gamepad1.b) {
-                            mainRobot.hook.goToState(ElevatorHook.State.FullyExtended);
+                            // mainRobot.hook.goToState(ElevatorHook.State.FullyExtended);
+                            mainRobot.hook.setPowerDirectControl(-1);
                         } else if (gamepad1.y) {
                             // toggle servo
                             if (System.currentTimeMillis() > previousServoCheck + 500) {
@@ -94,6 +96,10 @@ public class MainOpMode extends LinearOpMode {
                                 previousServoCheck = System.currentTimeMillis();
                             }
                         }
+                    }
+
+                    if (!gamepad1.a && !gamepad1.b) {
+                        mainRobot.hook.setPowerDirectControl(0);
                     }
 
                     if (gamepad1.dpad_up) {
@@ -157,7 +163,7 @@ public class MainOpMode extends LinearOpMode {
             }
 
             mainRobot.sampler.contractAll();
-            mainRobot.hook.update();
+            // mainRobot.hook.update();
             // send out info
             mainRobot.sampler.reportInfo(telemetry);
             mainRobot.driveBase.report_encoder_ticks();
