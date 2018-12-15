@@ -12,6 +12,7 @@ public abstract class Command {
     }
 
     public final void execute(NavigationalState navigationalState, InertialSensor imu, VisionProcessor visionProcessor, MainRobot mainRobot, Telemetry telemetry) throws InterruptedException {
+        System.out.println("Executing Command: " + name());
         telemetry.addData("Executing Command", name());
         telemetry.update();
         executeCommand(navigationalState, imu, visionProcessor, mainRobot, telemetry);

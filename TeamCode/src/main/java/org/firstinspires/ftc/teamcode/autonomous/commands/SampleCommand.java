@@ -10,8 +10,15 @@ import org.firstinspires.ftc.teamcode.components.visionProcessor.VisionProcessor
 
 public class SampleCommand extends Command {
     void executeCommand(NavigationalState navigationalState, InertialSensor imu, VisionProcessor visionProcessor, MainRobot mainRobot, Telemetry telemetry) throws InterruptedException {
-        Thread.sleep(1000);
-        SamplingConfiguration samplingConfiguration = visionProcessor.getSamplingConfiguration();
+        Thread.sleep(2000);
+        SamplingConfiguration samplingConfiguration = visionProcessor.getSamplingConfigurationPhoneRightOnlyGold();
+        if (samplingConfiguration == null) {
+            telemetry.addLine("Didn't get sampling configuration, defaulting to center");
+            samplingConfiguration = SamplingConfiguration.CENTER;
+        } else {
+            telemetry.addData("Got sampling configuration", samplingConfiguration);
+        }
+        telemetry.update();
         visionProcessor.stopTfod();
         switch (navigationalState.startLocation) {
             case BLUE_LEFT:
@@ -46,20 +53,21 @@ public class SampleCommand extends Command {
     }
 
     private void servoSample(SamplingConfiguration samplingConfiguration, MainRobot mainRobot) throws InterruptedException {
+        int time = 2000;
         switch (samplingConfiguration) {
             case LEFT:
                 mainRobot.sampler.extendLeft();
-                Thread.sleep(200);
+                Thread.sleep(time);
                 mainRobot.sampler.contractLeft();
                 break;
             case RIGHT:
                 mainRobot.sampler.extendRight();
-                Thread.sleep(200);
+                Thread.sleep(time);
                 mainRobot.sampler.contractRight();
                 break;
             case CENTER:
                 mainRobot.sampler.extendCenter();
-                Thread.sleep(200);
+                Thread.sleep(time);
                 mainRobot.sampler.contractCenter();
                 break;
         }

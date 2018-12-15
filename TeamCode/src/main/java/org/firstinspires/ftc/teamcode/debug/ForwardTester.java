@@ -23,6 +23,8 @@ public class ForwardTester extends LinearOpMode {
 
         telemetry.addLine("forward 4 feet");
         telemetry.update();
+
+        //mainRobot.driveBase.imu_forward_move(6000f, mainRobot.imu);
         mainRobot.driveBase.imu_forward_move(1219.2f, mainRobot.imu);
     }
 }

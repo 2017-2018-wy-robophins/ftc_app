@@ -22,10 +22,10 @@ public class HybridTankOmni extends DriveBase {
 
     float MAX_TURN_POWER = 0.4f;
     float GYRO_TURN_CLAMP_CUTOFF_DEGREES = 70;
-    float MAX_FORWARD_POWER = 0.4f;
+    public static double MAX_FORWARD_POWER = 0.7f;
     float MAX_FORWARD_POWER_DIRECT = 0.9f;
-    float MAX_FORWARD_TURN_ADJUST_POWER = 0.1f;
-    float FORWARD_CLAMP_CUTOFF_TICKS = 100;
+    public static double MAX_FORWARD_TURN_ADJUST_POWER = 0.8f;
+    public static double FORWARD_CLAMP_CUTOFF_TICKS = 200;
     int ENCODER_EPSILON = 20;
     public static double TICKS_PER_MM = -2.15; // TODO: SET
     private float TICKS_PER_DEGREE = 6;
@@ -85,15 +85,15 @@ public class HybridTankOmni extends DriveBase {
             headingError = getHeadingError(targetHeading, imu);
             rightError = right.getCurrentPosition() - rightTarget;
             leftError = left.getCurrentPosition() - leftTarget;
-            float heading_adjust_v = ExtendedMath.clamp(-MAX_FORWARD_TURN_ADJUST_POWER,
-                    MAX_FORWARD_TURN_ADJUST_POWER,
-                    headingError * (MAX_FORWARD_TURN_ADJUST_POWER / GYRO_TURN_CLAMP_CUTOFF_DEGREES));
-            float right_v = ExtendedMath.clamp(-MAX_FORWARD_POWER,
-                    MAX_FORWARD_POWER,
-                    rightError * (MAX_FORWARD_POWER / FORWARD_CLAMP_CUTOFF_TICKS));
-            float left_v = ExtendedMath.clamp(-MAX_FORWARD_POWER,
-                    MAX_FORWARD_POWER,
-                    leftError * (MAX_FORWARD_POWER / FORWARD_CLAMP_CUTOFF_TICKS));
+            float heading_adjust_v = ExtendedMath.clamp(-(float)MAX_FORWARD_TURN_ADJUST_POWER,
+                    (float)MAX_FORWARD_TURN_ADJUST_POWER,
+                    headingError * ((float)MAX_FORWARD_TURN_ADJUST_POWER / GYRO_TURN_CLAMP_CUTOFF_DEGREES));
+            float right_v = ExtendedMath.clamp(-(float)MAX_FORWARD_POWER,
+                    (float)MAX_FORWARD_POWER,
+                    rightError * ((float)MAX_FORWARD_POWER / (float)FORWARD_CLAMP_CUTOFF_TICKS));
+            float left_v = ExtendedMath.clamp(-(float)MAX_FORWARD_POWER,
+                    (float)MAX_FORWARD_POWER,
+                    leftError * ((float)MAX_FORWARD_POWER / (float)FORWARD_CLAMP_CUTOFF_TICKS));
             telemetry.addData("heading adjust", heading_adjust_v);
             telemetry.addData("right v", right_v);
             telemetry.addData("left v", left_v);
@@ -101,8 +101,8 @@ public class HybridTankOmni extends DriveBase {
             telemetry.addData("left error", leftError);
             telemetry.update();
 
-            left.setPower(left_v - heading_adjust_v);
-            right.setPower(right_v + heading_adjust_v);
+            left.setPower(left_v + heading_adjust_v);
+            right.setPower(right_v - heading_adjust_v);
         } while (Globals.OPMODE_ACTIVE && Math.abs(rightError) > ENCODER_EPSILON || Math.abs(leftError) > ENCODER_EPSILON);
         stop();
     }

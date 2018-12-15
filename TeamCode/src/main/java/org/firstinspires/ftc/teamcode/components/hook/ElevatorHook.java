@@ -43,6 +43,17 @@ public class ElevatorHook extends Component {
         leftMotor.setMode(mode);
     }
 
+    private void setPowerDirectControl(float power) {
+        velocity = (int)Math.signum(power);
+        if (velocity == 1) {
+            targetState = State.FullyExtended;
+        } else if (velocity == -1) {
+            targetState = State.Contracted;
+        }
+        rightMotor.setPower(power);
+        leftMotor.setPower(power);
+    }
+
     private void setPower(float power) {
         rightMotor.setPower(power);
         leftMotor.setPower(power);

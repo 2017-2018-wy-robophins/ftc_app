@@ -29,8 +29,8 @@ public class TwoDOFGrabber extends Component {
         this.containerServo = containerServo;
         this.telemetry = telemetry;
 
-        leftRotate.setDirection(DcMotor.Direction.REVERSE);
-        rightRotate.setDirection(DcMotor.Direction.FORWARD);
+        leftRotate.setDirection(DcMotor.Direction.FORWARD);
+        rightRotate.setDirection(DcMotor.Direction.REVERSE);
         intakeMotor.setDirection(DcMotor.Direction.FORWARD);
         extensionMotor.setDirection(DcMotor.Direction.FORWARD);
 

@@ -128,8 +128,8 @@ public class AutonMain {
             case RED_LEFT:
                 commandList = new Command[] {
                         new BeginCommand(),
-                        new HookControlCommand(ElevatorHook.State.FullyExtended),
-                        new MovementCommand(609.6f, -609.6f, -45),
+                        //new HookControlCommand(ElevatorHook.State.FullyExtended),
+                        //new MovementCommand(609.6f, -609.6f, -45),
                         new SampleCommand(),
                         new MovementCommand(1524f, 304.8f, 90),
                         new MovementCommand(1524f, 1219.2f, 90),
@@ -181,6 +181,7 @@ public class AutonMain {
                 break;
         }
 
+        System.out.println("Running command list");
         for (Command command: commandList) {
             command.execute(navinfo, imu, visionProcessor, mainRobot, telemetry);
         }
@@ -236,5 +237,7 @@ public class AutonMain {
     boolean mainLoop() throws InterruptedException {
         return false;
     }
-    void finish() throws InterruptedException {}
+    void finish() throws InterruptedException {
+        visionProcessor.stopTfod();
+    }
 }

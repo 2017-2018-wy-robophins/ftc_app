@@ -17,18 +17,22 @@ public abstract class AbstractAutonPlatform extends LinearOpMode {
     public abstract StartLocation getStartLocation();
     @Override
     public void runOpMode() throws InterruptedException {
+        AutonMain runner = new AutonMain(hardwareMap, telemetry, getStartLocation());
+        waitForStart();
         CompletableFuture<Void> opModeActiveChecker = CompletableFuture.runAsync(() -> {
-            while (opModeIsActive()) {}
+            System.out.println("opmode checker active");
+            while (opModeIsActive()) {
+                idle();
+            }
             Globals.OPMODE_ACTIVE = false;
-            Thread.currentThread().interrupt();
+            // Thread.currentThread().interrupt();
         });
 
         CompletableFuture<Void> mainBody = CompletableFuture.runAsync(() -> {
             try {
                 // initialize the more generic AutonMain container class
-                AutonMain runner = new AutonMain(hardwareMap, telemetry, getStartLocation());
                 // wait for the start button to be pressed.
-                waitForStart();
+                System.out.println("start mainbody");
                 // run the stuff that we only want to run once
                 runner.runOnce();
 
@@ -40,7 +44,9 @@ public abstract class AbstractAutonPlatform extends LinearOpMode {
                 }
 
                 // clean up
+                System.out.println("Finish");
                 runner.finish();
+                stop();
             } catch (InterruptedException e) {
                 System.out.println("Interrupted");
             }

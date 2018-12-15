@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode.debug;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -13,6 +14,7 @@ import org.firstinspires.ftc.teamcode.components.hook.ElevatorHook;
 import org.firstinspires.ftc.teamcode.components.inertialSensor.InertialSensor;
 import org.firstinspires.ftc.teamcode.components.inertialSensor.InertialSensorBNO055;
 
+@Disabled
 @TeleOp(name = "IMU Tester", group = "Debug")
 @Config
 public class ImuTester extends LinearOpMode {

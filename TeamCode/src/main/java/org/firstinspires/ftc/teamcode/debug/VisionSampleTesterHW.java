@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode.debug;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.vuforia.CameraDevice;
@@ -13,6 +14,7 @@ import org.firstinspires.ftc.teamcode.components.MainRobot;
 import org.firstinspires.ftc.teamcode.components.hook.ElevatorHook;
 import org.firstinspires.ftc.teamcode.components.visionProcessor.VuforiaVisionProcessor;
 
+@Disabled
 @TeleOp(name = "Vision Sample Tester HW", group = "Debug")
 public class VisionSampleTesterHW extends LinearOpMode {
     @Override

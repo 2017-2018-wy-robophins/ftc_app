@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.inertial;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
@@ -10,6 +11,7 @@ import org.firstinspires.ftc.teamcode.inertial.InertialPositionUpdater;
  * Created by efyang on 1/4/18.
  */
 
+@Disabled
 @Autonomous(name="Inertial Position Testing", group="Concept")
 public class InertialPositionTesting extends LinearOpMode {
     InertialPositionUpdater position_updater;
