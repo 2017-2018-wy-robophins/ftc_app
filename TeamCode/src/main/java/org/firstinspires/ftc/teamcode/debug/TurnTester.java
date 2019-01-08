@@ -16,7 +16,7 @@ import java.util.concurrent.ExecutionException;
 public class TurnTester extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        MainRobot mainRobot = new MainRobot(hardwareMap, telemetry, ElevatorHook.State.Contracted, false);
+        MainRobot mainRobot = new MainRobot(hardwareMap, telemetry, ElevatorHook.State.Contracted);
         telemetry.addLine("Init");
         telemetry.update();
         waitForStart();

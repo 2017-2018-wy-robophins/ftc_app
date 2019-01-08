@@ -29,7 +29,6 @@ public class MainRobot {
     public Sampler sampler;
     public InertialSensor imu;
     public VisionProcessor visionProcessor;
-    boolean DEBUG_CLASSES;
     // keep hardware variables for manual control
     public DcMotor leftDrive;
     public DcMotor rightDrive;
@@ -48,39 +47,34 @@ public class MainRobot {
 
 
     //runs on press of the "init" button. Maps engines from the robot to variables,
-    public MainRobot(HardwareMap hardwareMap, Telemetry telemetry, ElevatorHook.State initialElevatorState, boolean DEBUG_CLASSES) {
-        this.DEBUG_CLASSES = DEBUG_CLASSES;
+    public MainRobot(HardwareMap hardwareMap, Telemetry telemetry, ElevatorHook.State initialElevatorState) {
+        // create the drivebase
+        leftDrive = hardwareMap.dcMotor.get("leftDrive");
+        rightDrive = hardwareMap.dcMotor.get("rightDrive");
+        driveBase = new HybridTankOmni(leftDrive, rightDrive, telemetry);
 
-        if (DEBUG_CLASSES) {
-        } else {
-            // create the drivebase
-            leftDrive = hardwareMap.dcMotor.get("leftDrive");
-            rightDrive = hardwareMap.dcMotor.get("rightDrive");
-            driveBase = new HybridTankOmni(leftDrive, rightDrive, telemetry);
+        // create the elevator
+        leftElevator = hardwareMap.dcMotor.get("leftElevator");
+        rightElevator = hardwareMap.dcMotor.get("rightElevator");
+        DigitalLimitSwitch limitSwitch = new DigitalLimitSwitch(hardwareMap, "elevatorLimit");
+        hook = new ElevatorHook(leftElevator, rightElevator, limitSwitch, initialElevatorState, telemetry);
 
-            // create the elevator
-            leftElevator = hardwareMap.dcMotor.get("leftElevator");
-            rightElevator = hardwareMap.dcMotor.get("rightElevator");
-            DigitalLimitSwitch limitSwitch = new DigitalLimitSwitch(hardwareMap, "elevatorLimit");
-            hook = new ElevatorHook(leftElevator, rightElevator, limitSwitch, initialElevatorState, telemetry);
+        // create the grabber
+        rightRotate = hardwareMap.dcMotor.get("rightRotate");
+        leftRotate = hardwareMap.dcMotor.get("leftRotate");
+        leftRotate.setDirection(DcMotorSimple.Direction.REVERSE);
+        armExtend = hardwareMap.dcMotor.get("armExtend");
+        intake = hardwareMap.dcMotor.get("intake");
+        grabContainerServo = hardwareMap.servo.get("grabContainerServo");
+        grabber = new TwoDOFGrabber(rightRotate, leftRotate, armExtend, intake, grabContainerServo, telemetry);
 
-            // create the grabber
-            rightRotate = hardwareMap.dcMotor.get("rightRotate");
-            leftRotate = hardwareMap.dcMotor.get("leftRotate");
-            leftRotate.setDirection(DcMotorSimple.Direction.REVERSE);
-            armExtend = hardwareMap.dcMotor.get("armExtend");
-            intake = hardwareMap.dcMotor.get("intake");
-            grabContainerServo = hardwareMap.servo.get("grabContainerServo");
-            grabber = new TwoDOFGrabber(rightRotate, leftRotate, armExtend, intake, grabContainerServo, telemetry);
+        // create the imu
+        imu = new InertialSensorBNO055(hardwareMap);
 
-            // create the imu
-            imu = new InertialSensorBNO055(hardwareMap);
-
-            // create the sampler
-            rightSampler = hardwareMap.servo.get("rightSampler");
-            leftSampler = hardwareMap.servo.get("leftSampler");
-            centerSampler = hardwareMap.servo.get("centerSampler");
-            sampler = new Sampler(rightSampler, leftSampler, centerSampler);
-        }
+        // create the sampler
+        rightSampler = hardwareMap.servo.get("rightSampler");
+        leftSampler = hardwareMap.servo.get("leftSampler");
+        centerSampler = hardwareMap.servo.get("centerSampler");
+        sampler = new Sampler(rightSampler, leftSampler, centerSampler);
     }
 }

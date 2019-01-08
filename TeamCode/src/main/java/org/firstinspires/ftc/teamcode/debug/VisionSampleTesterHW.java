@@ -24,7 +24,7 @@ public class VisionSampleTesterHW extends LinearOpMode {
         telemetry.addLine("Init");
         telemetry.update();
 
-        MainRobot mainRobot = new MainRobot(hardwareMap, telemetry, ElevatorHook.State.Contracted,false);
+        MainRobot mainRobot = new MainRobot(hardwareMap, telemetry, ElevatorHook.State.Contracted);
         VuforiaVisionProcessor vision = new VuforiaVisionProcessor(hardwareMap);
         vision.initTfod();
 

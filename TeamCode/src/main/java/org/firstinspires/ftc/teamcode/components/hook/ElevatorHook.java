@@ -32,8 +32,8 @@ public class ElevatorHook extends Component {
 
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); // TODO: fix until working encoder cable
-        rightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
@@ -51,8 +51,6 @@ public class ElevatorHook extends Component {
             targetState = State.Contracted;
         }
         System.out.println(power);
-        rightMotor.setPower(power);
-        leftMotor.setPower(power);
     }
 
     private void setPower(float power) {
@@ -98,6 +96,8 @@ public class ElevatorHook extends Component {
 
         if (currentState == targetState) {
             stop();
+        } else {
+            setPower(velocity);
         }
 
         previousPressed = pressed;

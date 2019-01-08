@@ -20,7 +20,7 @@ public class MotorDirectionTester extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         telemetry.addLine("Init");
         telemetry.update();
-        MainRobot mainRobot = new MainRobot(hardwareMap, telemetry, ElevatorHook.State.Contracted,false);
+        MainRobot mainRobot = new MainRobot(hardwareMap, telemetry, ElevatorHook.State.Contracted);
 
         waitForStart();
         telemetry.addLine("start");

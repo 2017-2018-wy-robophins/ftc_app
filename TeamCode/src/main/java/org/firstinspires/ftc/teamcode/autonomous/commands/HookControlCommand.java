@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.components.inertialSensor.InertialSensor;
 import org.firstinspires.ftc.teamcode.components.visionProcessor.VisionProcessor;
 
 public class HookControlCommand extends Command {
-    ElevatorHook.State targetState;
+    private ElevatorHook.State targetState;
     public HookControlCommand(ElevatorHook.State targetState) {
         this.targetState = targetState;
     }

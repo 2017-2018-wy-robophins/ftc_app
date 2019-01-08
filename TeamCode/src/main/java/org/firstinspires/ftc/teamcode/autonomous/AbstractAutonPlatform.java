@@ -24,7 +24,7 @@ public abstract class AbstractAutonPlatform extends LinearOpMode {
         AutonMain runner = new AutonMain(hardwareMap, telemetry, getStartLocation());
         waitForStart();
         new Thread(() -> {
-        System.out.println("opmode checker active");
+            System.out.println("opmode checker active");
             while (opModeIsActive()) {
                 try {
                     Thread.sleep(500);
