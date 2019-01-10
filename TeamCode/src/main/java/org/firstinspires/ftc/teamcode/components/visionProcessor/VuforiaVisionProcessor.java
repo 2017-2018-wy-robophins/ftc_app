@@ -77,7 +77,7 @@ public class VuforiaVisionProcessor implements VisionProcessor {
     }
 
     public void initTfod() throws InterruptedException {
-        CameraDevice.getInstance().setFlashTorchMode(true);
+        // CameraDevice.getInstance().setFlashTorchMode(true);
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
             "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);

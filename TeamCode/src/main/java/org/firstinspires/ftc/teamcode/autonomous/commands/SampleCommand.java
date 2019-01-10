@@ -20,12 +20,13 @@ public class SampleCommand extends Command {
         }
         telemetry.update();
         visionProcessor.stopTfod();
+        //TODO Fix sampling backs up too far- slams into lander then is unable to turn.
         switch (navigationalState.startLocation) {
             case BLUE_LEFT:
                 servoSample(samplingConfiguration, mainRobot);
                 break;
             case BLUE_RIGHT:
-                (new MovementCommand(-304.8f, -304.8f, -135, false)).executeCommand(navigationalState, imu, visionProcessor, mainRobot, telemetry);
+                (new MovementCommand(-304.8f - 50, -304.8f - 50, -135, false)).executeCommand(navigationalState, imu, visionProcessor, mainRobot, telemetry);
                 switch (samplingConfiguration) {
                     case LEFT:
                         (new MovementCommand(-609.6f, -1219.2f, -90, true)).executeCommand(navigationalState, imu, visionProcessor, mainRobot, telemetry);
@@ -40,7 +41,7 @@ public class SampleCommand extends Command {
                 servoSample(samplingConfiguration, mainRobot);
                 break;
             case RED_RIGHT:
-                (new MovementCommand(304.8f, 304.8f, 45, false)).executeCommand(navigationalState, imu, visionProcessor, mainRobot, telemetry);
+                (new MovementCommand(304.8f + 50, 304.8f + 50, 45, false)).executeCommand(navigationalState, imu, visionProcessor, mainRobot, telemetry);
                 switch (samplingConfiguration) {
                     case LEFT:
                         (new MovementCommand(1219.2f, 609.6f, 0, true)).executeCommand(navigationalState, imu, visionProcessor, mainRobot, telemetry);
@@ -51,11 +52,13 @@ public class SampleCommand extends Command {
                 }
                 (new MovementCommand(1219.2f, 1219.2f, 45, true)).executeCommand(navigationalState, imu, visionProcessor, mainRobot, telemetry);
                 break;
+                // edward if ur reasding this ur a god
+            // but ur also GAY!11
         }
     }
 
     private void servoSample(SamplingConfiguration samplingConfiguration, MainRobot mainRobot) throws InterruptedException {
-        int time = 2000;
+        int time = 1000;
         switch (samplingConfiguration) {
             case LEFT:
                 mainRobot.sampler.extendLeft();

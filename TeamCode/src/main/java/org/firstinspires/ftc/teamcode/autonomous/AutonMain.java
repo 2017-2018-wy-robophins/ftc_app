@@ -96,13 +96,14 @@ public class AutonMain {
             case RED_LEFT:
                 commandList = new Command[] {
                         new BeginCommand(),
-                        //new HookControlCommand(ElevatorHook.State.FullyExtended),
-                        new MovementCommand(609.6f, -609.6f, -45, true),
+                        new HookControlCommand(ElevatorHook.State.FullyExtended),
+                        new MovementCommand(609.6f - 50, -609.6f + 50, -45, true),
+                        new HookControlCommand(ElevatorHook.State.Contracted),
                         new SampleCommand(),
                         new MovementCommand(1524f, 304.8f, 90, true),
                         new MovementCommand(1524f, 1219.2f, 90, true),
                         new ClaimCommand(),
-                        new MovementCommand(1524f, -304.8f, 90, false),
+                        new MovementCommand(1524f, -609.6f, 90, false),
                         new ArmDeployCommand(),
                         new FinishCommand()
                 };
@@ -110,13 +111,14 @@ public class AutonMain {
             case BLUE_LEFT:
                 commandList = new Command[] {
                         new BeginCommand(),
-                        //new HookControlCommand(ElevatorHook.State.FullyExtended),
-                        new MovementCommand(-609.6f, 609.6f, 135, true),
+                        new HookControlCommand(ElevatorHook.State.FullyExtended),
+                        new MovementCommand(-609.6f + 50, 609.6f - 50, 135, true),
+                        new HookControlCommand(ElevatorHook.State.Contracted),
                         new SampleCommand(),
                         new MovementCommand(-1524f, -304.8f, -90, true),
                         new MovementCommand(-1524f, -1219.2f, -90, true),
                         new ClaimCommand(),
-                        new MovementCommand(-1524f, 304.8f, -90, false),
+                        new MovementCommand(-1524f, 609.6f, -90, false),
                         new ArmDeployCommand(),
                         new FinishCommand()
                 };
@@ -124,12 +126,13 @@ public class AutonMain {
             case RED_RIGHT:
                 commandList = new Command[] {
                         new BeginCommand(),
-                        //new HookControlCommand(ElevatorHook.State.FullyExtended),
-                        new MovementCommand(609.6f, 609.6f, 45, true),
+                        new HookControlCommand(ElevatorHook.State.FullyExtended),
+                        new MovementCommand(609.6f - 50, 609.6f - 50, 45, true),
+                        new HookControlCommand(ElevatorHook.State.Contracted),
                         new SampleCommand(),
+                        new MovementCommand(1219.2f, 1524, 0, true),
                         new ClaimCommand(),
-                        new MovementCommand(1219.2f, 1524, 180, true),
-                        new MovementCommand(-609.6f, 1524, 180, true),
+                        new MovementCommand(-609.6f, 1524, 0, false),
                         new ArmDeployCommand(),
                         new FinishCommand()
                 };
@@ -137,13 +140,13 @@ public class AutonMain {
             case BLUE_RIGHT:
                 commandList = new Command[] {
                         new BeginCommand(),
-                        //new HookControlCommand(ElevatorHook.State.FullyExtended),
-                        new MovementCommand(-609.6f, -609.6f, -135, true),
+                        new HookControlCommand(ElevatorHook.State.FullyExtended),
+                        new MovementCommand(-609.6f + 50, -609.6f + 50, -135, true),
+                        new HookControlCommand(ElevatorHook.State.Contracted),
                         new SampleCommand(),
+                        new MovementCommand(-1219.2f, -1524, 180, true),
                         new ClaimCommand(),
-                        //TODO Reverse onto crater please
-                        new MovementCommand(-1219.2f, -1524, 0, true),
-                        new MovementCommand(609.6f, -1524, 0, true),
+                        new MovementCommand(609.6f, -1524, 180, false),
                         new ArmDeployCommand(),
                         new FinishCommand()
                 };
@@ -152,7 +155,7 @@ public class AutonMain {
         System.out.println("Running command list");
         for (Command command: commandList) {
             command.execute(navinfo, imu, visionProcessor, mainRobot, telemetry);
-            Thread.sleep(2000);
+            Thread.sleep(500);
         }
         System.out.println("Done");
         /*

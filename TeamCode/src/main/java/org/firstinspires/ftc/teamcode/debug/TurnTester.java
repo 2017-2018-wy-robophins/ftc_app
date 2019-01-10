@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.debug;
 
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -12,8 +13,11 @@ import org.firstinspires.ftc.teamcode.components.hook.ElevatorHook;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
-@TeleOp(name = "IMU Turn Tester", group = "Debug")
+@Config
+@TeleOp(name = "IMU Motion Tester", group = "Debug")
 public class TurnTester extends LinearOpMode {
+    public static double TURN_AMOUNT = 90;
+    public static double FORWARD_AMOUNT = 1000;
     @Override
     public void runOpMode() throws InterruptedException {
         MainRobot mainRobot = new MainRobot(hardwareMap, telemetry, ElevatorHook.State.Contracted);
@@ -23,20 +27,12 @@ public class TurnTester extends LinearOpMode {
         telemetry.addLine("Start");
         telemetry.update();
 
-        telemetry.addLine("90 turn");
-        telemetry.update();
-        mainRobot.driveBase.imu_turn(90, mainRobot.imu);
-        Thread.sleep(3000);
-        telemetry.addLine("180 turn");
-        telemetry.update();
-        mainRobot.driveBase.imu_turn(180, mainRobot.imu);
-        Thread.sleep(3000);
-        telemetry.addLine("-180 turn");
-        telemetry.update();
-        mainRobot.driveBase.imu_turn(-179, mainRobot.imu);
-        Thread.sleep(3000);
-        telemetry.addLine("-90 turn");
-        telemetry.update();
-        mainRobot.driveBase.imu_turn(-90, mainRobot.imu);
+        while (true) {
+            if (gamepad1.a) {
+                mainRobot.driveBase.imu_turn((float)TURN_AMOUNT, mainRobot.imu);
+            } else if (gamepad1.b) {
+                mainRobot.driveBase.imu_forward_move((float)FORWARD_AMOUNT, mainRobot.imu);
+            }
+        }
     }
 }

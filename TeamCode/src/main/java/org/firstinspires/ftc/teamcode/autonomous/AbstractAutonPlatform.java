@@ -23,16 +23,21 @@ public abstract class AbstractAutonPlatform extends LinearOpMode {
         telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry(), telemetry);
         AutonMain runner = new AutonMain(hardwareMap, telemetry, getStartLocation());
         waitForStart();
-        new Thread(() -> {
+        Globals.OPMODE_ACTIVE.set(true);
+        Thread opmodeCheckerThread = new Thread(() -> {
             System.out.println("opmode checker active");
             while (opModeIsActive()) {
                 try {
-                    Thread.sleep(500);
+                    Thread.sleep(50);
                 } catch (InterruptedException e) {
+                    telemetry.addLine("Checker thread stopped");
+                    telemetry.update();
+                    break;
                 }
             }
-            Globals.OPMODE_ACTIVE = false;
-        }).start();
+            Globals.OPMODE_ACTIVE.set(false);
+        });
+        opmodeCheckerThread.start();
 
 
         // initialize the more generic AutonMain container class
@@ -47,6 +52,8 @@ public abstract class AbstractAutonPlatform extends LinearOpMode {
                 break;
             }
         }
+        // INCREDIBLY IMPORTANT
+        opmodeCheckerThread.interrupt();
 
         // clean up
         System.out.println("Finish");

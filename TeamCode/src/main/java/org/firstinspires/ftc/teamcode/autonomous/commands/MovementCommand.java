@@ -30,10 +30,6 @@ public class MovementCommand extends Command {
         telemetry.addData("Moving to target heading", targetHeading);
         telemetry.update();
 
-        try {
-        Thread.sleep(1000);
-        } catch (InterruptedException e) {}
-
         // get the angle we need to rotate to first to move correctly
         VectorF movement_vector = targetPosition.subtracted(navigationalState.get_position());
         float movement_angle;
@@ -49,9 +45,6 @@ public class MovementCommand extends Command {
         float final_rotation = navigationalState.get_robot_rotation(targetHeading);
         telemetry.addData("final angle", final_rotation);
         telemetry.update();
-        try {
-        Thread.sleep(1000);
-        } catch (InterruptedException e) {}
 
         float movement_amount;
         if (forward) {
@@ -59,17 +52,9 @@ public class MovementCommand extends Command {
         } else {
            movement_amount = -movement_vector.magnitude();
         }
-        telemetry.addData("initial imu", imu.getHeading());
         mainRobot.driveBase.imu_turn(initial_rotation, imu);
-        telemetry.addData("initial imu 2", imu.getHeading());
         mainRobot.driveBase.imu_forward_move(movement_amount, imu);
-        telemetry.addData("initial imu 3", imu.getHeading());
         mainRobot.driveBase.imu_turn(final_rotation, imu);
-        telemetry.addData("initial imu 4", imu.getHeading());
-        telemetry.update();
-         try {
-        Thread.sleep(1000);
-        } catch (InterruptedException e) {}
 
         navigationalState.set_position(targetPosition);
         navigationalState.set_heading(targetHeading);

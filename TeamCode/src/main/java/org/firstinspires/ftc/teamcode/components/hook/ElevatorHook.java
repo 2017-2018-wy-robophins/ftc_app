@@ -60,7 +60,7 @@ public class ElevatorHook extends Component {
 
     public void goToStateBlocking(State targetState) {
         goToState(targetState);
-        while (Globals.OPMODE_ACTIVE && currentState != targetState) {
+        while (Globals.OPMODE_ACTIVE.get() && currentState != targetState) {
             telemetry.addLine("blocking update");
             telemetry.update();
             update();
@@ -71,7 +71,7 @@ public class ElevatorHook extends Component {
         this.targetState = targetState;
         int power = currentState.getDirection(targetState);
         velocity = power;
-        setPower((float)power);
+        setPower((float)-power);
     }
 
     public void update() {

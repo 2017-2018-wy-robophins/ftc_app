@@ -17,16 +17,18 @@ public class HybridTankOmni extends DriveBase {
     DcMotor right;
     Telemetry telemetry;
 
-    float MAX_TURN_POWER = 0.6f;
-    float GYRO_TURN_CLAMP_CUTOFF_DEGREES = 70;
+    public static double MAX_TURN_POWER = 0.65f;
+    public static double GYRO_TURN_CLAMP_CUTOFF_DEGREES = 90;
     public static double MAX_FORWARD_POWER = 0.4f;
+    public static double MIN_FORWARD_POWER = 0.27f;
     float MAX_FORWARD_POWER_DIRECT = 0.9f;
+    public static double MIN_TURN_POWER = 0.28f;
     public static double MAX_FORWARD_TURN_ADJUST_POWER = 0.8f;
     public static double FORWARD_CLAMP_CUTOFF_TICKS = 200;
-    int ENCODER_EPSILON = 30;
+    int ENCODER_EPSILON = 20;
     public static double TICKS_PER_MM = -2.15; // TODO: SET
     private float TICKS_PER_DEGREE = 6;
-    int ANGLE_EPSILON = 1;
+    int ANGLE_EPSILON = 2;
 
     int MOTOR_TIMEOUT_MS = 1000;
     int ENCODER_TICKS_TIMEOUT_THRESHOLD = 10;
@@ -56,18 +58,21 @@ public class HybridTankOmni extends DriveBase {
         float targetHeading = imu.getHeading() + r;
         float headingError;
 
+        telemetry.addLine("Run IMU turn");
+        telemetry.update();
+
         int last_right = right.getCurrentPosition();
         int last_left = left.getCurrentPosition();
         long next_check_timestamp = System.currentTimeMillis() + MOTOR_TIMEOUT_MS;
 
         do {
             headingError = -getHeadingError(targetHeading, imu);
-            float v = ExtendedMath.clamp(-MAX_TURN_POWER, MAX_TURN_POWER,  Math.signum(headingError) * 0.25f + headingError * (MAX_TURN_POWER / GYRO_TURN_CLAMP_CUTOFF_DEGREES));
+            telemetry.addData("headingError", headingError);
+            float v = ExtendedMath.clamp(-(float)MAX_TURN_POWER, (float)MAX_TURN_POWER,  Math.signum(headingError) * (float)MIN_TURN_POWER + headingError * ((float)MAX_TURN_POWER / (float)GYRO_TURN_CLAMP_CUTOFF_DEGREES));
             telemetry.addData("v", v);
             left.setPower(-v);
             right.setPower(v);
             telemetry.update();
-
 
             if (System.currentTimeMillis() >= next_check_timestamp) {
                 int right_current = right.getCurrentPosition();
@@ -83,7 +88,7 @@ public class HybridTankOmni extends DriveBase {
                 last_left = left_current;
                 next_check_timestamp = System.currentTimeMillis() + MOTOR_TIMEOUT_MS;
             }
-        } while (Globals.OPMODE_ACTIVE && Math.abs(headingError) > ANGLE_EPSILON);
+        } while (Globals.OPMODE_ACTIVE.get() && Math.abs(headingError) > ANGLE_EPSILON);
         stop();
     }
 
@@ -112,7 +117,7 @@ public class HybridTankOmni extends DriveBase {
             leftError = left.getCurrentPosition() - leftTarget;
             float heading_adjust_v = ExtendedMath.clamp(-(float)MAX_FORWARD_TURN_ADJUST_POWER,
                     (float)MAX_FORWARD_TURN_ADJUST_POWER,
-                    headingError * ((float)MAX_FORWARD_TURN_ADJUST_POWER / GYRO_TURN_CLAMP_CUTOFF_DEGREES));
+                    headingError * ((float)MAX_FORWARD_TURN_ADJUST_POWER / (float)GYRO_TURN_CLAMP_CUTOFF_DEGREES));
             float right_v = ExtendedMath.clamp(-(float)MAX_FORWARD_POWER,
                     (float)MAX_FORWARD_POWER,
                     rightError * ((float)MAX_FORWARD_POWER / (float)FORWARD_CLAMP_CUTOFF_TICKS));
@@ -128,8 +133,8 @@ public class HybridTankOmni extends DriveBase {
 
             float left_power = left_v + heading_adjust_v;
             float right_power = right_v - heading_adjust_v;
-            left.setPower(left_power + 0.25f * Math.signum(left_power));
-            right.setPower(right_power + 0.25f * Math.signum(right_power));
+            left.setPower(left_power + MIN_FORWARD_POWER * Math.signum(left_power));
+            right.setPower(right_power + MIN_FORWARD_POWER * Math.signum(right_power));
 
             if (System.currentTimeMillis() >= next_check_timestamp) {
                 int right_current = right.getCurrentPosition();
@@ -146,7 +151,7 @@ public class HybridTankOmni extends DriveBase {
                 next_check_timestamp = System.currentTimeMillis() + MOTOR_TIMEOUT_MS;
             }
 
-        } while (Globals.OPMODE_ACTIVE && Math.abs(rightError) > ENCODER_EPSILON || Math.abs(leftError) > ENCODER_EPSILON);
+        } while (Globals.OPMODE_ACTIVE.get() && Math.abs(rightError) > ENCODER_EPSILON || Math.abs(leftError) > ENCODER_EPSILON);
         stop();
     }
 
@@ -167,7 +172,7 @@ public class HybridTankOmni extends DriveBase {
         int last_left = left.getCurrentPosition();
         long next_check_timestamp = System.currentTimeMillis() + timeout;
 
-        while (Globals.OPMODE_ACTIVE && right.isBusy() || left.isBusy()) {
+        while (Globals.OPMODE_ACTIVE.get() && right.isBusy() || left.isBusy()) {
             int right_current = right.getCurrentPosition();
             int left_current = left.getCurrentPosition();
             telemetry.addData("Left Target", left_target);
@@ -216,7 +221,7 @@ public class HybridTankOmni extends DriveBase {
         int last_left = left.getCurrentPosition();
         long next_check_timestamp = System.currentTimeMillis() + timeout;
 
-        while (Globals.OPMODE_ACTIVE && right.isBusy() || left.isBusy()) {
+        while (Globals.OPMODE_ACTIVE.get() && right.isBusy() || left.isBusy()) {
             int right_current = right.getCurrentPosition();
             int left_current = left.getCurrentPosition();
 
