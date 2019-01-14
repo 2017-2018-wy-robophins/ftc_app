@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode.debug;
 
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -20,6 +22,7 @@ public class TurnTester extends LinearOpMode {
     public static double FORWARD_AMOUNT = 1000;
     @Override
     public void runOpMode() throws InterruptedException {
+        telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry(), telemetry);
         MainRobot mainRobot = new MainRobot(hardwareMap, telemetry, ElevatorHook.State.Contracted);
         telemetry.addLine("Init");
         telemetry.update();
