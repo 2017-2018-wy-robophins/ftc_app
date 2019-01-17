@@ -194,6 +194,76 @@ public class HybridTankOmni extends DriveBase {
         stop();
     }
 
+    public void ramsete_forward_move(float movement, InertialSensor imu) {
+        set_mode_motors(DcMotor.RunMode.RUN_USING_ENCODER);
+        float initialHeading = imu.getHeading();
+
+        float vd = 0.5f;
+        float wd = 0.5f;
+        float thetad = 0;
+        float xd = movement;
+        float yd = 0;
+
+        float x = 0;
+        float y = 0;
+        float v = 0;
+        float theta = 0;
+
+        float b = 0.5f;
+        float zeta = 0.0001f;
+
+        float k2 = b;
+
+        long previous_time_millis = System.currentTimeMillis();
+
+        int last_right = right.getCurrentPosition();
+        int last_left = left.getCurrentPosition();
+        long next_check_timestamp = System.currentTimeMillis() + MOTOR_TIMEOUT_MS;
+
+        // TODO: v and w need to be in correct units
+        do {
+            long current_time_millis = System.currentTimeMillis();
+            long dt_millis = current_time_millis - previous_time_millis;
+            previous_time_millis = current_time_millis;
+            float dt_seconds = current_time_millis / 1000;
+            x = x + v * (float)Math.cos(theta) * dt_seconds;
+            y = y + v * (float)Math.sin(theta) * dt_seconds;
+            theta = (float)Math.toRadians(ExtendedMath.get_min_rotation(initialHeading, imu.getHeading()));
+
+            v = (float)(vd*Math.cos(thetad - theta) + ramsete_k1_k3(vd,wd,b,zeta)*((xd - x)*Math.cos(theta) + (yd - y)*Math.sin(theta)));
+            float w = (float)(wd + b*vd*sinc(thetad - theta)*((yd - y)*Math.cos(theta) - (xd - x)*Math.sin(theta)) + ramsete_k1_k3(vd,wd,b,zeta)*(thetad - theta));
+
+            left.setPower(v + w);
+            right.setPower(v - w);
+
+            if (System.currentTimeMillis() >= next_check_timestamp) {
+                int right_current = right.getCurrentPosition();
+                int left_current = left.getCurrentPosition();
+                if ((Math.abs(right_current - last_right) < ENCODER_TICKS_TIMEOUT_THRESHOLD) &&
+                        (Math.abs(left_current - last_left) < ENCODER_TICKS_TIMEOUT_THRESHOLD)) {
+                    telemetry.addLine("Forward move timeout");
+                    telemetry.update();
+                    break;
+                }
+
+                last_right = right_current;
+                last_left = left_current;
+                next_check_timestamp = System.currentTimeMillis() + MOTOR_TIMEOUT_MS;
+            }
+
+        } while (Globals.OPMODE_ACTIVE.get());
+
+        stop();
+    }
+
+    private float ramsete_k1_k3(float vd, float wd, float b, float zeta) {
+        return 2 * zeta * (float)Math.sqrt(wd * wd + b * vd * vd);
+    }
+
+    private float sinc(float x) {
+        return (float)(Math.sin(x) / x);
+    }
+
     // direct control functions
     // x = [-1, 1], r = [-1, 1]
     public void direct_move_and_turn(float x, float r) {
