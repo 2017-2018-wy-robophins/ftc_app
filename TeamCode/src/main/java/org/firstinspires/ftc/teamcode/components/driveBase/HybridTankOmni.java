@@ -23,7 +23,7 @@ public class HybridTankOmni extends DriveBase {
     public static double MAX_FORWARD_POWER = 0.5f;
     public static double MIN_FORWARD_POWER = 0.27f;
     float MAX_FORWARD_POWER_DIRECT = 0.9f;
-    public static double MIN_TURN_POWER = 0.3;
+    public static double MIN_TURN_POWER = 0.32;
     public static double MAX_FORWARD_TURN_ADJUST_POWER = 0.8f;
     public static double FORWARD_CLAMP_CUTOFF_TICKS = 200;
     int ENCODER_EPSILON = 10;
@@ -34,9 +34,9 @@ public class HybridTankOmni extends DriveBase {
     float ANGLE_EPSILON = 2;
     float ANGLE_DERIV_EPSILON = 0.001f;
     float ENCODER_DERIV_EPSILON = 0;
-    public static double TURN_P_COEFF = 0.04;
-    public static double TURN_D_COEFF = 0.01;
-    public static double TURN_I_COEFF = 0;
+    public static double TURN_P_COEFF = 0.02;
+    public static double TURN_D_COEFF = 0.004;
+    public static double TURN_I_COEFF = 1.9;
 
     public static double TURN_ADJUST_P_COEFF = 0.06;
     public static double TURN_ADJUST_D_COEFF = 0;
@@ -45,6 +45,8 @@ public class HybridTankOmni extends DriveBase {
     public static double FORWARD_P_COEFF = 0.02;
     public static double FORWARD_D_COEFF = 0;
     public static double FORWARD_I_COEFF = 2.5;
+
+    public static int TURN_OSCILLATION_CUTOFF = 2;
 
     int MOTOR_TIMEOUT_MS = 1000;
     int ENCODER_TICKS_TIMEOUT_THRESHOLD = 30;
@@ -81,6 +83,8 @@ public class HybridTankOmni extends DriveBase {
         long next_check_timestamp = System.currentTimeMillis() + MOTOR_TIMEOUT_MS;
         long previous_time_millis = System.currentTimeMillis();
 
+        float previousHeadingError = 0;
+        float numOscillations = 0;
         PIDController headingPID = new PIDController((float)TURN_P_COEFF, (float)TURN_D_COEFF, (float)TURN_I_COEFF, -getHeadingError(targetHeading, imu));
 
         do {
@@ -91,7 +95,6 @@ public class HybridTankOmni extends DriveBase {
             float headingError = -getHeadingError(targetHeading, imu);
             headingPID.updateError(headingError, time_change_millis);
 
-
             float v = ExtendedMath.clamp(
                     -(float)MAX_TURN_POWER,
                     (float)MAX_TURN_POWER,
@@ -100,6 +103,7 @@ public class HybridTankOmni extends DriveBase {
             telemetry.addData("headingError", headingPID.getError());
             telemetry.addData("headingErrorDerivative", headingPID.getErrorDerivative());
             telemetry.addData("v", v);
+            telemetry.addData("num oscillations", numOscillations);
             telemetry.update();
 
             left.setPower(v);
@@ -119,8 +123,27 @@ public class HybridTankOmni extends DriveBase {
                 last_left = left_current;
                 next_check_timestamp = System.currentTimeMillis() + MOTOR_TIMEOUT_MS;
             }
+
+            if (roundedSignum(previousHeadingError) != roundedSignum(headingError)) {
+                numOscillations++;
+            }
+
+            if (numOscillations >= TURN_OSCILLATION_CUTOFF + 1) {
+                break;
+            }
+
+            previousHeadingError = headingError;
         } while (Globals.OPMODE_ACTIVE.get() && (Math.abs(headingPID.getError()) > ANGLE_EPSILON || Math.abs(headingPID.getErrorDerivative()) > ANGLE_DERIV_EPSILON));
         stop();
+    }
+
+    private float roundedSignum(float x) {
+        float s = Math.signum(x);
+        if (s >= 0) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
     private float getHeadingError(float targetHeading, InertialSensor imu) {
