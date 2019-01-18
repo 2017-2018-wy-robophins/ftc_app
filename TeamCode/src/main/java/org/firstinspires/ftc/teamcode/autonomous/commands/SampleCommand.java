@@ -20,7 +20,7 @@ public class SampleCommand extends Command {
         }
         telemetry.update();
         visionProcessor.stopTfod();
-        //TODO Fix sampling backs up too far- slams into lander then is unable to turn.
+
         switch (navigationalState.startLocation) {
             case BLUE_LEFT:
                 servoSample(samplingConfiguration, mainRobot);
@@ -29,10 +29,10 @@ public class SampleCommand extends Command {
                 (new MovementCommand(-304.8f - 50, -304.8f - 50, -135, false)).executeCommand(navigationalState, imu, visionProcessor, mainRobot, telemetry);
                 switch (samplingConfiguration) {
                     case LEFT:
-                        (new MovementCommand(-609.6f, -1219.2f, -90, true)).executeCommand(navigationalState, imu, visionProcessor, mainRobot, telemetry);
+                        (new MovementCommand(-609.6f + 150, -1219.2f - 150, -90, true)).executeCommand(navigationalState, imu, visionProcessor, mainRobot, telemetry);
                         break;
                     case RIGHT:
-                        (new MovementCommand(-1219.2f, -609.6f, 180, true)).executeCommand(navigationalState, imu, visionProcessor, mainRobot, telemetry);
+                        (new MovementCommand(-1219.2f - 150, -609.6f + 150, 180, true)).executeCommand(navigationalState, imu, visionProcessor, mainRobot, telemetry);
                         break;
                 }
                 (new MovementCommand(-1219.2f, -1219.2f, -135, true)).executeCommand(navigationalState, imu, visionProcessor, mainRobot, telemetry);
@@ -44,16 +44,14 @@ public class SampleCommand extends Command {
                 (new MovementCommand(304.8f + 50, 304.8f + 50, 45, false)).executeCommand(navigationalState, imu, visionProcessor, mainRobot, telemetry);
                 switch (samplingConfiguration) {
                     case LEFT:
-                        (new MovementCommand(1219.2f, 609.6f, 0, true)).executeCommand(navigationalState, imu, visionProcessor, mainRobot, telemetry);
+                        (new MovementCommand(1219.2f + 150, 609.6f - 150, 0, true)).executeCommand(navigationalState, imu, visionProcessor, mainRobot, telemetry);
                         break;
                     case RIGHT:
-                        (new MovementCommand(609.6f, 1219.2f, 90, true)).executeCommand(navigationalState, imu, visionProcessor, mainRobot, telemetry);
+                        (new MovementCommand(609.6f - 150, 1219.2f + 150, 90, true)).executeCommand(navigationalState, imu, visionProcessor, mainRobot, telemetry);
                         break;
                 }
                 (new MovementCommand(1219.2f, 1219.2f, 45, true)).executeCommand(navigationalState, imu, visionProcessor, mainRobot, telemetry);
                 break;
-                // edward if ur reasding this ur a god
-            // but ur also GAY!11
         }
     }
 

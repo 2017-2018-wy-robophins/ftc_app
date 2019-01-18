@@ -83,6 +83,7 @@ public class AutonMain {
         }
         navinfo = new NavigationalState(location, startLocation);
 
+        telemetry.addLine("INIT COMPLETE\n");
         telemetry.addData("location", location);
         telemetry.addData("Start Location", startLocation);
         telemetry.addData("location2", navinfo.get_position());
@@ -97,9 +98,10 @@ public class AutonMain {
                 commandList = new Command[] {
                         new BeginCommand(),
                         new HookControlCommand(ElevatorHook.State.FullyExtended),
-                        new MovementCommand(609.6f - 50, -609.6f + 50, -45, true),
+                        new MovementCommand(609.6f, -609.6f, -45, true),
                         new HookControlCommand(ElevatorHook.State.Contracted),
                         new SampleCommand(),
+                        new MovementCommand(457.2f, -457.2f, -45, false),
                         new MovementCommand(1524f, 304.8f, 90, true),
                         new MovementCommand(1524f, 1219.2f, 90, true),
                         new ClaimCommand(),
@@ -112,9 +114,10 @@ public class AutonMain {
                 commandList = new Command[] {
                         new BeginCommand(),
                         new HookControlCommand(ElevatorHook.State.FullyExtended),
-                        new MovementCommand(-609.6f + 50, 609.6f - 50, 135, true),
+                        new MovementCommand(-609.6f, 609.6f, 135, true),
                         new HookControlCommand(ElevatorHook.State.Contracted),
                         new SampleCommand(),
+                        new MovementCommand(-457.2f, 457.2f, 135, false),
                         new MovementCommand(-1524f, -304.8f, -90, true),
                         new MovementCommand(-1524f, -1219.2f, -90, true),
                         new ClaimCommand(),
@@ -127,7 +130,7 @@ public class AutonMain {
                 commandList = new Command[] {
                         new BeginCommand(),
                         new HookControlCommand(ElevatorHook.State.FullyExtended),
-                        new MovementCommand(609.6f - 50, 609.6f - 50, 45, true),
+                        new MovementCommand(609.6f, 609.6f, 45, true),
                         new HookControlCommand(ElevatorHook.State.Contracted),
                         new SampleCommand(),
                         new MovementCommand(1219.2f, 1524, 0, true),
@@ -141,7 +144,7 @@ public class AutonMain {
                 commandList = new Command[] {
                         new BeginCommand(),
                         new HookControlCommand(ElevatorHook.State.FullyExtended),
-                        new MovementCommand(-609.6f + 50, -609.6f + 50, -135, true),
+                        new MovementCommand(-609.6f, -609.6f, -135, true),
                         new HookControlCommand(ElevatorHook.State.Contracted),
                         new SampleCommand(),
                         new MovementCommand(-1219.2f, -1524, 180, true),
@@ -157,27 +160,6 @@ public class AutonMain {
             command.execute(navinfo, imu, visionProcessor, mainRobot, telemetry);
             Thread.sleep(500);
         }
-        System.out.println("Done");
-        /*
-        telemetry.addLine("Starting Elevator");
-        telemetry.update();
-        mainRobot.hook.goToStateBlocking(ElevatorHook.State.FullyExtended);
-
-        mainRobot.driveBase.imu_forward_move(375, mainRobot.imu);
-
-        Thread.sleep(2000);
-        SamplingConfiguration samplingConfiguration = visionProcessor.getSamplingConfigurationPhoneRightOnlyGold();
-        if (samplingConfiguration == null) {
-            telemetry.addLine("Didn't get sampling configuration, defaulting to center");
-            samplingConfiguration = SamplingConfiguration.CENTER;
-        } else {
-            telemetry.addData("Got sampling configuration", samplingConfiguration);
-        }
-        telemetry.update();
-        visionProcessor.stopTfod();
-
-        servoSample(samplingConfiguration, mainRobot);
-        */
     }
 
     // true to continue, false to stop

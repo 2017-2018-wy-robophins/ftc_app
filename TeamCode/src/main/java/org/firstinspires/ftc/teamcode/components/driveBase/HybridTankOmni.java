@@ -23,7 +23,7 @@ public class HybridTankOmni extends DriveBase {
     public static double MAX_FORWARD_POWER = 0.5f;
     public static double MIN_FORWARD_POWER = 0.27f;
     float MAX_FORWARD_POWER_DIRECT = 0.9f;
-    public static double MIN_TURN_POWER = 0.35;
+    public static double MIN_TURN_POWER = 0.3;
     public static double MAX_FORWARD_TURN_ADJUST_POWER = 0.8f;
     public static double FORWARD_CLAMP_CUTOFF_TICKS = 200;
     int ENCODER_EPSILON = 10;
@@ -34,9 +34,9 @@ public class HybridTankOmni extends DriveBase {
     float ANGLE_EPSILON = 2;
     float ANGLE_DERIV_EPSILON = 0.001f;
     float ENCODER_DERIV_EPSILON = 0;
-    public static double TURN_P_COEFF = 0.06;
-    public static double TURN_D_COEFF = 0.012;
-    public static double TURN_I_COEFF = 2.2;
+    public static double TURN_P_COEFF = 0.04;
+    public static double TURN_D_COEFF = 0.01;
+    public static double TURN_I_COEFF = 0;
 
     public static double TURN_ADJUST_P_COEFF = 0.06;
     public static double TURN_ADJUST_D_COEFF = 0;

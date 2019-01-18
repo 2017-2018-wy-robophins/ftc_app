@@ -21,6 +21,8 @@ public abstract class AbstractAutonPlatform extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry(), telemetry);
+        telemetry.addLine("Initializing...");
+        telemetry.update();
         AutonMain runner = new AutonMain(hardwareMap, telemetry, getStartLocation());
         waitForStart();
         Globals.OPMODE_ACTIVE.set(true);
