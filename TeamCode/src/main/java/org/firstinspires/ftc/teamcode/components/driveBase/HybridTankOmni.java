@@ -31,12 +31,12 @@ public class HybridTankOmni extends DriveBase {
     private float TICKS_PER_DEGREE = 6;
 
 
-    float ANGLE_EPSILON = 2;
-    float ANGLE_DERIV_EPSILON = 0.001f;
+    float ANGLE_EPSILON = 3;
+    float ANGLE_DERIV_EPSILON = 0.002f;
     float ENCODER_DERIV_EPSILON = 0;
     public static double TURN_P_COEFF = 0.02;
-    public static double TURN_D_COEFF = 0.004;
-    public static double TURN_I_COEFF = 1.9;
+    public static double TURN_D_COEFF = 0.0039;
+    public static double TURN_I_COEFF = 1.8;
 
     public static double TURN_ADJUST_P_COEFF = 0.06;
     public static double TURN_ADJUST_D_COEFF = 0;
@@ -87,7 +87,7 @@ public class HybridTankOmni extends DriveBase {
         float numOscillations = 0;
         PIDController headingPID = new PIDController((float)TURN_P_COEFF, (float)TURN_D_COEFF, (float)TURN_I_COEFF, -getHeadingError(targetHeading, imu));
 
-        do {
+        while (Globals.OPMODE_ACTIVE.get() && (Math.abs(headingPID.getError()) > ANGLE_EPSILON || Math.abs(headingPID.getErrorDerivative()) > ANGLE_DERIV_EPSILON)) {
             // PD Control (Integral not necessary - may cause windup)
             long current_time_millis = System.currentTimeMillis();
             long time_change_millis = current_time_millis - previous_time_millis;
@@ -133,7 +133,7 @@ public class HybridTankOmni extends DriveBase {
             }
 
             previousHeadingError = headingError;
-        } while (Globals.OPMODE_ACTIVE.get() && (Math.abs(headingPID.getError()) > ANGLE_EPSILON || Math.abs(headingPID.getErrorDerivative()) > ANGLE_DERIV_EPSILON));
+        }
         stop();
     }
 

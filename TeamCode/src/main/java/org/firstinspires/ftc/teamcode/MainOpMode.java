@@ -30,7 +30,7 @@ public class MainOpMode extends LinearOpMode {
         gamepad1.setJoystickDeadzone((float)ARM_JOYSTICK_MOVEMENT_THRESHOLD);
         float TRIGGER_THRESHOLD = 0.3f;
 
-        MainRobot mainRobot = new MainRobot(hardwareMap, telemetry, ElevatorHook.State.Contracted);
+        MainRobot mainRobot = new MainRobot(hardwareMap, telemetry, ElevatorHook.State.FullyExtended);
 
         waitForStart();
         telemetry.addLine("start");
@@ -80,10 +80,12 @@ public class MainOpMode extends LinearOpMode {
                            //  mainRobot.hook.goToState(ElevatorHook.State.Contracted);
                         } else if (gamepad1.a) {
                             // mainRobot.hook.goToState(ElevatorHook.State.PartiallyExtended);
-                            mainRobot.hook.setPowerDirectControl(1);
+                            // mainRobot.hook.setPowerDirectControl(1);
+                            mainRobot.hook.setPower(1);
                         } else if (gamepad1.b) {
                             // mainRobot.hook.goToState(ElevatorHook.State.FullyExtended);
-                            mainRobot.hook.setPowerDirectControl(-1);
+                            // mainRobot.hook.setPowerDirectControl(-1);
+                            mainRobot.hook.setPower(-1);
                         } else if (gamepad1.y) {
                             // toggle servo
                             if (System.currentTimeMillis() > previousServoCheck + 500) {
@@ -99,7 +101,8 @@ public class MainOpMode extends LinearOpMode {
                     }
 
                     if (!gamepad1.a && !gamepad1.b) {
-                        mainRobot.hook.setPowerDirectControl(0);
+                        mainRobot.hook.setPower(0);
+                        // mainRobot.hook.setPowerDirectControl(0);
                     }
 
                     if (gamepad1.dpad_up) {
@@ -163,7 +166,7 @@ public class MainOpMode extends LinearOpMode {
             }
 
             mainRobot.sampler.contractAll();
-            mainRobot.hook.update();
+            // mainRobot.hook.update();
             // send out info
             mainRobot.sampler.reportInfo(telemetry);
             mainRobot.driveBase.report_encoder_ticks();

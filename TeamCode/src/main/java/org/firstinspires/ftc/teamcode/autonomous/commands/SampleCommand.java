@@ -26,7 +26,7 @@ public class SampleCommand extends Command {
                 servoSample(samplingConfiguration, mainRobot);
                 break;
             case BLUE_RIGHT:
-                (new MovementCommand(-304.8f - 50, -304.8f - 50, -135, false)).executeCommand(navigationalState, imu, visionProcessor, mainRobot, telemetry);
+                (new MovementCommand(-304.8f - 150, -304.8f - 150, -135, false)).executeCommand(navigationalState, imu, visionProcessor, mainRobot, telemetry);
                 switch (samplingConfiguration) {
                     case LEFT:
                         (new MovementCommand(-609.6f + 150, -1219.2f - 150, -90, true)).executeCommand(navigationalState, imu, visionProcessor, mainRobot, telemetry);
@@ -35,13 +35,13 @@ public class SampleCommand extends Command {
                         (new MovementCommand(-1219.2f - 150, -609.6f + 150, 180, true)).executeCommand(navigationalState, imu, visionProcessor, mainRobot, telemetry);
                         break;
                 }
-                (new MovementCommand(-1219.2f, -1219.2f, -135, true)).executeCommand(navigationalState, imu, visionProcessor, mainRobot, telemetry);
+                //(new MovementCommand(-1219.2f, -1219.2f, -135, true)).executeCommand(navigationalState, imu, visionProcessor, mainRobot, telemetry);
                 break;
             case RED_LEFT:
                 servoSample(samplingConfiguration, mainRobot);
                 break;
             case RED_RIGHT:
-                (new MovementCommand(304.8f + 50, 304.8f + 50, 45, false)).executeCommand(navigationalState, imu, visionProcessor, mainRobot, telemetry);
+                (new MovementCommand(304.8f + 150, 304.8f + 150, 45, false)).executeCommand(navigationalState, imu, visionProcessor, mainRobot, telemetry);
                 switch (samplingConfiguration) {
                     case LEFT:
                         (new MovementCommand(1219.2f + 150, 609.6f - 150, 0, true)).executeCommand(navigationalState, imu, visionProcessor, mainRobot, telemetry);
@@ -50,7 +50,7 @@ public class SampleCommand extends Command {
                         (new MovementCommand(609.6f - 150, 1219.2f + 150, 90, true)).executeCommand(navigationalState, imu, visionProcessor, mainRobot, telemetry);
                         break;
                 }
-                (new MovementCommand(1219.2f, 1219.2f, 45, true)).executeCommand(navigationalState, imu, visionProcessor, mainRobot, telemetry);
+                //(new MovementCommand(1219.2f, 1219.2f, 45, true)).executeCommand(navigationalState, imu, visionProcessor, mainRobot, telemetry);
                 break;
         }
     }

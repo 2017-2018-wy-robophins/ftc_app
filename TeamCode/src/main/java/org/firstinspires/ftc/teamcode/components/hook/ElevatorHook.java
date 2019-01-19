@@ -53,7 +53,7 @@ public class ElevatorHook extends Component {
         System.out.println(power);
     }
 
-    private void setPower(float power) {
+    public void setPower(float power) {
         rightMotor.setPower(power);
         leftMotor.setPower(power);
     }
