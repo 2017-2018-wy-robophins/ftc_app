@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.components.DigitalLimitSwitch;
 
 import java.util.Optional;
 
+//Implementation of the elevator.
 public class ElevatorHook extends Component {
     private DcMotor rightMotor;
     private DcMotor leftMotor;
@@ -22,6 +23,7 @@ public class ElevatorHook extends Component {
     private int velocity = 0;
     private boolean previousPressed; // when previous switch state was pressed, now not pressed, then off initial switch
 
+    //Prepare the elevator for motion.
     public ElevatorHook(DcMotor leftMotor, DcMotor rightMotor, DigitalLimitSwitch limitSwitch, State initialState, Telemetry telemetry) {
         this.leftMotor = leftMotor;
         this.rightMotor = rightMotor;
@@ -38,11 +40,13 @@ public class ElevatorHook extends Component {
         leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
+    //Sets the RunMode of both elevator motors.
     private void setMode(DcMotor.RunMode mode) {
         rightMotor.setMode(mode);
         leftMotor.setMode(mode);
     }
 
+    //Sets target state based on direction of elevator, preparing limit switches for function.
     public void setPowerDirectControl(float power) {
         velocity = (int)Math.signum(power);
         if (velocity == 1) {
@@ -53,11 +57,13 @@ public class ElevatorHook extends Component {
         System.out.println(power);
     }
 
+    //Sets the power of both elevator motors.
     public void setPower(float power) {
         rightMotor.setPower(power);
         leftMotor.setPower(power);
     }
 
+    //Moves elevator to target state, blocking asynchronous access until the operation has completed.
     public void goToStateBlocking(State targetState) {
         goToState(targetState);
         while (Globals.OPMODE_ACTIVE.get() && currentState != targetState) {
@@ -67,6 +73,7 @@ public class ElevatorHook extends Component {
         }
     }
 
+    //Moves elevator to target state.
     public void goToState(State targetState) {
         this.targetState = targetState;
         int power = currentState.getDirection(targetState);
@@ -74,6 +81,7 @@ public class ElevatorHook extends Component {
         setPower((float)-power);
     }
 
+    //Updates elevator information, outputting to Telemetry.
     public void update() {
         boolean pressed = limitSwitch.isPressed();
         telemetry.addData("current state", currentState);
@@ -103,6 +111,7 @@ public class ElevatorHook extends Component {
         previousPressed = pressed;
     }
 
+    //Stops both elevator motors.
     public void stop() {
         telemetry.addLine("Stop elevator");
         telemetry.update();
@@ -110,6 +119,7 @@ public class ElevatorHook extends Component {
         velocity = 0;
     }
 
+    //Reports information to Telemetry.
     public void reportInfo(Telemetry telemetry) {
         telemetry.addData("R Elev Power", rightMotor.getPower());
         telemetry.addData("L Elev Power", leftMotor.getPower());
@@ -119,6 +129,7 @@ public class ElevatorHook extends Component {
         telemetry.addData("Velocity", velocity);
     }
 
+    //Defines elevator location information in terms of enums.
     public enum State {
         Contracted(0),
         ContractedPartialBetween(1),

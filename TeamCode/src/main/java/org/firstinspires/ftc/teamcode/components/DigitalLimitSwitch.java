@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.components;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+//Provides information on limit switch behavior.
 public class DigitalLimitSwitch {
     DigitalChannel sensor;
     String name;
@@ -13,6 +14,7 @@ public class DigitalLimitSwitch {
         sensor.setMode(DigitalChannel.Mode.INPUT);
     }
 
+    //Returns true if the sensor is being triggered, false otherwise.
     public boolean isPressed() {
         return !sensor.getState();
     }

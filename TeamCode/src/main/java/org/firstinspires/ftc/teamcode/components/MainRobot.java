@@ -21,7 +21,7 @@ import org.firstinspires.ftc.teamcode.components.positionFinder.VuforiaPositionF
 import org.firstinspires.ftc.teamcode.components.visionProcessor.VisionProcessor;
 import org.firstinspires.ftc.teamcode.components.visionProcessor.VuforiaVisionProcessor;
 
-
+//Defines information on the current robot setup.
 public class MainRobot {
     public HybridTankOmni driveBase;
     public ElevatorHook hook;
@@ -46,20 +46,20 @@ public class MainRobot {
     public Servo centerSampler;
 
 
-    //runs on press of the "init" button. Maps engines from the robot to variables,
+    //Runs on press of the "init" button. Maps engines from the robot to variables,
     public MainRobot(HardwareMap hardwareMap, Telemetry telemetry, ElevatorHook.State initialElevatorState) {
-        // create the drivebase
+        //Create the drivebase.
         leftDrive = hardwareMap.dcMotor.get("leftDrive");
         rightDrive = hardwareMap.dcMotor.get("rightDrive");
         driveBase = new HybridTankOmni(leftDrive, rightDrive, telemetry);
 
-        // create the elevator
+        //Create the elevator.
         leftElevator = hardwareMap.dcMotor.get("leftElevator");
         rightElevator = hardwareMap.dcMotor.get("rightElevator");
         DigitalLimitSwitch limitSwitch = new DigitalLimitSwitch(hardwareMap, "elevatorLimit");
         hook = new ElevatorHook(leftElevator, rightElevator, limitSwitch, initialElevatorState, telemetry);
 
-        // create the grabber
+        //Create the grabber.
         rightRotate = hardwareMap.dcMotor.get("rightRotate");
         leftRotate = hardwareMap.dcMotor.get("leftRotate");
         leftRotate.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -68,10 +68,10 @@ public class MainRobot {
         grabContainerServo = hardwareMap.servo.get("grabContainerServo");
         grabber = new TwoDOFGrabber(rightRotate, leftRotate, armExtend, intake, grabContainerServo, telemetry);
 
-        // create the imu
+        //Create the imu.
         imu = new InertialSensorBNO055(hardwareMap);
 
-        // create the sampler
+        //Create the sampler.
         rightSampler = hardwareMap.servo.get("rightSampler");
         leftSampler = hardwareMap.servo.get("leftSampler");
         centerSampler = hardwareMap.servo.get("centerSampler");

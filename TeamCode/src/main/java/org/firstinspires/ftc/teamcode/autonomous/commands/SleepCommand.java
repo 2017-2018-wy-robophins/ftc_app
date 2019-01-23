@@ -8,6 +8,8 @@ import org.firstinspires.ftc.teamcode.components.inertialSensor.InertialSensor;
 import org.firstinspires.ftc.teamcode.components.visionProcessor.VisionProcessor;
 
 public class SleepCommand extends Command {
+
+    //A command to sleep all threads, catching InterruptedExceptions and relaying them to the user.
     int ms;
     public SleepCommand(int ms) {
         this.ms = ms;

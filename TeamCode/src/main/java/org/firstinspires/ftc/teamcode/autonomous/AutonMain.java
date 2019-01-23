@@ -54,6 +54,7 @@ public class AutonMain {
     private InertialSensor imu;
 
     AutonMain(HardwareMap hardwareMap, Telemetry telemetry, StartLocation startLocation) throws InterruptedException {
+        //The origin of all autonomous actions.
         this.telemetry = telemetry;
         this.startLocation = startLocation;
         mainRobot = new MainRobot(hardwareMap, telemetry, ElevatorHook.State.Contracted);
@@ -66,6 +67,7 @@ public class AutonMain {
         visionProcessor = new VuforiaVisionProcessor(hardwareMap);
         visionProcessor.initTfod();
 
+        //Set field constants based on initial conditions.
         OpenGLMatrix location = null;
         switch (startLocation) {
             case RED_LEFT:
@@ -92,6 +94,8 @@ public class AutonMain {
 
     void runOnce() throws InterruptedException {
         // currently no need for commandtree - everything is being run serially
+
+        //The initialization of all commands to be run, depending on autonomous mode.
         Command[] commandList = null;
         switch (startLocation) {
             case RED_LEFT:
@@ -155,6 +159,8 @@ public class AutonMain {
                 };
                 break;
         }
+
+        //The iteration of all commands, as specified in the pre-defined list.
         System.out.println("Running command list");
         for (Command command: commandList) {
             command.execute(navinfo, imu, visionProcessor, mainRobot, telemetry);
@@ -166,6 +172,8 @@ public class AutonMain {
     boolean mainLoop() throws InterruptedException {
         return false;
     }
+
+    //Close the vision processing libraries.
     void finish() throws InterruptedException {
         visionProcessor.stopTfod();
     }

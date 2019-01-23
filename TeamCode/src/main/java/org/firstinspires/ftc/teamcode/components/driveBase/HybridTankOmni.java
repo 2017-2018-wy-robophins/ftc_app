@@ -12,12 +12,16 @@ import org.firstinspires.ftc.teamcode.components.PIDController;
 import org.firstinspires.ftc.teamcode.components.inertialSensor.InertialSensor;
 
 // keep in mind that the center of rotation/the robot will be considered as in between the drive wheels
+
+//Specific information relevant to our drive base implementation.
 @Config
 public class HybridTankOmni extends DriveBase {
     DcMotor left;
     DcMotor right;
     Telemetry telemetry;
 
+
+    //Initialize contants for motion.
     public static double MAX_TURN_POWER = 0.9;
     public static double GYRO_TURN_CLAMP_CUTOFF_DEGREES = 90;
     public static double MAX_FORWARD_POWER = 0.5f;
@@ -30,7 +34,7 @@ public class HybridTankOmni extends DriveBase {
     public static double TICKS_PER_MM = -2.15; // TODO: SET
     private float TICKS_PER_DEGREE = 6;
 
-
+    //Initialize constants for PID control.
     float ANGLE_EPSILON = 3;
     float ANGLE_DERIV_EPSILON = 0.002f;
     float ENCODER_DERIV_EPSILON = 0;
@@ -51,6 +55,8 @@ public class HybridTankOmni extends DriveBase {
     int MOTOR_TIMEOUT_MS = 1000;
     int ENCODER_TICKS_TIMEOUT_THRESHOLD = 30;
 
+
+    //Constructing this drive base prepares motors and encoders for movement.
     public HybridTankOmni(DcMotor left, DcMotor right, Telemetry telemetry) {
         this.telemetry = telemetry;
         this.left = left;
@@ -70,6 +76,7 @@ public class HybridTankOmni extends DriveBase {
     // TODO: maybe async?
     // autonomous control functions
 
+    //Perform a turn using information from the InertialSensor, imu.
     // r in degrees - relative turn
     public void imu_turn(float r, InertialSensor imu) {
         set_mode_motors(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -146,13 +153,14 @@ public class HybridTankOmni extends DriveBase {
         }
     }
 
+    //Returns the difference in heading and target heading, based on information from the imu.
     private float getHeadingError(float targetHeading, InertialSensor imu) {
         float positiveError = ExtendedMath.get_min_rotation(imu.getHeading(), targetHeading);
         // now normalize to +-180 for convenience
         return positiveError + (positiveError > 180 ? -360 : 0);
     }
 
-    // x in mm
+    //Moves forward x millimeters, using information from the imu.
     public void imu_forward_move(float x, InertialSensor imu) {
         set_mode_motors(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         int targetMovement = (int)(x * TICKS_PER_MM);
@@ -171,6 +179,10 @@ public class HybridTankOmni extends DriveBase {
         PIDController leftPID = new PIDController((float)FORWARD_P_COEFF, (float)FORWARD_D_COEFF, (float)FORWARD_I_COEFF, left.getCurrentPosition() - leftTarget);
 
         do {
+
+            //Implementation of PID movement.
+
+            //Record relevant information.
             float headingError = getHeadingError(targetHeading, imu);
             long current_time_millis = System.currentTimeMillis();
             long time_change_millis = current_time_millis - previous_time_millis;
@@ -183,6 +195,7 @@ public class HybridTankOmni extends DriveBase {
             float right_v = ExtendedMath.clamp(-(float)MAX_FORWARD_POWER, (float)MAX_FORWARD_POWER, rightPID.getValue());
             float left_v = ExtendedMath.clamp(-(float)MAX_FORWARD_POWER, (float)MAX_FORWARD_POWER, leftPID.getValue());
 
+            //Display important variables.
             telemetry.addData("heading adjust", heading_adjust_v);
             telemetry.addData("right v", right_v);
             telemetry.addData("left v", left_v);
@@ -191,11 +204,13 @@ public class HybridTankOmni extends DriveBase {
             telemetry.addData("left error", leftPID.getError());
             telemetry.update();
 
+            //Calculate motor power and run motors.
             float left_power = left_v - heading_adjust_v;
             float right_power = right_v + heading_adjust_v;
             left.setPower(left_power + MIN_FORWARD_POWER * Math.signum(left_power));
             right.setPower(right_power + MIN_FORWARD_POWER * Math.signum(right_power));
 
+            //Break if the robot gets stuck.
             if (System.currentTimeMillis() >= next_check_timestamp) {
                 int right_current = right.getCurrentPosition();
                 int left_current = left.getCurrentPosition();
@@ -210,7 +225,7 @@ public class HybridTankOmni extends DriveBase {
                 last_left = left_current;
                 next_check_timestamp = System.currentTimeMillis() + MOTOR_TIMEOUT_MS;
             }
-
+        //Stop when error is under the determined threshold, or when the opmode has been deactivated.
         } while (Globals.OPMODE_ACTIVE.get() &&
                 Math.abs(rightPID.getError()) > ENCODER_EPSILON && Math.abs(leftPID.getError()) > ENCODER_EPSILON);
 
@@ -227,12 +242,14 @@ public class HybridTankOmni extends DriveBase {
         right.setPower(MAX_FORWARD_POWER_DIRECT * (x * throttle_contrib - r));
     }
 
+    //Stops both drive motors.
     // shared
     public void stop() {
         left.setPower(0);
         right.setPower(0);
     }
 
+    //Displays encoder values to user for debugging.
     public void report_encoder_ticks() {
         telemetry.addData("DRIVE LEFT TICKS", left.getCurrentPosition());
         telemetry.addData("DRIVE RIGHT TICKS", right.getCurrentPosition());
@@ -240,6 +257,7 @@ public class HybridTankOmni extends DriveBase {
         telemetry.addData("DRIVE RIGHT POWER", right.getPower());
     }
 
+    //Updates the mode of boh drive motors.
     private void set_mode_motors(DcMotor.RunMode mode) {
         left.setMode(mode);
         right.setMode(mode);

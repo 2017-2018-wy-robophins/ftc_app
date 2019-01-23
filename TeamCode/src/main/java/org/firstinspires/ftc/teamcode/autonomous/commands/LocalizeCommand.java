@@ -16,6 +16,8 @@ import static org.firstinspires.ftc.teamcode.common.ExtendedMath.decompose_openg
 import static org.firstinspires.ftc.teamcode.common.ExtendedMath.extract_z_rot;
 
 public class LocalizeCommand extends Command {
+
+    //A command to locate the robot in the field, using the Vuforia vision processing library.
     void executeCommand(NavigationalState navigationalState, InertialSensor imu, VisionProcessor visionProcessor, MainRobot mainRobot, Telemetry telemetry) {
         OpenGLMatrix info = visionProcessor.getCurrentPosition();
         Pair<VectorF, MatrixF> decomposed = ExtendedMath.decompose_opengl_matrix(info);

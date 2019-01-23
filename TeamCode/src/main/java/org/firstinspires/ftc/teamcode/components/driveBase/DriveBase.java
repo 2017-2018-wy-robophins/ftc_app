@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.components.inertialSensor.InertialSensor;
  * Created by efyang on 2/6/18.
  */
 
+//Provides standardized functions for any drive base.
 public abstract class DriveBase {
     public abstract void imu_turn(float r, InertialSensor imu);
     public abstract void imu_forward_move(float x, InertialSensor imu);

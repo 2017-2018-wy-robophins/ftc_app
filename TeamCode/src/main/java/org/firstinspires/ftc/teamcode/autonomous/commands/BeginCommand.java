@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.components.inertialSensor.InertialSensor;
 import org.firstinspires.ftc.teamcode.components.visionProcessor.VisionProcessor;
 
 public class BeginCommand extends Command {
+    //A dummy command used to begin command execution, particularly during debugging.
     @Override
     void executeCommand(NavigationalState navigationalState, InertialSensor imu, VisionProcessor visionProcessor, MainRobot mainRobot, Telemetry telemetry) {
     }

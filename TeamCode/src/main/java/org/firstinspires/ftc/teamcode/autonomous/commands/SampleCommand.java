@@ -9,6 +9,9 @@ import org.firstinspires.ftc.teamcode.components.inertialSensor.InertialSensor;
 import org.firstinspires.ftc.teamcode.components.visionProcessor.VisionProcessor;
 
 public class SampleCommand extends Command {
+
+    //A command to sample. This means either using the sampling servos, or creating movement commands to knock the cube off.
+
     void executeCommand(NavigationalState navigationalState, InertialSensor imu, VisionProcessor visionProcessor, MainRobot mainRobot, Telemetry telemetry) throws InterruptedException {
         Thread.sleep(2000);
         SamplingConfiguration samplingConfiguration = visionProcessor.getSamplingConfigurationPhoneRightOnlyGold();

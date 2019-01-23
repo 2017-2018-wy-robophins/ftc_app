@@ -9,6 +9,8 @@ import org.firstinspires.ftc.teamcode.components.inertialSensor.InertialSensor;
  * Created by efyang on 2/13/18.
  */
 
+//Provides implementation of turns based on information for the imu sensor.
+//Additionally, notifies user of function execution through Telemetry.
 public class DebugDriveBase extends DriveBase {
     private final Telemetry telemetry;
 

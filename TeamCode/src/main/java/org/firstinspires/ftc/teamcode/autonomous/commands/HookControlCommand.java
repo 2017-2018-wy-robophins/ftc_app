@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.components.inertialSensor.InertialSensor;
 import org.firstinspires.ftc.teamcode.components.visionProcessor.VisionProcessor;
 
 public class HookControlCommand extends Command {
+    //A command for movement of the elevator, the mechanism that allows the robot to perform a pull-up.
     private ElevatorHook.State targetState;
     public HookControlCommand(ElevatorHook.State targetState) {
         this.targetState = targetState;

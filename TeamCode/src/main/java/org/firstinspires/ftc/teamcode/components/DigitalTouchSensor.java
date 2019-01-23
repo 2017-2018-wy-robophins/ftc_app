@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.components;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+//Provides information from touch sensors. Identical in implementation to DigitalLimitSwitch.
 public class DigitalTouchSensor {
     DigitalChannel sensor;
     String name;

@@ -10,7 +10,7 @@ public abstract class Command {
     private String name() {
         return this.getClass().getSimpleName();
     }
-
+    //An organized type that individualizes actions to so-called commands. Complete with output for debugging and abstracted exectueCommand functionality.
     public final void execute(NavigationalState navigationalState, InertialSensor imu, VisionProcessor visionProcessor, MainRobot mainRobot, Telemetry telemetry) throws InterruptedException {
         System.out.println("Executing Command: " + name());
         telemetry.addData("Executing Command", name());

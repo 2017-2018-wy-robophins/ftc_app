@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.components.DigitalTouchSensor;
 
+
+//Implementation of a rack and pinion elevator,
 public class LimitedRackAndPinionHook implements Hook {
     private DcMotor hookMotor;
     private DigitalTouchSensor touchLimit;

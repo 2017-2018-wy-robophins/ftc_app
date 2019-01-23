@@ -18,6 +18,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 public class ExtendedMath {
     // ONLY WORKS FOR 3D VECTORS
+
+    //Compute the cross product of two three-dimensional vectors.
     public static VectorF cross_product(VectorF a, VectorF b) {
         float[] k = a.getData();
         float[] w = b.getData();
@@ -28,9 +30,8 @@ public class ExtendedMath {
         );
     }
 
+    //Decomposes a 4x4 transformation matrix into its vector and matrix components.
     public static Pair<VectorF, MatrixF> decompose_opengl_matrix(OpenGLMatrix m) {
-        // takes a 4x4 opengl transformation matrix and decomposes
-        // it into its vector and matrix components
         VectorF k = new VectorF(
                 m.get(0, 3),
                 m.get(1, 3),

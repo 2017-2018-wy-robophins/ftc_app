@@ -39,6 +39,7 @@ public class VuforiaPositionFinder implements PositionFinder {
     private VuforiaLocalizer vuforia;
     List<VuforiaTrackable> allTrackables;
 
+    //Prepares the Vuforia library for image-processing.
     public VuforiaPositionFinder(HardwareMap hwmap) {
         this.hardwareMap = hwmap;
 
@@ -73,7 +74,7 @@ public class VuforiaPositionFinder implements PositionFinder {
         targetsRoverRuckus.activate();
     }
 
-    // return the transformation matrix and the template type
+    //Returns the transformation matrix and the template type based on field images.
     public OpenGLMatrix getCurrentPosition() throws InterruptedException {
         // we want to wait a second before finding a vumark so that we have a good read of it
         Thread.sleep(1000);

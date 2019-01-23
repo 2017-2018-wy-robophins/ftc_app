@@ -21,6 +21,7 @@ public class TwoDOFGrabber extends Component {
     public static double LEFT_POSITION = 0;
     Telemetry telemetry;
 
+    //Initialize grabber motor for use. The name of this class refers to the old grabber design, one with two degress of freedom.
     public TwoDOFGrabber(DcMotor rightRotate, DcMotor leftRotate, DcMotor extensionMotor, DcMotor intakeMotor, Servo containerServo, Telemetry telemetry) {
         this.rightRotate = rightRotate;
         this.leftRotate = leftRotate;
@@ -53,6 +54,8 @@ public class TwoDOFGrabber extends Component {
         openContainer();
         closeContainer();
     }
+
+    //A series of very self-explanatory functions controlling the servo that closes the mineral container, as well as the grabber motor.
 
     public void openContainer() {
         containerServo.setPosition(RIGHT_POSITION);

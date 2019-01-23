@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.components.inertialSensor.InertialSensor;
 import org.firstinspires.ftc.teamcode.components.visionProcessor.VisionProcessor;
 
 public class ClaimCommand extends Command {
+    //This command serves to deploy the Team Marker into the zone. Servo time indicates a "travel time" for the servo to open fully.
     private int SERVO_TIME = 500;
     void executeCommand(NavigationalState navigationalState, InertialSensor imu, VisionProcessor visionProcessor, MainRobot mainRobot, Telemetry telemetry) throws InterruptedException{
         mainRobot.grabber.openContainer();

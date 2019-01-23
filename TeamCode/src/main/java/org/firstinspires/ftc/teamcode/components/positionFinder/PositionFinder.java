@@ -9,6 +9,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
  * Created by efyang on 2/13/18.
  */
 
+//Returns the robot's position matrix.
 public interface PositionFinder {
     OpenGLMatrix getCurrentPosition() throws InterruptedException;
 }

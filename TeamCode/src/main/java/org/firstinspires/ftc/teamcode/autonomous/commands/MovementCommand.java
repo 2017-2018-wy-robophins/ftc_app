@@ -8,6 +8,12 @@ import org.firstinspires.ftc.teamcode.components.inertialSensor.InertialSensor;
 import org.firstinspires.ftc.teamcode.components.visionProcessor.VisionProcessor;
 
 public class MovementCommand extends Command {
+    //A command that instructs the robot to move based on imu sensor information. The robot will first turn towards the direction in question,
+    //(or to face away from it, in event that "forward" = false), then move to target position. Finally, it will turn to face in the direction
+    //specified by "targetHeading".
+
+    //Implements PID control
+
     private VectorF targetPosition;
     private float targetHeading;
     private boolean forward;
@@ -52,10 +58,13 @@ public class MovementCommand extends Command {
         } else {
            movement_amount = -movement_vector.magnitude();
         }
+
+        //Using calculated values, move robot accordingly.
         mainRobot.driveBase.imu_turn(initial_rotation, imu);
         mainRobot.driveBase.imu_forward_move(movement_amount, imu);
         mainRobot.driveBase.imu_turn(final_rotation, imu);
 
+        //Record final position and heading to the navigationalState.
         navigationalState.set_position(targetPosition);
         navigationalState.set_heading(targetHeading);
     }

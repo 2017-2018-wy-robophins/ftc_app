@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.components.inertialSensor.InertialSensor;
 import org.firstinspires.ftc.teamcode.components.visionProcessor.VisionProcessor;
 
 public class FinishCommand extends Command {
+    //Identical to BeginCommand in purpose, but instead located at the end of autonomous.
     @Override
     void executeCommand(NavigationalState navigationalState, InertialSensor imu, VisionProcessor visionProcessor, MainRobot mainRobot, Telemetry telemetry) {}
 }

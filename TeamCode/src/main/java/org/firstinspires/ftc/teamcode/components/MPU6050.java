@@ -14,6 +14,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
 
+//Code for implementation of the arm gyroscope.
 @I2cSensor(name = "MPU6050 Accelerometer + Gyroscope", description = "Gyroscope from Invensense", xmlTag = "MPU6050")
 public class MPU6050 extends I2cDeviceSynchDeviceWithParameters<I2cDeviceSynch, MPU6050.Parameters> {
 

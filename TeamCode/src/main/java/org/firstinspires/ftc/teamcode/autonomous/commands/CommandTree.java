@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class CommandTree {
+    //A peculiar implementation of commands to allow asynchronous execution.
     List<CommandTree> children;
     private Command value;
 

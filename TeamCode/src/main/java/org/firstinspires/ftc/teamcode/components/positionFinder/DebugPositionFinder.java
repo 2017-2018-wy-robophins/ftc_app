@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.components.positionFinder.PositionFinder;
  * Created by efyang on 2/13/18.
  */
 
+//A debug version of the position finder.
 public class DebugPositionFinder implements PositionFinder {
     Telemetry telemetry;
 

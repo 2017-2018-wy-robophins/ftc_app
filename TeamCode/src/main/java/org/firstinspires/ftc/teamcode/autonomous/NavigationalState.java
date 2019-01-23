@@ -22,6 +22,7 @@ public class NavigationalState {
 
     private SamplingConfiguration detectedSample = SamplingConfiguration.RIGHT;
 
+    //A type that decomposes location matrices to an absolute angle and position.
     public NavigationalState(StartLocation startLocation){
         this.startLocation = startLocation;
     }
@@ -38,6 +39,7 @@ public class NavigationalState {
                 .multiplied(field_target.subtracted(position));
     }
 
+    //Returns the distance from the robot to any position in the field.
     public float get_distance(VectorF field_target) {
         return field_target.subtracted(position).magnitude();
     }
@@ -47,9 +49,13 @@ public class NavigationalState {
         return ExtendedMath.get_min_rotation(heading, field_target);
     }
 
+    //Returns the orientation of sampling objects.
     public SamplingConfiguration get_sampling_configuration() {
         return this.detectedSample;
     }
+
+
+    //A series of functions to record movement of the robot, called during movement commands.
 
     public void move(VectorF d) {
         position.add(d);

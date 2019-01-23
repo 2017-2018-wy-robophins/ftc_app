@@ -12,6 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
+//The Rev hub imu.
 public class InertialSensorBNO055 implements InertialSensor {
     // The IMU sensor object
     BNO055IMU imu;
@@ -19,7 +20,7 @@ public class InertialSensorBNO055 implements InertialSensor {
     // State used for updating telemetry
     Orientation angles;
 
-
+    //Prepares the imu for use.
     public InertialSensorBNO055(HardwareMap hardwareMap) {
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
@@ -33,6 +34,7 @@ public class InertialSensorBNO055 implements InertialSensor {
         imu.initialize(parameters);
     }
 
+    //Returns the heading angle in degrees.
     public float getHeading() {
         angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         return angles.firstAngle;

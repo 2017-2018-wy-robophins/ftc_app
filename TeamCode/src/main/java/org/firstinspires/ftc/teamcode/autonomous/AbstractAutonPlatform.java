@@ -17,6 +17,9 @@ import java.util.concurrent.ExecutionException;
  */
 
 public abstract class AbstractAutonPlatform extends LinearOpMode {
+
+    //A class that works to generalize between opmodes in code. Sets navigationalState.startLocation to the respective location, denoted
+    //BLUE_LEFT, BLUE_RIGHT, RED_LEFT, or RED_RIGHT
     public abstract StartLocation getStartLocation();
     @Override
     public void runOpMode() throws InterruptedException {
