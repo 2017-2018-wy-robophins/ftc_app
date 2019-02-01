@@ -7,5 +7,6 @@ public interface VisionProcessor {
     OpenGLMatrix getCurrentPosition();
     SamplingConfiguration getSamplingConfiguration();
     SamplingConfiguration getSamplingConfigurationPhoneRightOnlyGold();
+    SamplingConfiguration getSamplingConfigurationPhoneLeftOnlyGold();
     void stopTfod();
 }

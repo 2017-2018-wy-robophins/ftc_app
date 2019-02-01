@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.components.visionProcessor.VisionProcessor
 public class SampleCommand extends Command {
     void executeCommand(NavigationalState navigationalState, InertialSensor imu, VisionProcessor visionProcessor, MainRobot mainRobot, Telemetry telemetry) throws InterruptedException {
         Thread.sleep(2000);
-        SamplingConfiguration samplingConfiguration = visionProcessor.getSamplingConfigurationPhoneRightOnlyGold();
+        SamplingConfiguration samplingConfiguration = visionProcessor.getSamplingConfigurationPhoneLeftOnlyGold();
         if (samplingConfiguration == null) {
             telemetry.addLine("Didn't get sampling configuration, defaulting to center");
             samplingConfiguration = SamplingConfiguration.CENTER;

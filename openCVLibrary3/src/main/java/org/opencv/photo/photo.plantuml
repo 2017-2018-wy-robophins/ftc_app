@@ -1,0 +1,528 @@
+@startuml
+
+title __PHOTO's Class Diagram__\n
+
+  package org.opencv {
+    package org.opencv.photo {
+      class AlignExposures {
+          # AlignExposures()
+          {static} + __fromPtr__()
+          + process()
+          # finalize()
+          {static} - process_0()
+          {static} - delete()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.photo {
+      class AlignMTB {
+          # AlignMTB()
+          {static} + __fromPtr__()
+          + calculateShift()
+          + getCut()
+          + getExcludeRange()
+          + getMaxBits()
+          + computeBitmaps()
+          + process()
+          + process()
+          + setCut()
+          + setExcludeRange()
+          + setMaxBits()
+          + shiftMat()
+          # finalize()
+          {static} - calculateShift_0()
+          {static} - getCut_0()
+          {static} - getExcludeRange_0()
+          {static} - getMaxBits_0()
+          {static} - computeBitmaps_0()
+          {static} - process_0()
+          {static} - process_1()
+          {static} - setCut_0()
+          {static} - setExcludeRange_0()
+          {static} - setMaxBits_0()
+          {static} - shiftMat_0()
+          {static} - delete()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.photo {
+      class CalibrateCRF {
+          # CalibrateCRF()
+          {static} + __fromPtr__()
+          + process()
+          # finalize()
+          {static} - process_0()
+          {static} - delete()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.photo {
+      class CalibrateDebevec {
+          # CalibrateDebevec()
+          {static} + __fromPtr__()
+          + getRandom()
+          + getLambda()
+          + getSamples()
+          + setLambda()
+          + setRandom()
+          + setSamples()
+          # finalize()
+          {static} - getRandom_0()
+          {static} - getLambda_0()
+          {static} - getSamples_0()
+          {static} - setLambda_0()
+          {static} - setRandom_0()
+          {static} - setSamples_0()
+          {static} - delete()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.photo {
+      class CalibrateRobertson {
+          # CalibrateRobertson()
+          {static} + __fromPtr__()
+          + getRadiance()
+          + getThreshold()
+          + getMaxIter()
+          + setMaxIter()
+          + setThreshold()
+          # finalize()
+          {static} - getRadiance_0()
+          {static} - getThreshold_0()
+          {static} - getMaxIter_0()
+          {static} - setMaxIter_0()
+          {static} - setThreshold_0()
+          {static} - delete()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.photo {
+      class MergeDebevec {
+          # MergeDebevec()
+          {static} + __fromPtr__()
+          + process()
+          + process()
+          # finalize()
+          {static} - process_0()
+          {static} - process_1()
+          {static} - delete()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.photo {
+      class MergeExposures {
+          # MergeExposures()
+          {static} + __fromPtr__()
+          + process()
+          # finalize()
+          {static} - process_0()
+          {static} - delete()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.photo {
+      class MergeMertens {
+          # MergeMertens()
+          {static} + __fromPtr__()
+          + getContrastWeight()
+          + getExposureWeight()
+          + getSaturationWeight()
+          + process()
+          + process()
+          + setContrastWeight()
+          + setExposureWeight()
+          + setSaturationWeight()
+          # finalize()
+          {static} - getContrastWeight_0()
+          {static} - getExposureWeight_0()
+          {static} - getSaturationWeight_0()
+          {static} - process_0()
+          {static} - process_1()
+          {static} - setContrastWeight_0()
+          {static} - setExposureWeight_0()
+          {static} - setSaturationWeight_0()
+          {static} - delete()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.photo {
+      class MergeRobertson {
+          # MergeRobertson()
+          {static} + __fromPtr__()
+          + process()
+          + process()
+          # finalize()
+          {static} - process_0()
+          {static} - process_1()
+          {static} - delete()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.photo {
+      class Photo {
+          {static} - CV_INPAINT_NS : int
+          {static} - CV_INPAINT_TELEA : int
+          {static} + INPAINT_NS : int
+          {static} + INPAINT_TELEA : int
+          {static} + NORMAL_CLONE : int
+          {static} + MIXED_CLONE : int
+          {static} + MONOCHROME_TRANSFER : int
+          {static} + RECURS_FILTER : int
+          {static} + NORMCONV_FILTER : int
+          {static} + LDR_SIZE : int
+          {static} + createAlignMTB()
+          {static} + createAlignMTB()
+          {static} + createAlignMTB()
+          {static} + createAlignMTB()
+          {static} + createCalibrateDebevec()
+          {static} + createCalibrateDebevec()
+          {static} + createCalibrateDebevec()
+          {static} + createCalibrateDebevec()
+          {static} + createCalibrateRobertson()
+          {static} + createCalibrateRobertson()
+          {static} + createCalibrateRobertson()
+          {static} + createMergeDebevec()
+          {static} + createMergeMertens()
+          {static} + createMergeMertens()
+          {static} + createMergeMertens()
+          {static} + createMergeMertens()
+          {static} + createMergeRobertson()
+          {static} + createTonemap()
+          {static} + createTonemap()
+          {static} + createTonemapDrago()
+          {static} + createTonemapDrago()
+          {static} + createTonemapDrago()
+          {static} + createTonemapDrago()
+          {static} + createTonemapDurand()
+          {static} + createTonemapDurand()
+          {static} + createTonemapDurand()
+          {static} + createTonemapDurand()
+          {static} + createTonemapDurand()
+          {static} + createTonemapDurand()
+          {static} + createTonemapMantiuk()
+          {static} + createTonemapMantiuk()
+          {static} + createTonemapMantiuk()
+          {static} + createTonemapMantiuk()
+          {static} + createTonemapReinhard()
+          {static} + createTonemapReinhard()
+          {static} + createTonemapReinhard()
+          {static} + createTonemapReinhard()
+          {static} + createTonemapReinhard()
+          {static} + colorChange()
+          {static} + colorChange()
+          {static} + colorChange()
+          {static} + colorChange()
+          {static} + decolor()
+          {static} + denoise_TVL1()
+          {static} + denoise_TVL1()
+          {static} + denoise_TVL1()
+          {static} + detailEnhance()
+          {static} + detailEnhance()
+          {static} + detailEnhance()
+          {static} + edgePreservingFilter()
+          {static} + edgePreservingFilter()
+          {static} + edgePreservingFilter()
+          {static} + edgePreservingFilter()
+          {static} + fastNlMeansDenoising()
+          {static} + fastNlMeansDenoising()
+          {static} + fastNlMeansDenoising()
+          {static} + fastNlMeansDenoising()
+          {static} + fastNlMeansDenoising()
+          {static} + fastNlMeansDenoising()
+          {static} + fastNlMeansDenoising()
+          {static} + fastNlMeansDenoising()
+          {static} + fastNlMeansDenoisingColored()
+          {static} + fastNlMeansDenoisingColored()
+          {static} + fastNlMeansDenoisingColored()
+          {static} + fastNlMeansDenoisingColored()
+          {static} + fastNlMeansDenoisingColored()
+          {static} + fastNlMeansDenoisingColoredMulti()
+          {static} + fastNlMeansDenoisingColoredMulti()
+          {static} + fastNlMeansDenoisingColoredMulti()
+          {static} + fastNlMeansDenoisingColoredMulti()
+          {static} + fastNlMeansDenoisingColoredMulti()
+          {static} + fastNlMeansDenoisingMulti()
+          {static} + fastNlMeansDenoisingMulti()
+          {static} + fastNlMeansDenoisingMulti()
+          {static} + fastNlMeansDenoisingMulti()
+          {static} + fastNlMeansDenoisingMulti()
+          {static} + fastNlMeansDenoisingMulti()
+          {static} + fastNlMeansDenoisingMulti()
+          {static} + fastNlMeansDenoisingMulti()
+          {static} + illuminationChange()
+          {static} + illuminationChange()
+          {static} + illuminationChange()
+          {static} + inpaint()
+          {static} + pencilSketch()
+          {static} + pencilSketch()
+          {static} + pencilSketch()
+          {static} + pencilSketch()
+          {static} + seamlessClone()
+          {static} + stylization()
+          {static} + stylization()
+          {static} + stylization()
+          {static} + textureFlattening()
+          {static} + textureFlattening()
+          {static} + textureFlattening()
+          {static} + textureFlattening()
+          {static} - createAlignMTB_0()
+          {static} - createAlignMTB_1()
+          {static} - createAlignMTB_2()
+          {static} - createAlignMTB_3()
+          {static} - createCalibrateDebevec_0()
+          {static} - createCalibrateDebevec_1()
+          {static} - createCalibrateDebevec_2()
+          {static} - createCalibrateDebevec_3()
+          {static} - createCalibrateRobertson_0()
+          {static} - createCalibrateRobertson_1()
+          {static} - createCalibrateRobertson_2()
+          {static} - createMergeDebevec_0()
+          {static} - createMergeMertens_0()
+          {static} - createMergeMertens_1()
+          {static} - createMergeMertens_2()
+          {static} - createMergeMertens_3()
+          {static} - createMergeRobertson_0()
+          {static} - createTonemap_0()
+          {static} - createTonemap_1()
+          {static} - createTonemapDrago_0()
+          {static} - createTonemapDrago_1()
+          {static} - createTonemapDrago_2()
+          {static} - createTonemapDrago_3()
+          {static} - createTonemapDurand_0()
+          {static} - createTonemapDurand_1()
+          {static} - createTonemapDurand_2()
+          {static} - createTonemapDurand_3()
+          {static} - createTonemapDurand_4()
+          {static} - createTonemapDurand_5()
+          {static} - createTonemapMantiuk_0()
+          {static} - createTonemapMantiuk_1()
+          {static} - createTonemapMantiuk_2()
+          {static} - createTonemapMantiuk_3()
+          {static} - createTonemapReinhard_0()
+          {static} - createTonemapReinhard_1()
+          {static} - createTonemapReinhard_2()
+          {static} - createTonemapReinhard_3()
+          {static} - createTonemapReinhard_4()
+          {static} - colorChange_0()
+          {static} - colorChange_1()
+          {static} - colorChange_2()
+          {static} - colorChange_3()
+          {static} - decolor_0()
+          {static} - denoise_TVL1_0()
+          {static} - denoise_TVL1_1()
+          {static} - denoise_TVL1_2()
+          {static} - detailEnhance_0()
+          {static} - detailEnhance_1()
+          {static} - detailEnhance_2()
+          {static} - edgePreservingFilter_0()
+          {static} - edgePreservingFilter_1()
+          {static} - edgePreservingFilter_2()
+          {static} - edgePreservingFilter_3()
+          {static} - fastNlMeansDenoising_0()
+          {static} - fastNlMeansDenoising_1()
+          {static} - fastNlMeansDenoising_2()
+          {static} - fastNlMeansDenoising_3()
+          {static} - fastNlMeansDenoising_4()
+          {static} - fastNlMeansDenoising_5()
+          {static} - fastNlMeansDenoising_6()
+          {static} - fastNlMeansDenoising_7()
+          {static} - fastNlMeansDenoisingColored_0()
+          {static} - fastNlMeansDenoisingColored_1()
+          {static} - fastNlMeansDenoisingColored_2()
+          {static} - fastNlMeansDenoisingColored_3()
+          {static} - fastNlMeansDenoisingColored_4()
+          {static} - fastNlMeansDenoisingColoredMulti_0()
+          {static} - fastNlMeansDenoisingColoredMulti_1()
+          {static} - fastNlMeansDenoisingColoredMulti_2()
+          {static} - fastNlMeansDenoisingColoredMulti_3()
+          {static} - fastNlMeansDenoisingColoredMulti_4()
+          {static} - fastNlMeansDenoisingMulti_0()
+          {static} - fastNlMeansDenoisingMulti_1()
+          {static} - fastNlMeansDenoisingMulti_2()
+          {static} - fastNlMeansDenoisingMulti_3()
+          {static} - fastNlMeansDenoisingMulti_4()
+          {static} - fastNlMeansDenoisingMulti_5()
+          {static} - fastNlMeansDenoisingMulti_6()
+          {static} - fastNlMeansDenoisingMulti_7()
+          {static} - illuminationChange_0()
+          {static} - illuminationChange_1()
+          {static} - illuminationChange_2()
+          {static} - inpaint_0()
+          {static} - pencilSketch_0()
+          {static} - pencilSketch_1()
+          {static} - pencilSketch_2()
+          {static} - pencilSketch_3()
+          {static} - seamlessClone_0()
+          {static} - stylization_0()
+          {static} - stylization_1()
+          {static} - stylization_2()
+          {static} - textureFlattening_0()
+          {static} - textureFlattening_1()
+          {static} - textureFlattening_2()
+          {static} - textureFlattening_3()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.photo {
+      class Tonemap {
+          # Tonemap()
+          {static} + __fromPtr__()
+          + getGamma()
+          + process()
+          + setGamma()
+          # finalize()
+          {static} - getGamma_0()
+          {static} - process_0()
+          {static} - setGamma_0()
+          {static} - delete()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.photo {
+      class TonemapDrago {
+          # TonemapDrago()
+          {static} + __fromPtr__()
+          + getBias()
+          + getSaturation()
+          + setBias()
+          + setSaturation()
+          # finalize()
+          {static} - getBias_0()
+          {static} - getSaturation_0()
+          {static} - setBias_0()
+          {static} - setSaturation_0()
+          {static} - delete()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.photo {
+      class TonemapDurand {
+          # TonemapDurand()
+          {static} + __fromPtr__()
+          + getContrast()
+          + getSaturation()
+          + getSigmaColor()
+          + getSigmaSpace()
+          + setContrast()
+          + setSaturation()
+          + setSigmaColor()
+          + setSigmaSpace()
+          # finalize()
+          {static} - getContrast_0()
+          {static} - getSaturation_0()
+          {static} - getSigmaColor_0()
+          {static} - getSigmaSpace_0()
+          {static} - setContrast_0()
+          {static} - setSaturation_0()
+          {static} - setSigmaColor_0()
+          {static} - setSigmaSpace_0()
+          {static} - delete()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.photo {
+      class TonemapMantiuk {
+          # TonemapMantiuk()
+          {static} + __fromPtr__()
+          + getSaturation()
+          + getScale()
+          + setSaturation()
+          + setScale()
+          # finalize()
+          {static} - getSaturation_0()
+          {static} - getScale_0()
+          {static} - setSaturation_0()
+          {static} - setScale_0()
+          {static} - delete()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.photo {
+      class TonemapReinhard {
+          # TonemapReinhard()
+          {static} + __fromPtr__()
+          + getColorAdaptation()
+          + getIntensity()
+          + getLightAdaptation()
+          + setColorAdaptation()
+          + setIntensity()
+          + setLightAdaptation()
+          # finalize()
+          {static} - getColorAdaptation_0()
+          {static} - getIntensity_0()
+          {static} - getLightAdaptation_0()
+          {static} - setColorAdaptation_0()
+          {static} - setIntensity_0()
+          {static} - setLightAdaptation_0()
+          {static} - delete()
+      }
+    }
+  }
+  
+
+  AlignExposures -up-|> Algorithm
+  AlignMTB -up-|> AlignExposures
+  CalibrateCRF -up-|> Algorithm
+  CalibrateDebevec -up-|> CalibrateCRF
+  CalibrateRobertson -up-|> CalibrateCRF
+  MergeDebevec -up-|> MergeExposures
+  MergeExposures -up-|> Algorithm
+  MergeMertens -up-|> MergeExposures
+  MergeRobertson -up-|> MergeExposures
+  Tonemap -up-|> Algorithm
+  TonemapDrago -up-|> Tonemap
+  TonemapDurand -up-|> Tonemap
+  TonemapMantiuk -up-|> Tonemap
+  TonemapReinhard -up-|> Tonemap
+
+
+right footer
+
+
+PlantUML diagram generated by SketchIt! (https://bitbucket.org/pmesmeur/sketch.it)
+For more information about this tool, please contact philippe.mesmeur@gmail.com
+endfooter
+
+@enduml

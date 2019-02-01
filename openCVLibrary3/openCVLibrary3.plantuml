@@ -1,0 +1,1182 @@
+@startuml
+
+title __OPENCVLIBRARY3's Class Diagram__\n
+
+  package org.opencv {
+    package org.opencv.features2d {
+      class AKAZE {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.ml {
+      class ANN_MLP {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.ml {
+      class ANN_MLP_ANNEAL {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.features2d {
+      class AgastFeatureDetector {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class Algorithm {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.photo {
+      class AlignExposures {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.photo {
+      class AlignMTB {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.android {
+      class AsyncServiceHelper {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.features2d {
+      class BFMatcher {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.features2d {
+      class BOWImgDescriptorExtractor {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.features2d {
+      class BOWKMeansTrainer {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.features2d {
+      class BOWTrainer {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.features2d {
+      class BRISK {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.video {
+      class BackgroundSubtractor {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.video {
+      class BackgroundSubtractorKNN {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.video {
+      class BackgroundSubtractorMOG2 {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.objdetect {
+      class BaseCascadeClassifier {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.android {
+      abstract class BaseLoaderCallback {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.ml {
+      class Boost {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    class BuildConfig {
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.imgproc {
+      class CLAHE {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.calib3d {
+      class Calib3d {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.photo {
+      class CalibrateCRF {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.photo {
+      class CalibrateDebevec {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.photo {
+      class CalibrateRobertson {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.android {
+      class Camera2Renderer {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.android {
+      abstract class CameraBridgeViewBase {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.android {
+      abstract class CameraGLRendererBase {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.android {
+      class CameraGLSurfaceView {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.android {
+      class CameraRenderer {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.objdetect {
+      class CascadeClassifier {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.utils {
+      class Converters {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class Core {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class CvException {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class CvType {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class DMatch {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.ml {
+      class DTrees {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.video {
+      class DenseOpticalFlow {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.features2d {
+      class DescriptorExtractor {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.features2d {
+      class DescriptorMatcher {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.dnn {
+      class DictValue {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.dnn {
+      class Dnn {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.video {
+      class DualTVL1OpticalFlow {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.ml {
+      class EM {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.video {
+      class FarnebackOpticalFlow {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.features2d {
+      class FastFeatureDetector {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.features2d {
+      class Feature2D {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.features2d {
+      class FeatureDetector {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.features2d {
+      class Features2d {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.features2d {
+      class FlannBasedMatcher {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.android {
+      class FpsMeter {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.features2d {
+      class GFTTDetector {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.objdetect {
+      class HOGDescriptor {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.imgcodecs {
+      class Imgcodecs {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.imgproc {
+      class Imgproc {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.android {
+      interface InstallCallbackInterface {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.android {
+      class JavaCamera2View {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.android {
+      class JavaCameraView {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.features2d {
+      class KAZE {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.ml {
+      class KNearest {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.video {
+      class KalmanFilter {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class KeyPoint {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.dnn {
+      class Layer {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.imgproc {
+      class LineSegmentDetector {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.android {
+      interface LoaderCallbackInterface {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.ml {
+      class LogisticRegression {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.features2d {
+      class MSER {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class Mat {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class MatOfByte {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class MatOfDMatch {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class MatOfDouble {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class MatOfFloat {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class MatOfFloat4 {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class MatOfFloat6 {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class MatOfInt {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class MatOfInt4 {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class MatOfKeyPoint {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class MatOfPoint {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class MatOfPoint2f {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class MatOfPoint3 {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class MatOfPoint3f {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class MatOfRect {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class MatOfRect2d {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class MatOfRotatedRect {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.photo {
+      class MergeDebevec {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.photo {
+      class MergeExposures {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.photo {
+      class MergeMertens {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.photo {
+      class MergeRobertson {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.ml {
+      class Ml {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.imgproc {
+      class Moments {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.dnn {
+      class Net {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.ml {
+      class NormalBayesClassifier {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.features2d {
+      class ORB {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.objdetect {
+      class Objdetect {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.engine {
+      interface OpenCVEngineInterface {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.engine {
+      interface OpenCVEngineInterface {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.osgi {
+      interface OpenCVInterface {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.android {
+      class OpenCVLoader {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.osgi {
+      class OpenCVNativeLoader {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.ml {
+      class ParamGrid {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.features2d {
+      class Params {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.photo {
+      class Photo {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class Point {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class Point3 {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.ml {
+      class RTrees {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class Range {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class Rect {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class Rect2d {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class RotatedRect {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.ml {
+      class SVM {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.ml {
+      class SVMSGD {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class Scalar {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class Size {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.video {
+      class SparseOpticalFlow {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.video {
+      class SparsePyrLKOpticalFlow {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.ml {
+      class StatModel {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.android {
+      class StaticHelper {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.calib3d {
+      class StereoBM {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.calib3d {
+      class StereoMatcher {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.calib3d {
+      class StereoSGBM {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.imgproc {
+      class Subdiv2D {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class TermCriteria {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class TickMeter {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.photo {
+      class Tonemap {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.photo {
+      class TonemapDrago {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.photo {
+      class TonemapDurand {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.photo {
+      class TonemapMantiuk {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.photo {
+      class TonemapReinhard {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.ml {
+      class TrainData {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.android {
+      class Utils {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.video {
+      class Video {
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.video {
+      package org.opencv.videoio {
+        class VideoCapture {
+        }
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.video {
+      package org.opencv.videoio {
+        class VideoWriter {
+        }
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.video {
+      package org.opencv.videoio {
+        class Videoio {
+        }
+      }
+    }
+  }
+  
+
+  AKAZE -up-|> Feature2D
+  ANN_MLP -up-|> StatModel
+  ANN_MLP_ANNEAL -up-|> ANN_MLP
+  AgastFeatureDetector -up-|> Feature2D
+  AlignExposures -up-|> Algorithm
+  AlignMTB -up-|> AlignExposures
+  AsyncServiceHelper o-- OpenCVEngineInterface : mEngineService
+  AsyncServiceHelper o-- LoaderCallbackInterface : mUserAppCallback
+  BFMatcher -up-|> DescriptorMatcher
+  BOWKMeansTrainer -up-|> BOWTrainer
+  BRISK -up-|> Feature2D
+  BackgroundSubtractor -up-|> Algorithm
+  BackgroundSubtractorKNN -up-|> BackgroundSubtractor
+  BackgroundSubtractorMOG2 -up-|> BackgroundSubtractor
+  BaseCascadeClassifier -up-|> Algorithm
+  BaseLoaderCallback -up-|> LoaderCallbackInterface
+  Boost -up-|> DTrees
+  CLAHE -up-|> Algorithm
+  CalibrateCRF -up-|> Algorithm
+  CalibrateDebevec -up-|> CalibrateCRF
+  CalibrateRobertson -up-|> CalibrateCRF
+  Camera2Renderer -up-|> CameraGLRendererBase
+  CameraBridgeViewBase -up-|> Callback
+  CameraBridgeViewBase -up-|> SurfaceView
+  CameraBridgeViewBase o-- CvCameraViewListener2 : mListener
+  CameraBridgeViewBase o-- FpsMeter : mFpsMeter
+  CameraGLRendererBase -up-|> Renderer
+  CameraGLRendererBase -up-|> OnFrameAvailableListener
+  CameraGLRendererBase o-- CameraGLSurfaceView : mView
+  CameraGLSurfaceView -up-|> GLSurfaceView
+  CameraGLSurfaceView o-- CameraTextureListener : mTexListener
+  CameraGLSurfaceView o-- CameraGLRendererBase : mRenderer
+  CameraRenderer -up-|> CameraGLRendererBase
+  DTrees -up-|> StatModel
+  DenseOpticalFlow -up-|> Algorithm
+  DescriptorMatcher -up-|> Algorithm
+  DualTVL1OpticalFlow -up-|> DenseOpticalFlow
+  EM -up-|> StatModel
+  FarnebackOpticalFlow -up-|> DenseOpticalFlow
+  FastFeatureDetector -up-|> Feature2D
+  Feature2D -up-|> Algorithm
+  FlannBasedMatcher -up-|> DescriptorMatcher
+  GFTTDetector -up-|> Feature2D
+  JavaCamera2View -up-|> CameraBridgeViewBase
+  JavaCameraView -up-|> PreviewCallback
+  JavaCameraView -up-|> CameraBridgeViewBase
+  KAZE -up-|> Feature2D
+  KNearest -up-|> StatModel
+  KeyPoint o-- Point : pt
+  Layer -up-|> Algorithm
+  LineSegmentDetector -up-|> Algorithm
+  LogisticRegression -up-|> StatModel
+  MSER -up-|> Feature2D
+  MatOfByte -up-|> Mat
+  MatOfDMatch -up-|> Mat
+  MatOfDouble -up-|> Mat
+  MatOfFloat -up-|> Mat
+  MatOfFloat4 -up-|> Mat
+  MatOfFloat6 -up-|> Mat
+  MatOfInt -up-|> Mat
+  MatOfInt4 -up-|> Mat
+  MatOfKeyPoint -up-|> Mat
+  MatOfPoint -up-|> Mat
+  MatOfPoint2f -up-|> Mat
+  MatOfPoint3 -up-|> Mat
+  MatOfPoint3f -up-|> Mat
+  MatOfRect -up-|> Mat
+  MatOfRect2d -up-|> Mat
+  MatOfRotatedRect -up-|> Mat
+  MergeDebevec -up-|> MergeExposures
+  MergeExposures -up-|> Algorithm
+  MergeMertens -up-|> MergeExposures
+  MergeRobertson -up-|> MergeExposures
+  NormalBayesClassifier -up-|> StatModel
+  ORB -up-|> Feature2D
+  OpenCVNativeLoader -up-|> OpenCVInterface
+  RTrees -up-|> DTrees
+  RotatedRect o-- Point : center
+  RotatedRect o-- Size : size
+  SVM -up-|> StatModel
+  SVMSGD -up-|> StatModel
+  SparseOpticalFlow -up-|> Algorithm
+  SparsePyrLKOpticalFlow -up-|> SparseOpticalFlow
+  StatModel -up-|> Algorithm
+  StereoBM -up-|> StereoMatcher
+  StereoMatcher -up-|> Algorithm
+  StereoSGBM -up-|> StereoMatcher
+  Tonemap -up-|> Algorithm
+  TonemapDrago -up-|> Tonemap
+  TonemapDurand -up-|> Tonemap
+  TonemapMantiuk -up-|> Tonemap
+  TonemapReinhard -up-|> Tonemap
+
+
+right footer
+
+
+PlantUML diagram generated by SketchIt! (https://bitbucket.org/pmesmeur/sketch.it)
+For more information about this tool, please contact philippe.mesmeur@gmail.com
+endfooter
+
+@enduml

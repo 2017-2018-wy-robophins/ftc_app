@@ -1,0 +1,231 @@
+@startuml
+
+title __OBJDETECT's Class Diagram__\n
+
+  package org.opencv {
+    package org.opencv.objdetect {
+      class BaseCascadeClassifier {
+          # BaseCascadeClassifier()
+          {static} + __fromPtr__()
+          # finalize()
+          {static} - delete()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.objdetect {
+      class CascadeClassifier {
+          # nativeObj : long
+          # CascadeClassifier()
+          + getNativeObjAddr()
+          {static} + __fromPtr__()
+          + CascadeClassifier()
+          + CascadeClassifier()
+          + getOriginalWindowSize()
+          {static} + convert()
+          + empty()
+          + isOldFormatCascade()
+          + load()
+          + getFeatureType()
+          + detectMultiScale()
+          + detectMultiScale()
+          + detectMultiScale()
+          + detectMultiScale()
+          + detectMultiScale()
+          + detectMultiScale()
+          + detectMultiScale2()
+          + detectMultiScale2()
+          + detectMultiScale2()
+          + detectMultiScale2()
+          + detectMultiScale2()
+          + detectMultiScale2()
+          + detectMultiScale3()
+          + detectMultiScale3()
+          + detectMultiScale3()
+          + detectMultiScale3()
+          + detectMultiScale3()
+          + detectMultiScale3()
+          + detectMultiScale3()
+          # finalize()
+          {static} - CascadeClassifier_0()
+          {static} - CascadeClassifier_1()
+          {static} - getOriginalWindowSize_0()
+          {static} - convert_0()
+          {static} - empty_0()
+          {static} - isOldFormatCascade_0()
+          {static} - load_0()
+          {static} - getFeatureType_0()
+          {static} - detectMultiScale_0()
+          {static} - detectMultiScale_1()
+          {static} - detectMultiScale_2()
+          {static} - detectMultiScale_3()
+          {static} - detectMultiScale_4()
+          {static} - detectMultiScale_5()
+          {static} - detectMultiScale2_0()
+          {static} - detectMultiScale2_1()
+          {static} - detectMultiScale2_2()
+          {static} - detectMultiScale2_3()
+          {static} - detectMultiScale2_4()
+          {static} - detectMultiScale2_5()
+          {static} - detectMultiScale3_0()
+          {static} - detectMultiScale3_1()
+          {static} - detectMultiScale3_2()
+          {static} - detectMultiScale3_3()
+          {static} - detectMultiScale3_4()
+          {static} - detectMultiScale3_5()
+          {static} - detectMultiScale3_6()
+          {static} - delete()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.objdetect {
+      class HOGDescriptor {
+          # nativeObj : long
+          {static} + L2Hys : int
+          {static} + DEFAULT_NLEVELS : int
+          # HOGDescriptor()
+          + getNativeObjAddr()
+          {static} + __fromPtr__()
+          + HOGDescriptor()
+          + HOGDescriptor()
+          + HOGDescriptor()
+          + HOGDescriptor()
+          + HOGDescriptor()
+          + HOGDescriptor()
+          + HOGDescriptor()
+          + HOGDescriptor()
+          + HOGDescriptor()
+          + HOGDescriptor()
+          + checkDetectorSize()
+          + load()
+          + load()
+          + getWinSigma()
+          + getDescriptorSize()
+          {static} + getDaimlerPeopleDetector()
+          {static} + getDefaultPeopleDetector()
+          + compute()
+          + compute()
+          + compute()
+          + compute()
+          + computeGradient()
+          + computeGradient()
+          + computeGradient()
+          + detect()
+          + detect()
+          + detect()
+          + detect()
+          + detect()
+          + detectMultiScale()
+          + detectMultiScale()
+          + detectMultiScale()
+          + detectMultiScale()
+          + detectMultiScale()
+          + detectMultiScale()
+          + detectMultiScale()
+          + save()
+          + save()
+          + setSVMDetector()
+          + get_winSize()
+          + get_blockSize()
+          + get_blockStride()
+          + get_cellSize()
+          + get_nbins()
+          + get_derivAperture()
+          + get_winSigma()
+          + get_histogramNormType()
+          + get_L2HysThreshold()
+          + get_gammaCorrection()
+          + get_svmDetector()
+          + get_nlevels()
+          + get_signedGradient()
+          # finalize()
+          {static} - HOGDescriptor_0()
+          {static} - HOGDescriptor_1()
+          {static} - HOGDescriptor_2()
+          {static} - HOGDescriptor_3()
+          {static} - HOGDescriptor_4()
+          {static} - HOGDescriptor_5()
+          {static} - HOGDescriptor_6()
+          {static} - HOGDescriptor_7()
+          {static} - HOGDescriptor_8()
+          {static} - HOGDescriptor_9()
+          {static} - checkDetectorSize_0()
+          {static} - load_0()
+          {static} - load_1()
+          {static} - getWinSigma_0()
+          {static} - getDescriptorSize_0()
+          {static} - getDaimlerPeopleDetector_0()
+          {static} - getDefaultPeopleDetector_0()
+          {static} - compute_0()
+          {static} - compute_1()
+          {static} - compute_2()
+          {static} - compute_3()
+          {static} - computeGradient_0()
+          {static} - computeGradient_1()
+          {static} - computeGradient_2()
+          {static} - detect_0()
+          {static} - detect_1()
+          {static} - detect_2()
+          {static} - detect_3()
+          {static} - detect_4()
+          {static} - detectMultiScale_0()
+          {static} - detectMultiScale_1()
+          {static} - detectMultiScale_2()
+          {static} - detectMultiScale_3()
+          {static} - detectMultiScale_4()
+          {static} - detectMultiScale_5()
+          {static} - detectMultiScale_6()
+          {static} - save_0()
+          {static} - save_1()
+          {static} - setSVMDetector_0()
+          {static} - get_winSize_0()
+          {static} - get_blockSize_0()
+          {static} - get_blockStride_0()
+          {static} - get_cellSize_0()
+          {static} - get_nbins_0()
+          {static} - get_derivAperture_0()
+          {static} - get_winSigma_0()
+          {static} - get_histogramNormType_0()
+          {static} - get_L2HysThreshold_0()
+          {static} - get_gammaCorrection_0()
+          {static} - get_svmDetector_0()
+          {static} - get_nlevels_0()
+          {static} - get_signedGradient_0()
+          {static} - delete()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.objdetect {
+      class Objdetect {
+          {static} + CASCADE_DO_CANNY_PRUNING : int
+          {static} + CASCADE_SCALE_IMAGE : int
+          {static} + CASCADE_FIND_BIGGEST_OBJECT : int
+          {static} + CASCADE_DO_ROUGH_SEARCH : int
+          {static} + groupRectangles()
+          {static} + groupRectangles()
+          {static} - groupRectangles_0()
+          {static} - groupRectangles_1()
+      }
+    }
+  }
+  
+
+  BaseCascadeClassifier -up-|> Algorithm
+
+
+right footer
+
+
+PlantUML diagram generated by SketchIt! (https://bitbucket.org/pmesmeur/sketch.it)
+For more information about this tool, please contact philippe.mesmeur@gmail.com
+endfooter
+
+@enduml

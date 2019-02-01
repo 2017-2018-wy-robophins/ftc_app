@@ -1,0 +1,937 @@
+@startuml
+
+title __FEATURES2D's Class Diagram__\n
+
+  package org.opencv {
+    package org.opencv.features2d {
+      class AKAZE {
+          {static} + DESCRIPTOR_KAZE_UPRIGHT : int
+          {static} + DESCRIPTOR_KAZE : int
+          {static} + DESCRIPTOR_MLDB_UPRIGHT : int
+          {static} + DESCRIPTOR_MLDB : int
+          # AKAZE()
+          {static} + __fromPtr__()
+          {static} + create()
+          {static} + create()
+          {static} + create()
+          {static} + create()
+          {static} + create()
+          {static} + create()
+          {static} + create()
+          {static} + create()
+          + getDefaultName()
+          + getThreshold()
+          + getDescriptorChannels()
+          + getDescriptorSize()
+          + getDescriptorType()
+          + getDiffusivity()
+          + getNOctaveLayers()
+          + getNOctaves()
+          + setDescriptorChannels()
+          + setDescriptorSize()
+          + setDescriptorType()
+          + setDiffusivity()
+          + setNOctaveLayers()
+          + setNOctaves()
+          + setThreshold()
+          # finalize()
+          {static} - create_0()
+          {static} - create_1()
+          {static} - create_2()
+          {static} - create_3()
+          {static} - create_4()
+          {static} - create_5()
+          {static} - create_6()
+          {static} - create_7()
+          {static} - getDefaultName_0()
+          {static} - getThreshold_0()
+          {static} - getDescriptorChannels_0()
+          {static} - getDescriptorSize_0()
+          {static} - getDescriptorType_0()
+          {static} - getDiffusivity_0()
+          {static} - getNOctaveLayers_0()
+          {static} - getNOctaves_0()
+          {static} - setDescriptorChannels_0()
+          {static} - setDescriptorSize_0()
+          {static} - setDescriptorType_0()
+          {static} - setDiffusivity_0()
+          {static} - setNOctaveLayers_0()
+          {static} - setNOctaves_0()
+          {static} - setThreshold_0()
+          {static} - delete()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.features2d {
+      class AgastFeatureDetector {
+          {static} + AGAST_5_8 : int
+          {static} + AGAST_7_12d : int
+          {static} + AGAST_7_12s : int
+          {static} + OAST_9_16 : int
+          {static} + THRESHOLD : int
+          {static} + NONMAX_SUPPRESSION : int
+          # AgastFeatureDetector()
+          {static} + __fromPtr__()
+          {static} + create()
+          {static} + create()
+          {static} + create()
+          {static} + create()
+          + getDefaultName()
+          + getNonmaxSuppression()
+          + getThreshold()
+          + getType()
+          + setNonmaxSuppression()
+          + setThreshold()
+          + setType()
+          # finalize()
+          {static} - create_0()
+          {static} - create_1()
+          {static} - create_2()
+          {static} - create_3()
+          {static} - getDefaultName_0()
+          {static} - getNonmaxSuppression_0()
+          {static} - getThreshold_0()
+          {static} - getType_0()
+          {static} - setNonmaxSuppression_0()
+          {static} - setThreshold_0()
+          {static} - setType_0()
+          {static} - delete()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.features2d {
+      class BFMatcher {
+          # BFMatcher()
+          {static} + __fromPtr__()
+          + BFMatcher()
+          + BFMatcher()
+          + BFMatcher()
+          {static} + create()
+          {static} + create()
+          {static} + create()
+          # finalize()
+          {static} - BFMatcher_0()
+          {static} - BFMatcher_1()
+          {static} - BFMatcher_2()
+          {static} - create_0()
+          {static} - create_1()
+          {static} - create_2()
+          {static} - delete()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.features2d {
+      class BOWImgDescriptorExtractor {
+          # nativeObj : long
+          # BOWImgDescriptorExtractor()
+          + getNativeObjAddr()
+          {static} + __fromPtr__()
+          + getVocabulary()
+          + descriptorSize()
+          + descriptorType()
+          + compute()
+          + setVocabulary()
+          # finalize()
+          {static} - getVocabulary_0()
+          {static} - descriptorSize_0()
+          {static} - descriptorType_0()
+          {static} - compute_0()
+          {static} - setVocabulary_0()
+          {static} - delete()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.features2d {
+      class BOWKMeansTrainer {
+          # BOWKMeansTrainer()
+          {static} + __fromPtr__()
+          + BOWKMeansTrainer()
+          + BOWKMeansTrainer()
+          + BOWKMeansTrainer()
+          + BOWKMeansTrainer()
+          + cluster()
+          + cluster()
+          # finalize()
+          {static} - BOWKMeansTrainer_0()
+          {static} - BOWKMeansTrainer_1()
+          {static} - BOWKMeansTrainer_2()
+          {static} - BOWKMeansTrainer_3()
+          {static} - cluster_0()
+          {static} - cluster_1()
+          {static} - delete()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.features2d {
+      class BOWTrainer {
+          # nativeObj : long
+          # BOWTrainer()
+          + getNativeObjAddr()
+          {static} + __fromPtr__()
+          + cluster()
+          + cluster()
+          + descriptorsCount()
+          + getDescriptors()
+          + add()
+          + clear()
+          # finalize()
+          {static} - cluster_0()
+          {static} - cluster_1()
+          {static} - descriptorsCount_0()
+          {static} - getDescriptors_0()
+          {static} - add_0()
+          {static} - clear_0()
+          {static} - delete()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.features2d {
+      class BRISK {
+          # BRISK()
+          {static} + __fromPtr__()
+          {static} + create()
+          {static} + create()
+          {static} + create()
+          {static} + create()
+          {static} + create()
+          {static} + create()
+          {static} + create()
+          {static} + create()
+          {static} + create()
+          {static} + create()
+          {static} + create()
+          {static} + create()
+          + getDefaultName()
+          # finalize()
+          {static} - create_0()
+          {static} - create_1()
+          {static} - create_2()
+          {static} - create_3()
+          {static} - create_4()
+          {static} - create_5()
+          {static} - create_6()
+          {static} - create_7()
+          {static} - create_8()
+          {static} - create_9()
+          {static} - create_10()
+          {static} - create_11()
+          {static} - getDefaultName_0()
+          {static} - delete()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.features2d {
+      class DescriptorExtractor {
+          # nativeObj : long
+          {static} - OPPONENTEXTRACTOR : int
+          {static} + SIFT : int
+          {static} + SURF : int
+          {static} + ORB : int
+          {static} + BRIEF : int
+          {static} + BRISK : int
+          {static} + FREAK : int
+          {static} + AKAZE : int
+          {static} + OPPONENT_SIFT : int
+          {static} + OPPONENT_SURF : int
+          {static} + OPPONENT_ORB : int
+          {static} + OPPONENT_BRIEF : int
+          {static} + OPPONENT_BRISK : int
+          {static} + OPPONENT_FREAK : int
+          {static} + OPPONENT_AKAZE : int
+          # DescriptorExtractor()
+          + getNativeObjAddr()
+          {static} + __fromPtr__()
+          {static} + create()
+          + empty()
+          + descriptorSize()
+          + descriptorType()
+          + compute()
+          + compute()
+          + read()
+          + write()
+          # finalize()
+          {static} - create_0()
+          {static} - empty_0()
+          {static} - descriptorSize_0()
+          {static} - descriptorType_0()
+          {static} - compute_0()
+          {static} - compute_1()
+          {static} - read_0()
+          {static} - write_0()
+          {static} - delete()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.features2d {
+      class DescriptorMatcher {
+          {static} + FLANNBASED : int
+          {static} + BRUTEFORCE : int
+          {static} + BRUTEFORCE_L1 : int
+          {static} + BRUTEFORCE_HAMMING : int
+          {static} + BRUTEFORCE_HAMMINGLUT : int
+          {static} + BRUTEFORCE_SL2 : int
+          # DescriptorMatcher()
+          {static} + __fromPtr__()
+          + clone()
+          + clone()
+          {static} + create()
+          {static} + create()
+          + empty()
+          + isMaskSupported()
+          + getTrainDescriptors()
+          + add()
+          + clear()
+          + knnMatch()
+          + knnMatch()
+          + knnMatch()
+          + knnMatch()
+          + knnMatch()
+          + knnMatch()
+          + match()
+          + match()
+          + match()
+          + match()
+          + radiusMatch()
+          + radiusMatch()
+          + radiusMatch()
+          + radiusMatch()
+          + radiusMatch()
+          + radiusMatch()
+          + read()
+          + train()
+          + write()
+          # finalize()
+          {static} - clone_0()
+          {static} - clone_1()
+          {static} - create_0()
+          {static} - create_1()
+          {static} - empty_0()
+          {static} - isMaskSupported_0()
+          {static} - getTrainDescriptors_0()
+          {static} - add_0()
+          {static} - clear_0()
+          {static} - knnMatch_0()
+          {static} - knnMatch_1()
+          {static} - knnMatch_2()
+          {static} - knnMatch_3()
+          {static} - knnMatch_4()
+          {static} - knnMatch_5()
+          {static} - match_0()
+          {static} - match_1()
+          {static} - match_2()
+          {static} - match_3()
+          {static} - radiusMatch_0()
+          {static} - radiusMatch_1()
+          {static} - radiusMatch_2()
+          {static} - radiusMatch_3()
+          {static} - radiusMatch_4()
+          {static} - radiusMatch_5()
+          {static} - read_0()
+          {static} - train_0()
+          {static} - write_0()
+          {static} - delete()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.features2d {
+      class FastFeatureDetector {
+          {static} + TYPE_5_8 : int
+          {static} + TYPE_7_12 : int
+          {static} + TYPE_9_16 : int
+          {static} + THRESHOLD : int
+          {static} + NONMAX_SUPPRESSION : int
+          {static} + FAST_N : int
+          # FastFeatureDetector()
+          {static} + __fromPtr__()
+          {static} + create()
+          {static} + create()
+          {static} + create()
+          {static} + create()
+          + getDefaultName()
+          + getNonmaxSuppression()
+          + getThreshold()
+          + getType()
+          + setNonmaxSuppression()
+          + setThreshold()
+          + setType()
+          # finalize()
+          {static} - create_0()
+          {static} - create_1()
+          {static} - create_2()
+          {static} - create_3()
+          {static} - getDefaultName_0()
+          {static} - getNonmaxSuppression_0()
+          {static} - getThreshold_0()
+          {static} - getType_0()
+          {static} - setNonmaxSuppression_0()
+          {static} - setThreshold_0()
+          {static} - setType_0()
+          {static} - delete()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.features2d {
+      class Feature2D {
+          # Feature2D()
+          {static} + __fromPtr__()
+          + getDefaultName()
+          + empty()
+          + defaultNorm()
+          + descriptorSize()
+          + descriptorType()
+          + compute()
+          + compute()
+          + detect()
+          + detect()
+          + detect()
+          + detect()
+          + detectAndCompute()
+          + detectAndCompute()
+          + read()
+          + write()
+          # finalize()
+          {static} - getDefaultName_0()
+          {static} - empty_0()
+          {static} - defaultNorm_0()
+          {static} - descriptorSize_0()
+          {static} - descriptorType_0()
+          {static} - compute_0()
+          {static} - compute_1()
+          {static} - detect_0()
+          {static} - detect_1()
+          {static} - detect_2()
+          {static} - detect_3()
+          {static} - detectAndCompute_0()
+          {static} - detectAndCompute_1()
+          {static} - read_0()
+          {static} - write_0()
+          {static} - delete()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.features2d {
+      class FeatureDetector {
+          # nativeObj : long
+          {static} - GRIDDETECTOR : int
+          {static} - PYRAMIDDETECTOR : int
+          {static} - DYNAMICDETECTOR : int
+          {static} + FAST : int
+          {static} + STAR : int
+          {static} + SIFT : int
+          {static} + SURF : int
+          {static} + ORB : int
+          {static} + MSER : int
+          {static} + GFTT : int
+          {static} + HARRIS : int
+          {static} + SIMPLEBLOB : int
+          {static} + DENSE : int
+          {static} + BRISK : int
+          {static} + AKAZE : int
+          {static} + GRID_FAST : int
+          {static} + GRID_STAR : int
+          {static} + GRID_SIFT : int
+          {static} + GRID_SURF : int
+          {static} + GRID_ORB : int
+          {static} + GRID_MSER : int
+          {static} + GRID_GFTT : int
+          {static} + GRID_HARRIS : int
+          {static} + GRID_SIMPLEBLOB : int
+          {static} + GRID_DENSE : int
+          {static} + GRID_BRISK : int
+          {static} + GRID_AKAZE : int
+          {static} + PYRAMID_FAST : int
+          {static} + PYRAMID_STAR : int
+          {static} + PYRAMID_SIFT : int
+          {static} + PYRAMID_SURF : int
+          {static} + PYRAMID_ORB : int
+          {static} + PYRAMID_MSER : int
+          {static} + PYRAMID_GFTT : int
+          {static} + PYRAMID_HARRIS : int
+          {static} + PYRAMID_SIMPLEBLOB : int
+          {static} + PYRAMID_DENSE : int
+          {static} + PYRAMID_BRISK : int
+          {static} + PYRAMID_AKAZE : int
+          {static} + DYNAMIC_FAST : int
+          {static} + DYNAMIC_STAR : int
+          {static} + DYNAMIC_SIFT : int
+          {static} + DYNAMIC_SURF : int
+          {static} + DYNAMIC_ORB : int
+          {static} + DYNAMIC_MSER : int
+          {static} + DYNAMIC_GFTT : int
+          {static} + DYNAMIC_HARRIS : int
+          {static} + DYNAMIC_SIMPLEBLOB : int
+          {static} + DYNAMIC_DENSE : int
+          {static} + DYNAMIC_BRISK : int
+          {static} + DYNAMIC_AKAZE : int
+          # FeatureDetector()
+          + getNativeObjAddr()
+          {static} + __fromPtr__()
+          {static} + create()
+          + empty()
+          + detect()
+          + detect()
+          + detect()
+          + detect()
+          + read()
+          + write()
+          # finalize()
+          {static} - create_0()
+          {static} - empty_0()
+          {static} - detect_0()
+          {static} - detect_1()
+          {static} - detect_2()
+          {static} - detect_3()
+          {static} - read_0()
+          {static} - write_0()
+          {static} - delete()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.features2d {
+      class Features2d {
+          {static} + DRAW_OVER_OUTIMG : int
+          {static} + NOT_DRAW_SINGLE_POINTS : int
+          {static} + DRAW_RICH_KEYPOINTS : int
+          {static} + drawKeypoints()
+          {static} + drawKeypoints()
+          {static} + drawKeypoints()
+          {static} + drawMatches()
+          {static} + drawMatches()
+          {static} + drawMatches()
+          {static} + drawMatches()
+          {static} + drawMatches()
+          {static} + drawMatches2()
+          {static} + drawMatches2()
+          {static} + drawMatches2()
+          {static} + drawMatches2()
+          {static} + drawMatches2()
+          {static} + drawMatchesKnn()
+          {static} + drawMatchesKnn()
+          {static} + drawMatchesKnn()
+          {static} + drawMatchesKnn()
+          {static} + drawMatchesKnn()
+          {static} - drawKeypoints_0()
+          {static} - drawKeypoints_1()
+          {static} - drawKeypoints_2()
+          {static} - drawMatches_0()
+          {static} - drawMatches_1()
+          {static} - drawMatches_2()
+          {static} - drawMatches_3()
+          {static} - drawMatches_4()
+          {static} - drawMatches2_0()
+          {static} - drawMatches2_1()
+          {static} - drawMatches2_2()
+          {static} - drawMatches2_3()
+          {static} - drawMatches2_4()
+          {static} - drawMatchesKnn_0()
+          {static} - drawMatchesKnn_1()
+          {static} - drawMatchesKnn_2()
+          {static} - drawMatchesKnn_3()
+          {static} - drawMatchesKnn_4()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.features2d {
+      class FlannBasedMatcher {
+          # FlannBasedMatcher()
+          {static} + __fromPtr__()
+          + FlannBasedMatcher()
+          {static} + create()
+          # finalize()
+          {static} - FlannBasedMatcher_0()
+          {static} - create_0()
+          {static} - delete()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.features2d {
+      class GFTTDetector {
+          # GFTTDetector()
+          {static} + __fromPtr__()
+          {static} + create()
+          {static} + create()
+          {static} + create()
+          {static} + create()
+          {static} + create()
+          {static} + create()
+          {static} + create()
+          {static} + create()
+          {static} + create()
+          {static} + create()
+          + getDefaultName()
+          + getHarrisDetector()
+          + getK()
+          + getMinDistance()
+          + getQualityLevel()
+          + getBlockSize()
+          + getMaxFeatures()
+          + setBlockSize()
+          + setHarrisDetector()
+          + setK()
+          + setMaxFeatures()
+          + setMinDistance()
+          + setQualityLevel()
+          # finalize()
+          {static} - create_0()
+          {static} - create_1()
+          {static} - create_2()
+          {static} - create_3()
+          {static} - create_4()
+          {static} - create_5()
+          {static} - create_6()
+          {static} - create_7()
+          {static} - create_8()
+          {static} - create_9()
+          {static} - getDefaultName_0()
+          {static} - getHarrisDetector_0()
+          {static} - getK_0()
+          {static} - getMinDistance_0()
+          {static} - getQualityLevel_0()
+          {static} - getBlockSize_0()
+          {static} - getMaxFeatures_0()
+          {static} - setBlockSize_0()
+          {static} - setHarrisDetector_0()
+          {static} - setK_0()
+          {static} - setMaxFeatures_0()
+          {static} - setMinDistance_0()
+          {static} - setQualityLevel_0()
+          {static} - delete()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.features2d {
+      class KAZE {
+          {static} + DIFF_PM_G1 : int
+          {static} + DIFF_PM_G2 : int
+          {static} + DIFF_WEICKERT : int
+          {static} + DIFF_CHARBONNIER : int
+          # KAZE()
+          {static} + __fromPtr__()
+          {static} + create()
+          {static} + create()
+          {static} + create()
+          {static} + create()
+          {static} + create()
+          {static} + create()
+          {static} + create()
+          + getDefaultName()
+          + getExtended()
+          + getUpright()
+          + getThreshold()
+          + getDiffusivity()
+          + getNOctaveLayers()
+          + getNOctaves()
+          + setDiffusivity()
+          + setExtended()
+          + setNOctaveLayers()
+          + setNOctaves()
+          + setThreshold()
+          + setUpright()
+          # finalize()
+          {static} - create_0()
+          {static} - create_1()
+          {static} - create_2()
+          {static} - create_3()
+          {static} - create_4()
+          {static} - create_5()
+          {static} - create_6()
+          {static} - getDefaultName_0()
+          {static} - getExtended_0()
+          {static} - getUpright_0()
+          {static} - getThreshold_0()
+          {static} - getDiffusivity_0()
+          {static} - getNOctaveLayers_0()
+          {static} - getNOctaves_0()
+          {static} - setDiffusivity_0()
+          {static} - setExtended_0()
+          {static} - setNOctaveLayers_0()
+          {static} - setNOctaves_0()
+          {static} - setThreshold_0()
+          {static} - setUpright_0()
+          {static} - delete()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.features2d {
+      class MSER {
+          # MSER()
+          {static} + __fromPtr__()
+          {static} + create()
+          {static} + create()
+          {static} + create()
+          {static} + create()
+          {static} + create()
+          {static} + create()
+          {static} + create()
+          {static} + create()
+          {static} + create()
+          {static} + create()
+          + getDefaultName()
+          + getPass2Only()
+          + getDelta()
+          + getMaxArea()
+          + getMinArea()
+          + detectRegions()
+          + setDelta()
+          + setMaxArea()
+          + setMinArea()
+          + setPass2Only()
+          # finalize()
+          {static} - create_0()
+          {static} - create_1()
+          {static} - create_2()
+          {static} - create_3()
+          {static} - create_4()
+          {static} - create_5()
+          {static} - create_6()
+          {static} - create_7()
+          {static} - create_8()
+          {static} - create_9()
+          {static} - getDefaultName_0()
+          {static} - getPass2Only_0()
+          {static} - getDelta_0()
+          {static} - getMaxArea_0()
+          {static} - getMinArea_0()
+          {static} - detectRegions_0()
+          {static} - setDelta_0()
+          {static} - setMaxArea_0()
+          {static} - setMinArea_0()
+          {static} - setPass2Only_0()
+          {static} - delete()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.features2d {
+      class ORB {
+          {static} + kBytes : int
+          {static} + HARRIS_SCORE : int
+          {static} + FAST_SCORE : int
+          # ORB()
+          {static} + __fromPtr__()
+          {static} + create()
+          {static} + create()
+          {static} + create()
+          {static} + create()
+          {static} + create()
+          {static} + create()
+          {static} + create()
+          {static} + create()
+          {static} + create()
+          {static} + create()
+          + getDefaultName()
+          + getScaleFactor()
+          + getEdgeThreshold()
+          + getFastThreshold()
+          + getFirstLevel()
+          + getMaxFeatures()
+          + getNLevels()
+          + getPatchSize()
+          + getScoreType()
+          + getWTA_K()
+          + setEdgeThreshold()
+          + setFastThreshold()
+          + setFirstLevel()
+          + setMaxFeatures()
+          + setNLevels()
+          + setPatchSize()
+          + setScaleFactor()
+          + setScoreType()
+          + setWTA_K()
+          # finalize()
+          {static} - create_0()
+          {static} - create_1()
+          {static} - create_2()
+          {static} - create_3()
+          {static} - create_4()
+          {static} - create_5()
+          {static} - create_6()
+          {static} - create_7()
+          {static} - create_8()
+          {static} - create_9()
+          {static} - getDefaultName_0()
+          {static} - getScaleFactor_0()
+          {static} - getEdgeThreshold_0()
+          {static} - getFastThreshold_0()
+          {static} - getFirstLevel_0()
+          {static} - getMaxFeatures_0()
+          {static} - getNLevels_0()
+          {static} - getPatchSize_0()
+          {static} - getScoreType_0()
+          {static} - getWTA_K_0()
+          {static} - setEdgeThreshold_0()
+          {static} - setFastThreshold_0()
+          {static} - setFirstLevel_0()
+          {static} - setMaxFeatures_0()
+          {static} - setNLevels_0()
+          {static} - setPatchSize_0()
+          {static} - setScaleFactor_0()
+          {static} - setScoreType_0()
+          {static} - setWTA_K_0()
+          {static} - delete()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.features2d {
+      class Params {
+          # nativeObj : long
+          # Params()
+          + getNativeObjAddr()
+          {static} + __fromPtr__()
+          + Params()
+          + get_thresholdStep()
+          + set_thresholdStep()
+          + get_minThreshold()
+          + set_minThreshold()
+          + get_maxThreshold()
+          + set_maxThreshold()
+          + get_minRepeatability()
+          + set_minRepeatability()
+          + get_minDistBetweenBlobs()
+          + set_minDistBetweenBlobs()
+          + get_filterByColor()
+          + set_filterByColor()
+          + get_filterByArea()
+          + set_filterByArea()
+          + get_minArea()
+          + set_minArea()
+          + get_maxArea()
+          + set_maxArea()
+          + get_filterByCircularity()
+          + set_filterByCircularity()
+          + get_minCircularity()
+          + set_minCircularity()
+          + get_maxCircularity()
+          + set_maxCircularity()
+          + get_filterByInertia()
+          + set_filterByInertia()
+          + get_minInertiaRatio()
+          + set_minInertiaRatio()
+          + get_maxInertiaRatio()
+          + set_maxInertiaRatio()
+          + get_filterByConvexity()
+          + set_filterByConvexity()
+          + get_minConvexity()
+          + set_minConvexity()
+          + get_maxConvexity()
+          + set_maxConvexity()
+          # finalize()
+          {static} - Params_0()
+          {static} - get_thresholdStep_0()
+          {static} - set_thresholdStep_0()
+          {static} - get_minThreshold_0()
+          {static} - set_minThreshold_0()
+          {static} - get_maxThreshold_0()
+          {static} - set_maxThreshold_0()
+          {static} - get_minRepeatability_0()
+          {static} - set_minRepeatability_0()
+          {static} - get_minDistBetweenBlobs_0()
+          {static} - set_minDistBetweenBlobs_0()
+          {static} - get_filterByColor_0()
+          {static} - set_filterByColor_0()
+          {static} - get_filterByArea_0()
+          {static} - set_filterByArea_0()
+          {static} - get_minArea_0()
+          {static} - set_minArea_0()
+          {static} - get_maxArea_0()
+          {static} - set_maxArea_0()
+          {static} - get_filterByCircularity_0()
+          {static} - set_filterByCircularity_0()
+          {static} - get_minCircularity_0()
+          {static} - set_minCircularity_0()
+          {static} - get_maxCircularity_0()
+          {static} - set_maxCircularity_0()
+          {static} - get_filterByInertia_0()
+          {static} - set_filterByInertia_0()
+          {static} - get_minInertiaRatio_0()
+          {static} - set_minInertiaRatio_0()
+          {static} - get_maxInertiaRatio_0()
+          {static} - set_maxInertiaRatio_0()
+          {static} - get_filterByConvexity_0()
+          {static} - set_filterByConvexity_0()
+          {static} - get_minConvexity_0()
+          {static} - set_minConvexity_0()
+          {static} - get_maxConvexity_0()
+          {static} - set_maxConvexity_0()
+          {static} - delete()
+      }
+    }
+  }
+  
+
+  AKAZE -up-|> Feature2D
+  AgastFeatureDetector -up-|> Feature2D
+  BFMatcher -up-|> DescriptorMatcher
+  BOWKMeansTrainer -up-|> BOWTrainer
+  BRISK -up-|> Feature2D
+  DescriptorMatcher -up-|> Algorithm
+  FastFeatureDetector -up-|> Feature2D
+  Feature2D -up-|> Algorithm
+  FlannBasedMatcher -up-|> DescriptorMatcher
+  GFTTDetector -up-|> Feature2D
+  KAZE -up-|> Feature2D
+  MSER -up-|> Feature2D
+  ORB -up-|> Feature2D
+
+
+right footer
+
+
+PlantUML diagram generated by SketchIt! (https://bitbucket.org/pmesmeur/sketch.it)
+For more information about this tool, please contact philippe.mesmeur@gmail.com
+endfooter
+
+@enduml

@@ -1,0 +1,1476 @@
+@startuml
+
+title __CORE's Class Diagram__\n
+
+  package org.opencv {
+    package org.opencv.core {
+      class Algorithm {
+          # nativeObj : long
+          # Algorithm()
+          + getNativeObjAddr()
+          {static} + __fromPtr__()
+          + getDefaultName()
+          + empty()
+          + clear()
+          + save()
+          # finalize()
+          {static} - getDefaultName_0()
+          {static} - empty_0()
+          {static} - clear_0()
+          {static} - save_0()
+          {static} - delete()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class Core {
+          {static} + VERSION : String
+          {static} + NATIVE_LIBRARY_NAME : String
+          {static} + VERSION_MAJOR : int
+          {static} + VERSION_MINOR : int
+          {static} + VERSION_REVISION : int
+          {static} + VERSION_STATUS : String
+          {static} - CV_8U : int
+          {static} - CV_8S : int
+          {static} - CV_16U : int
+          {static} - CV_16S : int
+          {static} - CV_32S : int
+          {static} - CV_32F : int
+          {static} - CV_64F : int
+          {static} - CV_USRTYPE1 : int
+          {static} + SVD_MODIFY_A : int
+          {static} + SVD_NO_UV : int
+          {static} + SVD_FULL_UV : int
+          {static} + FILLED : int
+          {static} + REDUCE_SUM : int
+          {static} + REDUCE_AVG : int
+          {static} + REDUCE_MAX : int
+          {static} + REDUCE_MIN : int
+          {static} + StsOk : int
+          {static} + StsBackTrace : int
+          {static} + StsError : int
+          {static} + StsInternal : int
+          {static} + StsNoMem : int
+          {static} + StsBadArg : int
+          {static} + StsBadFunc : int
+          {static} + StsNoConv : int
+          {static} + StsAutoTrace : int
+          {static} + HeaderIsNull : int
+          {static} + BadImageSize : int
+          {static} + BadOffset : int
+          {static} + BadDataPtr : int
+          {static} + BadStep : int
+          {static} + BadModelOrChSeq : int
+          {static} + BadNumChannels : int
+          {static} + BadNumChannel1U : int
+          {static} + BadDepth : int
+          {static} + BadAlphaChannel : int
+          {static} + BadOrder : int
+          {static} + BadOrigin : int
+          {static} + BadAlign : int
+          {static} + BadCallBack : int
+          {static} + BadTileSize : int
+          {static} + BadCOI : int
+          {static} + BadROISize : int
+          {static} + MaskIsTiled : int
+          {static} + StsNullPtr : int
+          {static} + StsVecLengthErr : int
+          {static} + StsFilterStructContentErr : int
+          {static} + StsKernelStructContentErr : int
+          {static} + StsFilterOffsetErr : int
+          {static} + StsBadSize : int
+          {static} + StsDivByZero : int
+          {static} + StsInplaceNotSupported : int
+          {static} + StsObjectNotFound : int
+          {static} + StsUnmatchedFormats : int
+          {static} + StsBadFlag : int
+          {static} + StsBadPoint : int
+          {static} + StsBadMask : int
+          {static} + StsUnmatchedSizes : int
+          {static} + StsUnsupportedFormat : int
+          {static} + StsOutOfRange : int
+          {static} + StsParseError : int
+          {static} + StsNotImplemented : int
+          {static} + StsBadMemBlock : int
+          {static} + StsAssert : int
+          {static} + GpuNotSupported : int
+          {static} + GpuApiCallError : int
+          {static} + OpenGlNotSupported : int
+          {static} + OpenGlApiCallError : int
+          {static} + OpenCLApiCallError : int
+          {static} + OpenCLDoubleNotSupported : int
+          {static} + OpenCLInitError : int
+          {static} + OpenCLNoAMDBlasFft : int
+          {static} + DECOMP_LU : int
+          {static} + DECOMP_SVD : int
+          {static} + DECOMP_EIG : int
+          {static} + DECOMP_CHOLESKY : int
+          {static} + DECOMP_QR : int
+          {static} + DECOMP_NORMAL : int
+          {static} + NORM_INF : int
+          {static} + NORM_L1 : int
+          {static} + NORM_L2 : int
+          {static} + NORM_L2SQR : int
+          {static} + NORM_HAMMING : int
+          {static} + NORM_HAMMING2 : int
+          {static} + NORM_TYPE_MASK : int
+          {static} + NORM_RELATIVE : int
+          {static} + NORM_MINMAX : int
+          {static} + CMP_EQ : int
+          {static} + CMP_GT : int
+          {static} + CMP_GE : int
+          {static} + CMP_LT : int
+          {static} + CMP_LE : int
+          {static} + CMP_NE : int
+          {static} + GEMM_1_T : int
+          {static} + GEMM_2_T : int
+          {static} + GEMM_3_T : int
+          {static} + DFT_INVERSE : int
+          {static} + DFT_SCALE : int
+          {static} + DFT_ROWS : int
+          {static} + DFT_COMPLEX_OUTPUT : int
+          {static} + DFT_REAL_OUTPUT : int
+          {static} + DFT_COMPLEX_INPUT : int
+          {static} + DCT_INVERSE : int
+          {static} + DCT_ROWS : int
+          {static} + BORDER_CONSTANT : int
+          {static} + BORDER_REPLICATE : int
+          {static} + BORDER_REFLECT : int
+          {static} + BORDER_WRAP : int
+          {static} + BORDER_REFLECT_101 : int
+          {static} + BORDER_TRANSPARENT : int
+          {static} + BORDER_REFLECT101 : int
+          {static} + BORDER_DEFAULT : int
+          {static} + BORDER_ISOLATED : int
+          {static} + SORT_EVERY_ROW : int
+          {static} + SORT_EVERY_COLUMN : int
+          {static} + SORT_ASCENDING : int
+          {static} + SORT_DESCENDING : int
+          {static} + COVAR_SCRAMBLED : int
+          {static} + COVAR_NORMAL : int
+          {static} + COVAR_USE_AVG : int
+          {static} + COVAR_SCALE : int
+          {static} + COVAR_ROWS : int
+          {static} + COVAR_COLS : int
+          {static} + KMEANS_RANDOM_CENTERS : int
+          {static} + KMEANS_PP_CENTERS : int
+          {static} + KMEANS_USE_INITIAL_LABELS : int
+          {static} + LINE_4 : int
+          {static} + LINE_8 : int
+          {static} + LINE_AA : int
+          {static} + FONT_HERSHEY_SIMPLEX : int
+          {static} + FONT_HERSHEY_PLAIN : int
+          {static} + FONT_HERSHEY_DUPLEX : int
+          {static} + FONT_HERSHEY_COMPLEX : int
+          {static} + FONT_HERSHEY_TRIPLEX : int
+          {static} + FONT_HERSHEY_COMPLEX_SMALL : int
+          {static} + FONT_HERSHEY_SCRIPT_SIMPLEX : int
+          {static} + FONT_HERSHEY_SCRIPT_COMPLEX : int
+          {static} + FONT_ITALIC : int
+          {static} + ROTATE_90_CLOCKWISE : int
+          {static} + ROTATE_180 : int
+          {static} + ROTATE_90_COUNTERCLOCKWISE : int
+          {static} + TYPE_GENERAL : int
+          {static} + TYPE_MARKER : int
+          {static} + TYPE_WRAPPER : int
+          {static} + TYPE_FUN : int
+          {static} + IMPL_PLAIN : int
+          {static} + IMPL_IPP : int
+          {static} + IMPL_OPENCL : int
+          {static} + FLAGS_NONE : int
+          {static} + FLAGS_MAPPING : int
+          {static} + FLAGS_EXPAND_SAME_NAMES : int
+          {static} - getVersion()
+          {static} - getNativeLibraryName()
+          {static} - getVersionMajorJ()
+          {static} - getVersionMinorJ()
+          {static} - getVersionRevisionJ()
+          {static} - getVersionStatusJ()
+          {static} + mean()
+          {static} + mean()
+          {static} + sumElems()
+          {static} + trace()
+          {static} + getBuildInformation()
+          {static} + getHardwareFeatureName()
+          {static} + getVersionString()
+          {static} + getIppVersion()
+          {static} + checkRange()
+          {static} + checkRange()
+          {static} + checkRange()
+          {static} + checkRange()
+          {static} + eigen()
+          {static} + eigen()
+          {static} + solve()
+          {static} + solve()
+          {static} + useIPP()
+          {static} + useIPP_NE()
+          {static} + Mahalanobis()
+          {static} + PSNR()
+          {static} + determinant()
+          {static} + getTickFrequency()
+          {static} + invert()
+          {static} + invert()
+          {static} + kmeans()
+          {static} + kmeans()
+          {static} + norm()
+          {static} + norm()
+          {static} + norm()
+          {static} + norm()
+          {static} + norm()
+          {static} + norm()
+          {static} + solvePoly()
+          {static} + solvePoly()
+          {static} + cubeRoot()
+          {static} + fastAtan2()
+          {static} + borderInterpolate()
+          {static} + countNonZero()
+          {static} + getNumThreads()
+          {static} + getNumberOfCPUs()
+          {static} + getOptimalDFTSize()
+          {static} + getThreadNum()
+          {static} + getVersionMajor()
+          {static} + getVersionMinor()
+          {static} + getVersionRevision()
+          {static} + solveCubic()
+          {static} + getCPUTickCount()
+          {static} + getTickCount()
+          {static} + LUT()
+          {static} + PCABackProject()
+          {static} + PCACompute2()
+          {static} + PCACompute2()
+          {static} + PCACompute2()
+          {static} + PCACompute()
+          {static} + PCACompute()
+          {static} + PCACompute()
+          {static} + PCAProject()
+          {static} + SVBackSubst()
+          {static} + SVDecomp()
+          {static} + SVDecomp()
+          {static} + absdiff()
+          {static} + absdiff()
+          {static} + add()
+          {static} + add()
+          {static} + add()
+          {static} + add()
+          {static} + add()
+          {static} + add()
+          {static} + addWeighted()
+          {static} + addWeighted()
+          {static} + batchDistance()
+          {static} + batchDistance()
+          {static} + batchDistance()
+          {static} + batchDistance()
+          {static} + batchDistance()
+          {static} + batchDistance()
+          {static} + bitwise_and()
+          {static} + bitwise_and()
+          {static} + bitwise_not()
+          {static} + bitwise_not()
+          {static} + bitwise_or()
+          {static} + bitwise_or()
+          {static} + bitwise_xor()
+          {static} + bitwise_xor()
+          {static} + calcCovarMatrix()
+          {static} + calcCovarMatrix()
+          {static} + cartToPolar()
+          {static} + cartToPolar()
+          {static} + compare()
+          {static} + compare()
+          {static} + completeSymm()
+          {static} + completeSymm()
+          {static} + convertFp16()
+          {static} + convertScaleAbs()
+          {static} + convertScaleAbs()
+          {static} + convertScaleAbs()
+          {static} + copyMakeBorder()
+          {static} + copyMakeBorder()
+          {static} + dct()
+          {static} + dct()
+          {static} + dft()
+          {static} + dft()
+          {static} + dft()
+          {static} + divide()
+          {static} + divide()
+          {static} + divide()
+          {static} + divide()
+          {static} + divide()
+          {static} + divide()
+          {static} + divide()
+          {static} + divide()
+          {static} + eigenNonSymmetric()
+          {static} + exp()
+          {static} + extractChannel()
+          {static} + findNonZero()
+          {static} + flip()
+          {static} + gemm()
+          {static} + gemm()
+          {static} + hconcat()
+          {static} + idct()
+          {static} + idct()
+          {static} + idft()
+          {static} + idft()
+          {static} + idft()
+          {static} + inRange()
+          {static} + insertChannel()
+          {static} + log()
+          {static} + magnitude()
+          {static} + max()
+          {static} + max()
+          {static} + meanStdDev()
+          {static} + meanStdDev()
+          {static} + merge()
+          {static} + min()
+          {static} + min()
+          {static} + mixChannels()
+          {static} + mulSpectrums()
+          {static} + mulSpectrums()
+          {static} + mulTransposed()
+          {static} + mulTransposed()
+          {static} + mulTransposed()
+          {static} + mulTransposed()
+          {static} + multiply()
+          {static} + multiply()
+          {static} + multiply()
+          {static} + multiply()
+          {static} + multiply()
+          {static} + multiply()
+          {static} + normalize()
+          {static} + normalize()
+          {static} + normalize()
+          {static} + normalize()
+          {static} + normalize()
+          {static} + normalize()
+          {static} + patchNaNs()
+          {static} + patchNaNs()
+          {static} + perspectiveTransform()
+          {static} + phase()
+          {static} + phase()
+          {static} + polarToCart()
+          {static} + polarToCart()
+          {static} + pow()
+          {static} + randShuffle()
+          {static} + randShuffle()
+          {static} + randn()
+          {static} + randu()
+          {static} + reduce()
+          {static} + reduce()
+          {static} + repeat()
+          {static} + rotate()
+          {static} + scaleAdd()
+          {static} + setErrorVerbosity()
+          {static} + setIdentity()
+          {static} + setIdentity()
+          {static} + setNumThreads()
+          {static} + setRNGSeed()
+          {static} + sort()
+          {static} + sortIdx()
+          {static} + split()
+          {static} + sqrt()
+          {static} + subtract()
+          {static} + subtract()
+          {static} + subtract()
+          {static} + subtract()
+          {static} + subtract()
+          {static} + subtract()
+          {static} + transform()
+          {static} + transpose()
+          {static} + vconcat()
+          {static} + setUseIPP()
+          {static} + setUseIPP_NE()
+          {static} + minMaxLoc()
+          {static} + minMaxLoc()
+          {static} - mean_0()
+          {static} - mean_1()
+          {static} - sumElems_0()
+          {static} - trace_0()
+          {static} - getBuildInformation_0()
+          {static} - getHardwareFeatureName_0()
+          {static} - getVersionString_0()
+          {static} - getIppVersion_0()
+          {static} - checkRange_0()
+          {static} - checkRange_1()
+          {static} - checkRange_2()
+          {static} - checkRange_4()
+          {static} - eigen_0()
+          {static} - eigen_1()
+          {static} - solve_0()
+          {static} - solve_1()
+          {static} - useIPP_0()
+          {static} - useIPP_NE_0()
+          {static} - Mahalanobis_0()
+          {static} - PSNR_0()
+          {static} - determinant_0()
+          {static} - getTickFrequency_0()
+          {static} - invert_0()
+          {static} - invert_1()
+          {static} - kmeans_0()
+          {static} - kmeans_1()
+          {static} - norm_0()
+          {static} - norm_1()
+          {static} - norm_2()
+          {static} - norm_3()
+          {static} - norm_4()
+          {static} - norm_5()
+          {static} - solvePoly_0()
+          {static} - solvePoly_1()
+          {static} - cubeRoot_0()
+          {static} - fastAtan2_0()
+          {static} - borderInterpolate_0()
+          {static} - countNonZero_0()
+          {static} - getNumThreads_0()
+          {static} - getNumberOfCPUs_0()
+          {static} - getOptimalDFTSize_0()
+          {static} - getThreadNum_0()
+          {static} - getVersionMajor_0()
+          {static} - getVersionMinor_0()
+          {static} - getVersionRevision_0()
+          {static} - solveCubic_0()
+          {static} - getCPUTickCount_0()
+          {static} - getTickCount_0()
+          {static} - LUT_0()
+          {static} - PCABackProject_0()
+          {static} - PCACompute2_0()
+          {static} - PCACompute2_1()
+          {static} - PCACompute2_2()
+          {static} - PCACompute_0()
+          {static} - PCACompute_1()
+          {static} - PCACompute_2()
+          {static} - PCAProject_0()
+          {static} - SVBackSubst_0()
+          {static} - SVDecomp_0()
+          {static} - SVDecomp_1()
+          {static} - absdiff_0()
+          {static} - absdiff_1()
+          {static} - add_0()
+          {static} - add_1()
+          {static} - add_2()
+          {static} - add_3()
+          {static} - add_4()
+          {static} - add_5()
+          {static} - addWeighted_0()
+          {static} - addWeighted_1()
+          {static} - batchDistance_0()
+          {static} - batchDistance_1()
+          {static} - batchDistance_2()
+          {static} - batchDistance_3()
+          {static} - batchDistance_4()
+          {static} - batchDistance_5()
+          {static} - bitwise_and_0()
+          {static} - bitwise_and_1()
+          {static} - bitwise_not_0()
+          {static} - bitwise_not_1()
+          {static} - bitwise_or_0()
+          {static} - bitwise_or_1()
+          {static} - bitwise_xor_0()
+          {static} - bitwise_xor_1()
+          {static} - calcCovarMatrix_0()
+          {static} - calcCovarMatrix_1()
+          {static} - cartToPolar_0()
+          {static} - cartToPolar_1()
+          {static} - compare_0()
+          {static} - compare_1()
+          {static} - completeSymm_0()
+          {static} - completeSymm_1()
+          {static} - convertFp16_0()
+          {static} - convertScaleAbs_0()
+          {static} - convertScaleAbs_1()
+          {static} - convertScaleAbs_2()
+          {static} - copyMakeBorder_0()
+          {static} - copyMakeBorder_1()
+          {static} - dct_0()
+          {static} - dct_1()
+          {static} - dft_0()
+          {static} - dft_1()
+          {static} - dft_2()
+          {static} - divide_0()
+          {static} - divide_1()
+          {static} - divide_2()
+          {static} - divide_3()
+          {static} - divide_4()
+          {static} - divide_5()
+          {static} - divide_6()
+          {static} - divide_7()
+          {static} - eigenNonSymmetric_0()
+          {static} - exp_0()
+          {static} - extractChannel_0()
+          {static} - findNonZero_0()
+          {static} - flip_0()
+          {static} - gemm_0()
+          {static} - gemm_1()
+          {static} - hconcat_0()
+          {static} - idct_0()
+          {static} - idct_1()
+          {static} - idft_0()
+          {static} - idft_1()
+          {static} - idft_2()
+          {static} - inRange_0()
+          {static} - insertChannel_0()
+          {static} - log_0()
+          {static} - magnitude_0()
+          {static} - max_0()
+          {static} - max_1()
+          {static} - meanStdDev_0()
+          {static} - meanStdDev_1()
+          {static} - merge_0()
+          {static} - min_0()
+          {static} - min_1()
+          {static} - mixChannels_0()
+          {static} - mulSpectrums_0()
+          {static} - mulSpectrums_1()
+          {static} - mulTransposed_0()
+          {static} - mulTransposed_1()
+          {static} - mulTransposed_2()
+          {static} - mulTransposed_3()
+          {static} - multiply_0()
+          {static} - multiply_1()
+          {static} - multiply_2()
+          {static} - multiply_3()
+          {static} - multiply_4()
+          {static} - multiply_5()
+          {static} - normalize_0()
+          {static} - normalize_1()
+          {static} - normalize_2()
+          {static} - normalize_3()
+          {static} - normalize_4()
+          {static} - normalize_5()
+          {static} - patchNaNs_0()
+          {static} - patchNaNs_1()
+          {static} - perspectiveTransform_0()
+          {static} - phase_0()
+          {static} - phase_1()
+          {static} - polarToCart_0()
+          {static} - polarToCart_1()
+          {static} - pow_0()
+          {static} - randShuffle_0()
+          {static} - randShuffle_2()
+          {static} - randn_0()
+          {static} - randu_0()
+          {static} - reduce_0()
+          {static} - reduce_1()
+          {static} - repeat_0()
+          {static} - rotate_0()
+          {static} - scaleAdd_0()
+          {static} - setErrorVerbosity_0()
+          {static} - setIdentity_0()
+          {static} - setIdentity_1()
+          {static} - setNumThreads_0()
+          {static} - setRNGSeed_0()
+          {static} - sort_0()
+          {static} - sortIdx_0()
+          {static} - split_0()
+          {static} - sqrt_0()
+          {static} - subtract_0()
+          {static} - subtract_1()
+          {static} - subtract_2()
+          {static} - subtract_3()
+          {static} - subtract_4()
+          {static} - subtract_5()
+          {static} - transform_0()
+          {static} - transpose_0()
+          {static} - vconcat_0()
+          {static} - setUseIPP_0()
+          {static} - setUseIPP_NE_0()
+          {static} - n_minMaxLocManual()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class MinMaxLocResult {
+          + minVal : double
+          + maxVal : double
+          + MinMaxLocResult()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class CvException {
+          {static} - serialVersionUID : long
+          + CvException()
+          + toString()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class CvType {
+          {static} + CV_8U : int
+          {static} + CV_8S : int
+          {static} + CV_16U : int
+          {static} + CV_16S : int
+          {static} + CV_32S : int
+          {static} + CV_32F : int
+          {static} + CV_64F : int
+          {static} + CV_USRTYPE1 : int
+          {static} + CV_8UC1 : int
+          {static} + CV_8UC2 : int
+          {static} + CV_8UC3 : int
+          {static} + CV_8UC4 : int
+          {static} + CV_8SC1 : int
+          {static} + CV_8SC2 : int
+          {static} + CV_8SC3 : int
+          {static} + CV_8SC4 : int
+          {static} + CV_16UC1 : int
+          {static} + CV_16UC2 : int
+          {static} + CV_16UC3 : int
+          {static} + CV_16UC4 : int
+          {static} + CV_16SC1 : int
+          {static} + CV_16SC2 : int
+          {static} + CV_16SC3 : int
+          {static} + CV_16SC4 : int
+          {static} + CV_32SC1 : int
+          {static} + CV_32SC2 : int
+          {static} + CV_32SC3 : int
+          {static} + CV_32SC4 : int
+          {static} + CV_32FC1 : int
+          {static} + CV_32FC2 : int
+          {static} + CV_32FC3 : int
+          {static} + CV_32FC4 : int
+          {static} + CV_64FC1 : int
+          {static} + CV_64FC2 : int
+          {static} + CV_64FC3 : int
+          {static} + CV_64FC4 : int
+          {static} - CV_CN_MAX : int
+          {static} - CV_CN_SHIFT : int
+          {static} - CV_DEPTH_MAX : int
+          {static} + makeType()
+          {static} + CV_8UC()
+          {static} + CV_8SC()
+          {static} + CV_16UC()
+          {static} + CV_16SC()
+          {static} + CV_32SC()
+          {static} + CV_32FC()
+          {static} + CV_64FC()
+          {static} + channels()
+          {static} + depth()
+          {static} + isInteger()
+          {static} + ELEM_SIZE()
+          {static} + typeToString()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class DMatch {
+          + queryIdx : int
+          + trainIdx : int
+          + imgIdx : int
+          + distance : float
+          + DMatch()
+          + DMatch()
+          + DMatch()
+          + lessThan()
+          + toString()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class KeyPoint {
+          + size : float
+          + angle : float
+          + response : float
+          + octave : int
+          + class_id : int
+          + KeyPoint()
+          + KeyPoint()
+          + KeyPoint()
+          + KeyPoint()
+          + KeyPoint()
+          + KeyPoint()
+          + toString()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class Mat {
+          + nativeObj : long
+          + Mat()
+          + Mat()
+          + Mat()
+          + Mat()
+          + Mat()
+          + Mat()
+          + Mat()
+          + Mat()
+          + Mat()
+          + Mat()
+          + adjustROI()
+          + assignTo()
+          + assignTo()
+          + channels()
+          + checkVector()
+          + checkVector()
+          + checkVector()
+          + clone()
+          + col()
+          + colRange()
+          + colRange()
+          + dims()
+          + cols()
+          + convertTo()
+          + convertTo()
+          + convertTo()
+          + copyTo()
+          + copyTo()
+          + create()
+          + create()
+          + cross()
+          + dataAddr()
+          + depth()
+          + diag()
+          + diag()
+          {static} + diag()
+          + dot()
+          + elemSize()
+          + elemSize1()
+          + empty()
+          {static} + eye()
+          {static} + eye()
+          + inv()
+          + inv()
+          + isContinuous()
+          + isSubmatrix()
+          + locateROI()
+          + mul()
+          + mul()
+          {static} + ones()
+          {static} + ones()
+          + push_back()
+          + release()
+          + reshape()
+          + reshape()
+          + row()
+          + rowRange()
+          + rowRange()
+          + rows()
+          + setTo()
+          + setTo()
+          + setTo()
+          + setTo()
+          + size()
+          + step1()
+          + step1()
+          + submat()
+          + submat()
+          + submat()
+          + t()
+          + total()
+          + type()
+          {static} + zeros()
+          {static} + zeros()
+          # finalize()
+          + toString()
+          + dump()
+          + put()
+          + put()
+          + put()
+          + put()
+          + put()
+          + put()
+          + get()
+          + get()
+          + get()
+          + get()
+          + get()
+          + get()
+          + height()
+          + width()
+          + getNativeObjAddr()
+          {static} - n_Mat()
+          {static} - n_Mat()
+          {static} - n_Mat()
+          {static} - n_Mat()
+          {static} - n_Mat()
+          {static} - n_Mat()
+          {static} - n_Mat()
+          {static} - n_Mat()
+          {static} - n_adjustROI()
+          {static} - n_assignTo()
+          {static} - n_assignTo()
+          {static} - n_channels()
+          {static} - n_checkVector()
+          {static} - n_checkVector()
+          {static} - n_checkVector()
+          {static} - n_clone()
+          {static} - n_col()
+          {static} - n_colRange()
+          {static} - n_dims()
+          {static} - n_cols()
+          {static} - n_convertTo()
+          {static} - n_convertTo()
+          {static} - n_convertTo()
+          {static} - n_copyTo()
+          {static} - n_copyTo()
+          {static} - n_create()
+          {static} - n_create()
+          {static} - n_cross()
+          {static} - n_dataAddr()
+          {static} - n_depth()
+          {static} - n_diag()
+          {static} - n_diag()
+          {static} - n_dot()
+          {static} - n_elemSize()
+          {static} - n_elemSize1()
+          {static} - n_empty()
+          {static} - n_eye()
+          {static} - n_eye()
+          {static} - n_inv()
+          {static} - n_inv()
+          {static} - n_isContinuous()
+          {static} - n_isSubmatrix()
+          {static} - locateROI_0()
+          {static} - n_mul()
+          {static} - n_mul()
+          {static} - n_ones()
+          {static} - n_ones()
+          {static} - n_push_back()
+          {static} - n_release()
+          {static} - n_reshape()
+          {static} - n_reshape()
+          {static} - n_row()
+          {static} - n_rowRange()
+          {static} - n_rows()
+          {static} - n_setTo()
+          {static} - n_setTo()
+          {static} - n_setTo()
+          {static} - n_setTo()
+          {static} - n_size()
+          {static} - n_step1()
+          {static} - n_step1()
+          {static} - n_submat_rr()
+          {static} - n_submat()
+          {static} - n_t()
+          {static} - n_total()
+          {static} - n_type()
+          {static} - n_zeros()
+          {static} - n_zeros()
+          {static} - n_delete()
+          {static} - nPutD()
+          {static} - nPutF()
+          {static} - nPutI()
+          {static} - nPutS()
+          {static} - nPutB()
+          {static} - nPutBwOffset()
+          {static} - nGetB()
+          {static} - nGetS()
+          {static} - nGetI()
+          {static} - nGetF()
+          {static} - nGetD()
+          {static} - nGet()
+          {static} - nDump()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class MatOfByte {
+          {static} - _depth : int
+          {static} - _channels : int
+          + MatOfByte()
+          # MatOfByte()
+          {static} + fromNativeAddr()
+          + MatOfByte()
+          + MatOfByte()
+          + MatOfByte()
+          + alloc()
+          + fromArray()
+          + fromArray()
+          + toArray()
+          + fromList()
+          + toList()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class MatOfDMatch {
+          {static} - _depth : int
+          {static} - _channels : int
+          + MatOfDMatch()
+          # MatOfDMatch()
+          {static} + fromNativeAddr()
+          + MatOfDMatch()
+          + MatOfDMatch()
+          + alloc()
+          + fromArray()
+          + toArray()
+          + fromList()
+          + toList()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class MatOfDouble {
+          {static} - _depth : int
+          {static} - _channels : int
+          + MatOfDouble()
+          # MatOfDouble()
+          {static} + fromNativeAddr()
+          + MatOfDouble()
+          + MatOfDouble()
+          + alloc()
+          + fromArray()
+          + toArray()
+          + fromList()
+          + toList()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class MatOfFloat {
+          {static} - _depth : int
+          {static} - _channels : int
+          + MatOfFloat()
+          # MatOfFloat()
+          {static} + fromNativeAddr()
+          + MatOfFloat()
+          + MatOfFloat()
+          + alloc()
+          + fromArray()
+          + toArray()
+          + fromList()
+          + toList()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class MatOfFloat4 {
+          {static} - _depth : int
+          {static} - _channels : int
+          + MatOfFloat4()
+          # MatOfFloat4()
+          {static} + fromNativeAddr()
+          + MatOfFloat4()
+          + MatOfFloat4()
+          + alloc()
+          + fromArray()
+          + toArray()
+          + fromList()
+          + toList()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class MatOfFloat6 {
+          {static} - _depth : int
+          {static} - _channels : int
+          + MatOfFloat6()
+          # MatOfFloat6()
+          {static} + fromNativeAddr()
+          + MatOfFloat6()
+          + MatOfFloat6()
+          + alloc()
+          + fromArray()
+          + toArray()
+          + fromList()
+          + toList()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class MatOfInt {
+          {static} - _depth : int
+          {static} - _channels : int
+          + MatOfInt()
+          # MatOfInt()
+          {static} + fromNativeAddr()
+          + MatOfInt()
+          + MatOfInt()
+          + alloc()
+          + fromArray()
+          + toArray()
+          + fromList()
+          + toList()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class MatOfInt4 {
+          {static} - _depth : int
+          {static} - _channels : int
+          + MatOfInt4()
+          # MatOfInt4()
+          {static} + fromNativeAddr()
+          + MatOfInt4()
+          + MatOfInt4()
+          + alloc()
+          + fromArray()
+          + toArray()
+          + fromList()
+          + toList()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class MatOfKeyPoint {
+          {static} - _depth : int
+          {static} - _channels : int
+          + MatOfKeyPoint()
+          # MatOfKeyPoint()
+          {static} + fromNativeAddr()
+          + MatOfKeyPoint()
+          + MatOfKeyPoint()
+          + alloc()
+          + fromArray()
+          + toArray()
+          + fromList()
+          + toList()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class MatOfPoint {
+          {static} - _depth : int
+          {static} - _channels : int
+          + MatOfPoint()
+          # MatOfPoint()
+          {static} + fromNativeAddr()
+          + MatOfPoint()
+          + MatOfPoint()
+          + alloc()
+          + fromArray()
+          + toArray()
+          + fromList()
+          + toList()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class MatOfPoint2f {
+          {static} - _depth : int
+          {static} - _channels : int
+          + MatOfPoint2f()
+          # MatOfPoint2f()
+          {static} + fromNativeAddr()
+          + MatOfPoint2f()
+          + MatOfPoint2f()
+          + alloc()
+          + fromArray()
+          + toArray()
+          + fromList()
+          + toList()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class MatOfPoint3 {
+          {static} - _depth : int
+          {static} - _channels : int
+          + MatOfPoint3()
+          # MatOfPoint3()
+          {static} + fromNativeAddr()
+          + MatOfPoint3()
+          + MatOfPoint3()
+          + alloc()
+          + fromArray()
+          + toArray()
+          + fromList()
+          + toList()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class MatOfPoint3f {
+          {static} - _depth : int
+          {static} - _channels : int
+          + MatOfPoint3f()
+          # MatOfPoint3f()
+          {static} + fromNativeAddr()
+          + MatOfPoint3f()
+          + MatOfPoint3f()
+          + alloc()
+          + fromArray()
+          + toArray()
+          + fromList()
+          + toList()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class MatOfRect {
+          {static} - _depth : int
+          {static} - _channels : int
+          + MatOfRect()
+          # MatOfRect()
+          {static} + fromNativeAddr()
+          + MatOfRect()
+          + MatOfRect()
+          + alloc()
+          + fromArray()
+          + toArray()
+          + fromList()
+          + toList()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class MatOfRect2d {
+          {static} - _depth : int
+          {static} - _channels : int
+          + MatOfRect2d()
+          # MatOfRect2d()
+          {static} + fromNativeAddr()
+          + MatOfRect2d()
+          + MatOfRect2d()
+          + alloc()
+          + fromArray()
+          + toArray()
+          + fromList()
+          + toList()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class MatOfRotatedRect {
+          {static} - _depth : int
+          {static} - _channels : int
+          + MatOfRotatedRect()
+          # MatOfRotatedRect()
+          {static} + fromNativeAddr()
+          + MatOfRotatedRect()
+          + MatOfRotatedRect()
+          + alloc()
+          + fromArray()
+          + toArray()
+          + fromList()
+          + toList()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class Point {
+          + x : double
+          + y : double
+          + Point()
+          + Point()
+          + Point()
+          + set()
+          + clone()
+          + dot()
+          + hashCode()
+          + equals()
+          + inside()
+          + toString()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class Point3 {
+          + x : double
+          + y : double
+          + z : double
+          + Point3()
+          + Point3()
+          + Point3()
+          + Point3()
+          + set()
+          + clone()
+          + dot()
+          + cross()
+          + hashCode()
+          + equals()
+          + toString()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class Range {
+          + start : int
+          + end : int
+          + Range()
+          + Range()
+          + Range()
+          + set()
+          + size()
+          + empty()
+          {static} + all()
+          + intersection()
+          + shift()
+          + clone()
+          + hashCode()
+          + equals()
+          + toString()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class Rect {
+          + x : int
+          + y : int
+          + width : int
+          + height : int
+          + Rect()
+          + Rect()
+          + Rect()
+          + Rect()
+          + Rect()
+          + set()
+          + clone()
+          + tl()
+          + br()
+          + size()
+          + area()
+          + empty()
+          + contains()
+          + hashCode()
+          + equals()
+          + toString()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class Rect2d {
+          + x : double
+          + y : double
+          + width : double
+          + height : double
+          + Rect2d()
+          + Rect2d()
+          + Rect2d()
+          + Rect2d()
+          + Rect2d()
+          + set()
+          + clone()
+          + tl()
+          + br()
+          + size()
+          + area()
+          + empty()
+          + contains()
+          + hashCode()
+          + equals()
+          + toString()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class RotatedRect {
+          + angle : double
+          + RotatedRect()
+          + RotatedRect()
+          + RotatedRect()
+          + set()
+          + points()
+          + boundingRect()
+          + clone()
+          + hashCode()
+          + equals()
+          + toString()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class Scalar {
+          + val : double[]
+          + Scalar()
+          + Scalar()
+          + Scalar()
+          + Scalar()
+          + Scalar()
+          + set()
+          {static} + all()
+          + clone()
+          + mul()
+          + mul()
+          + conj()
+          + isReal()
+          + hashCode()
+          + equals()
+          + toString()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class Size {
+          + width : double
+          + height : double
+          + Size()
+          + Size()
+          + Size()
+          + Size()
+          + set()
+          + area()
+          + empty()
+          + clone()
+          + hashCode()
+          + equals()
+          + toString()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class TermCriteria {
+          {static} + COUNT : int
+          {static} + MAX_ITER : int
+          {static} + EPS : int
+          + type : int
+          + maxCount : int
+          + epsilon : double
+          + TermCriteria()
+          + TermCriteria()
+          + TermCriteria()
+          + set()
+          + clone()
+          + hashCode()
+          + equals()
+          + toString()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.core {
+      class TickMeter {
+          # nativeObj : long
+          # TickMeter()
+          + getNativeObjAddr()
+          {static} + __fromPtr__()
+          + TickMeter()
+          + getTimeMicro()
+          + getTimeMilli()
+          + getTimeSec()
+          + getCounter()
+          + getTimeTicks()
+          + reset()
+          + start()
+          + stop()
+          # finalize()
+          {static} - TickMeter_0()
+          {static} - getTimeMicro_0()
+          {static} - getTimeMilli_0()
+          {static} - getTimeSec_0()
+          {static} - getCounter_0()
+          {static} - getTimeTicks_0()
+          {static} - reset_0()
+          {static} - start_0()
+          {static} - stop_0()
+          {static} - delete()
+      }
+    }
+  }
+  
+
+  Core +-down- MinMaxLocResult
+  MinMaxLocResult o-- Point : minLoc
+  MinMaxLocResult o-- Point : maxLoc
+  KeyPoint o-- Point : pt
+  MatOfByte -up-|> Mat
+  MatOfDMatch -up-|> Mat
+  MatOfDouble -up-|> Mat
+  MatOfFloat -up-|> Mat
+  MatOfFloat4 -up-|> Mat
+  MatOfFloat6 -up-|> Mat
+  MatOfInt -up-|> Mat
+  MatOfInt4 -up-|> Mat
+  MatOfKeyPoint -up-|> Mat
+  MatOfPoint -up-|> Mat
+  MatOfPoint2f -up-|> Mat
+  MatOfPoint3 -up-|> Mat
+  MatOfPoint3f -up-|> Mat
+  MatOfRect -up-|> Mat
+  MatOfRect2d -up-|> Mat
+  MatOfRotatedRect -up-|> Mat
+  RotatedRect o-- Point : center
+  RotatedRect o-- Size : size
+
+
+right footer
+
+
+PlantUML diagram generated by SketchIt! (https://bitbucket.org/pmesmeur/sketch.it)
+For more information about this tool, please contact philippe.mesmeur@gmail.com
+endfooter
+
+@enduml

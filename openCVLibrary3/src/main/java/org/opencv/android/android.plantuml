@@ -1,0 +1,566 @@
+@startuml
+
+title __ANDROID's Class Diagram__\n
+
+  package org.opencv {
+    package org.opencv.android {
+      class AsyncServiceHelper {
+          {static} # TAG : String
+          {static} # MINIMUM_ENGINE_VERSION : int
+          # mOpenCVersion : String
+          # mAppContext : Context
+          {static} # mServiceInstallationProgress : boolean
+          {static} # mLibraryInstallationProgress : boolean
+          {static} # OPEN_CV_SERVICE_URL : String
+          # mServiceConnection : ServiceConnection
+          {static} + initOpenCV()
+          # AsyncServiceHelper()
+          {static} # InstallServiceQuiet()
+          {static} # InstallService()
+          - loadLibrary()
+          - initOpenCVLibs()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.android {
+      abstract class BaseLoaderCallback {
+          # mAppContext : Context
+          {static} - TAG : String
+          + BaseLoaderCallback()
+          + onManagerConnected()
+          + onPackageInstall()
+          ~ finish()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.android {
+      class Camera2Renderer {
+          # LOGTAG : String
+          - mCameraDevice : CameraDevice
+          - mCaptureSession : CameraCaptureSession
+          - mPreviewRequestBuilder : Builder
+          - mCameraID : String
+          - mPreviewSize : Size
+          - mBackgroundThread : HandlerThread
+          - mBackgroundHandler : Handler
+          - mCameraOpenCloseLock : Semaphore
+          - mStateCallback : StateCallback
+          ~ Camera2Renderer()
+          # doStart()
+          # doStop()
+          ~ cacPreviewSize()
+          # openCamera()
+          # closeCamera()
+          - createCameraPreviewSession()
+          - startBackgroundThread()
+          - stopBackgroundThread()
+          # setCameraPreviewSize()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.android {
+      abstract class CameraBridgeViewBase {
+          {static} - TAG : String
+          {static} - MAX_UNSPECIFIED : int
+          {static} - STOPPED : int
+          {static} - STARTED : int
+          - mState : int
+          # mCacheBitmap : Bitmap
+          - mSurfaceExist : boolean
+          - mSyncObject : Object
+          # mFrameWidth : int
+          # mFrameHeight : int
+          # mMaxHeight : int
+          # mMaxWidth : int
+          # mScale : float
+          # mPreviewFormat : int
+          # mCameraIndex : int
+          # mEnabled : boolean
+          {static} + CAMERA_ID_ANY : int
+          {static} + CAMERA_ID_BACK : int
+          {static} + CAMERA_ID_FRONT : int
+          {static} + RGBA : int
+          {static} + GRAY : int
+          + CameraBridgeViewBase()
+          + CameraBridgeViewBase()
+          + setCameraIndex()
+          + surfaceChanged()
+          + surfaceCreated()
+          + surfaceDestroyed()
+          + enableView()
+          + disableView()
+          + enableFpsMeter()
+          + disableFpsMeter()
+          + setCvCameraViewListener()
+          + setCvCameraViewListener()
+          + setMaxFrameSize()
+          + SetCaptureFormat()
+          - checkCurrentState()
+          - processEnterState()
+          - processExitState()
+          - onEnterStoppedState()
+          - onExitStoppedState()
+          - onEnterStartedState()
+          - onExitStartedState()
+          # deliverAndDrawFrame()
+          {abstract} # connectCamera()
+          {abstract} # disconnectCamera()
+          # AllocateCache()
+          # calculateCameraFrameSize()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.android {
+      interface CvCameraViewListener {
+          {abstract} + onCameraViewStarted()
+          {abstract} + onCameraViewStopped()
+          {abstract} + onCameraFrame()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.android {
+      interface CvCameraViewListener2 {
+          {abstract} + onCameraViewStarted()
+          {abstract} + onCameraViewStopped()
+          {abstract} + onCameraFrame()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.android {
+      class CvCameraViewListenerAdapter {
+          - mPreviewFormat : int
+          + CvCameraViewListenerAdapter()
+          + onCameraViewStarted()
+          + onCameraViewStopped()
+          + onCameraFrame()
+          + setFrameFormat()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.android {
+      interface CvCameraViewFrame {
+          {abstract} + rgba()
+          {abstract} + gray()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.android {
+      interface ListItemAccessor {
+          {abstract} + getWidth()
+          {abstract} + getHeight()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.android {
+      abstract class CameraGLRendererBase {
+          # LOGTAG : String
+          - vss : String
+          - fssOES : String
+          - fss2D : String
+          - vertices : float[]
+          - texCoordOES : float[]
+          - texCoord2D : float[]
+          - texCamera : int[]
+          - texFBO : int[]
+          - texDraw : int[]
+          - FBO : int[]
+          - progOES : int
+          - prog2D : int
+          - vPosOES : int
+          - vTCOES : int
+          - vPos2D : int
+          - vTC2D : int
+          - vert : FloatBuffer
+          - texOES : FloatBuffer
+          - tex2D : FloatBuffer
+          # mCameraWidth : int
+          # mCameraHeight : int
+          # mFBOWidth : int
+          # mFBOHeight : int
+          # mMaxCameraWidth : int
+          # mMaxCameraHeight : int
+          # mCameraIndex : int
+          # mSTexture : SurfaceTexture
+          # mHaveSurface : boolean
+          # mHaveFBO : boolean
+          # mUpdateST : boolean
+          # mEnabled : boolean
+          # mIsStarted : boolean
+          {abstract} # openCamera()
+          {abstract} # closeCamera()
+          {abstract} # setCameraPreviewSize()
+          + CameraGLRendererBase()
+          + onFrameAvailable()
+          + onDrawFrame()
+          + onSurfaceChanged()
+          + onSurfaceCreated()
+          - initShaders()
+          - initSurfaceTexture()
+          - deleteSurfaceTexture()
+          - initTexOES()
+          {static} - deleteTex()
+          {static} - loadShader()
+          - deleteFBO()
+          - initFBO()
+          - drawTex()
+          + enableView()
+          + disableView()
+          # updateState()
+          # doStart()
+          # doStop()
+          # setPreviewSize()
+          + setCameraIndex()
+          + setMaxCameraPreviewSize()
+          + onResume()
+          + onPause()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.android {
+      class CameraGLSurfaceView {
+          {static} - LOGTAG : String
+          + CameraGLSurfaceView()
+          + setCameraTextureListener()
+          + getCameraTextureListener()
+          + setCameraIndex()
+          + setMaxCameraPreviewSize()
+          + surfaceCreated()
+          + surfaceDestroyed()
+          + surfaceChanged()
+          + onResume()
+          + onPause()
+          + enableView()
+          + disableView()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.android {
+      interface CameraTextureListener {
+          {abstract} + onCameraViewStarted()
+          {abstract} + onCameraViewStopped()
+          {abstract} + onCameraTexture()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.android {
+      class CameraRenderer {
+          {static} + LOGTAG : String
+          - mCamera : Camera
+          - mPreviewStarted : boolean
+          ~ CameraRenderer()
+          # closeCamera()
+          # openCamera()
+          + setCameraPreviewSize()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.android {
+      class FpsMeter {
+          {static} - TAG : String
+          {static} - STEP : int
+          {static} - FPS_FORMAT : DecimalFormat
+          - mFramesCouner : int
+          - mFrequency : double
+          - mprevFrameTime : long
+          - mStrfps : String
+          ~ mPaint : Paint
+          ~ mIsInitialized : boolean
+          ~ mWidth : int
+          ~ mHeight : int
+          + init()
+          + measure()
+          + setResolution()
+          + draw()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.android {
+      interface InstallCallbackInterface {
+          {static} + NEW_INSTALLATION : int
+          {static} + INSTALLATION_PROGRESS : int
+          {abstract} + getPackageName()
+          {abstract} + install()
+          {abstract} + cancel()
+          {abstract} + wait_install()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.android {
+      class JavaCamera2View {
+          {static} - LOGTAG : String
+          - mImageReader : ImageReader
+          - mPreviewFormat : int
+          - mCameraDevice : CameraDevice
+          - mCaptureSession : CameraCaptureSession
+          - mPreviewRequestBuilder : Builder
+          - mCameraID : String
+          - mPreviewSize : Size
+          - mBackgroundThread : HandlerThread
+          - mBackgroundHandler : Handler
+          - mStateCallback : StateCallback
+          + JavaCamera2View()
+          + JavaCamera2View()
+          - startBackgroundThread()
+          - stopBackgroundThread()
+          # initializeCamera()
+          - createCameraPreviewSession()
+          # disconnectCamera()
+          ~ calcPreviewSize()
+          # connectCamera()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.android {
+      class JavaCamera2Frame {
+          - mWidth : int
+          - mHeight : int
+          + gray()
+          + rgba()
+          + JavaCamera2Frame()
+          + JavaCamera2Frame()
+          + release()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.android {
+      class JavaCameraView {
+          {static} - MAGIC_TEXTURE_ID : int
+          {static} - TAG : String
+          - mBuffer : byte[]
+          - mFrameChain : Mat[]
+          - mChainIdx : int
+          - mThread : Thread
+          - mStopThread : boolean
+          # mCamera : Camera
+          # mCameraFrame : JavaCameraFrame[]
+          - mSurfaceTexture : SurfaceTexture
+          - mPreviewFormat : int
+          - mCameraFrameReady : boolean
+          + JavaCameraView()
+          + JavaCameraView()
+          # initializeCamera()
+          # releaseCamera()
+          # connectCamera()
+          # disconnectCamera()
+          + onPreviewFrame()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.android {
+      class JavaCameraSizeAccessor {
+          + getWidth()
+          + getHeight()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.android {
+      class JavaCameraFrame {
+          - mWidth : int
+          - mHeight : int
+          + gray()
+          + rgba()
+          + JavaCameraFrame()
+          + release()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.android {
+      class CameraWorker {
+          + run()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.android {
+      interface LoaderCallbackInterface {
+          {static} + SUCCESS : int
+          {static} + MARKET_ERROR : int
+          {static} + INSTALL_CANCELED : int
+          {static} + INCOMPATIBLE_MANAGER_VERSION : int
+          {static} + INIT_FAILED : int
+          {abstract} + onManagerConnected()
+          {abstract} + onPackageInstall()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.android {
+      class OpenCVLoader {
+          {static} + OPENCV_VERSION_2_4_2 : String
+          {static} + OPENCV_VERSION_2_4_3 : String
+          {static} + OPENCV_VERSION_2_4_4 : String
+          {static} + OPENCV_VERSION_2_4_5 : String
+          {static} + OPENCV_VERSION_2_4_6 : String
+          {static} + OPENCV_VERSION_2_4_7 : String
+          {static} + OPENCV_VERSION_2_4_8 : String
+          {static} + OPENCV_VERSION_2_4_9 : String
+          {static} + OPENCV_VERSION_2_4_10 : String
+          {static} + OPENCV_VERSION_2_4_11 : String
+          {static} + OPENCV_VERSION_2_4_12 : String
+          {static} + OPENCV_VERSION_2_4_13 : String
+          {static} + OPENCV_VERSION_3_0_0 : String
+          {static} + OPENCV_VERSION_3_1_0 : String
+          {static} + OPENCV_VERSION_3_2_0 : String
+          {static} + OPENCV_VERSION_3_3_0 : String
+          {static} + OPENCV_VERSION_3_4_0 : String
+          {static} + OPENCV_VERSION : String
+          {static} + initDebug()
+          {static} + initDebug()
+          {static} + initAsync()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.android {
+      class StaticHelper {
+          {static} - TAG : String
+          {static} + initOpenCV()
+          {static} - loadLibrary()
+          {static} - initOpenCVLibs()
+          {static} - getLibraryList()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.android {
+      class Utils {
+          {static} + exportResource()
+          {static} + exportResource()
+          {static} + loadResource()
+          {static} + loadResource()
+          {static} + bitmapToMat()
+          {static} + bitmapToMat()
+          {static} + matToBitmap()
+          {static} + matToBitmap()
+          {static} - nBitmapToMat2()
+          {static} - nMatToBitmap2()
+      }
+    }
+  }
+  
+
+  AsyncServiceHelper o-- OpenCVEngineInterface : mEngineService
+  AsyncServiceHelper o-- LoaderCallbackInterface : mUserAppCallback
+  BaseLoaderCallback -up-|> LoaderCallbackInterface
+  Camera2Renderer -up-|> CameraGLRendererBase
+  CameraBridgeViewBase -up-|> Callback
+  CameraBridgeViewBase -up-|> SurfaceView
+  CameraBridgeViewBase o-- CvCameraViewListener2 : mListener
+  CameraBridgeViewBase o-- FpsMeter : mFpsMeter
+  CameraBridgeViewBase +-down- CvCameraViewListener
+  CameraBridgeViewBase +-down- CvCameraViewListener2
+  CameraBridgeViewBase +-down- CvCameraViewListenerAdapter
+  CameraBridgeViewBase +-down- CvCameraViewFrame
+  CameraBridgeViewBase +-down- ListItemAccessor
+  CvCameraViewListenerAdapter -up-|> CvCameraViewListener2
+  CvCameraViewListenerAdapter o-- CvCameraViewListener : mOldStyleListener
+  BaseSavedState -up-|> AbsSavedState
+  CameraGLRendererBase -up-|> Renderer
+  CameraGLRendererBase -up-|> OnFrameAvailableListener
+  CameraGLRendererBase o-- CameraGLSurfaceView : mView
+  CameraGLSurfaceView -up-|> GLSurfaceView
+  CameraGLSurfaceView o-- CameraTextureListener : mTexListener
+  CameraGLSurfaceView o-- CameraGLRendererBase : mRenderer
+  CameraGLSurfaceView +-down- CameraTextureListener
+  BaseSavedState -up-|> AbsSavedState
+  CameraRenderer -up-|> CameraGLRendererBase
+  JavaCamera2View -up-|> CameraBridgeViewBase
+  JavaCamera2View +-down- JavaCamera2Frame
+  JavaCamera2Frame -up-|> CvCameraViewFrame
+  JavaCamera2Frame o-- Mat : mYuvFrameData
+  JavaCamera2Frame o-- Mat : mUVFrameData
+  JavaCamera2Frame o-- Mat : mRgba
+  CvCameraViewListenerAdapter -up-|> CvCameraViewListener2
+  CvCameraViewListenerAdapter o-- CvCameraViewListener : mOldStyleListener
+  BaseSavedState -up-|> AbsSavedState
+  JavaCameraView -up-|> PreviewCallback
+  JavaCameraView -up-|> CameraBridgeViewBase
+  JavaCameraView +-down- JavaCameraSizeAccessor
+  JavaCameraView +-down- JavaCameraFrame
+  JavaCameraView +-down- CameraWorker
+  JavaCameraSizeAccessor -up-|> ListItemAccessor
+  JavaCameraFrame -up-|> CvCameraViewFrame
+  JavaCameraFrame o-- Mat : mYuvFrameData
+  JavaCameraFrame o-- Mat : mRgba
+  CameraWorker -up-|> Runnable
+  CvCameraViewListenerAdapter -up-|> CvCameraViewListener2
+  CvCameraViewListenerAdapter o-- CvCameraViewListener : mOldStyleListener
+  BaseSavedState -up-|> AbsSavedState
+
+
+right footer
+
+
+PlantUML diagram generated by SketchIt! (https://bitbucket.org/pmesmeur/sketch.it)
+For more information about this tool, please contact philippe.mesmeur@gmail.com
+endfooter
+
+@enduml

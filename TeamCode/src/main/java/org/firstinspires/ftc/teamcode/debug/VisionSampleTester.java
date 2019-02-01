@@ -30,7 +30,7 @@ public class VisionSampleTester extends LinearOpMode {
         SamplingConfiguration samplingConfiguration = SamplingConfiguration.CENTER;
         while (opModeIsActive()) {
 
-            SamplingConfiguration tempSamplingConfiguration = vision.getSamplingConfigurationPhoneRightOnlyGold();
+            SamplingConfiguration tempSamplingConfiguration = vision.getSamplingConfigurationPhoneLeftOnlyGold();
             if (tempSamplingConfiguration != null) {
                 telemetry.addData("temp config", tempSamplingConfiguration);
                 samplingConfiguration = tempSamplingConfiguration;

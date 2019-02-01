@@ -11,7 +11,7 @@ public class ClaimCommand extends Command {
     void executeCommand(NavigationalState navigationalState, InertialSensor imu, VisionProcessor visionProcessor, MainRobot mainRobot, Telemetry telemetry) throws InterruptedException{
         mainRobot.grabber.openContainer();
         Thread.sleep(SERVO_TIME);
-        mainRobot.grabber.intakeMotor.setPower(-0.3);
+        mainRobot.grabber.intakeMotor.setPower(0.3);
         Thread.sleep(300);
         mainRobot.grabber.intakeMotor.setPower(0);
         mainRobot.grabber.closeContainer();

@@ -1,0 +1,269 @@
+@startuml
+
+title __DNN's Class Diagram__\n
+
+  package org.opencv {
+    package org.opencv.dnn {
+      class DictValue {
+          # nativeObj : long
+          # DictValue()
+          + getNativeObjAddr()
+          {static} + __fromPtr__()
+          + DictValue()
+          + DictValue()
+          + DictValue()
+          + getStringValue()
+          + getStringValue()
+          + isInt()
+          + isReal()
+          + isString()
+          + getRealValue()
+          + getRealValue()
+          + getIntValue()
+          + getIntValue()
+          # finalize()
+          {static} - DictValue_0()
+          {static} - DictValue_1()
+          {static} - DictValue_2()
+          {static} - getStringValue_0()
+          {static} - getStringValue_1()
+          {static} - isInt_0()
+          {static} - isReal_0()
+          {static} - isString_0()
+          {static} - getRealValue_0()
+          {static} - getRealValue_1()
+          {static} - getIntValue_0()
+          {static} - getIntValue_1()
+          {static} - delete()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.dnn {
+      class Dnn {
+          {static} + DNN_BACKEND_DEFAULT : int
+          {static} + DNN_BACKEND_HALIDE : int
+          {static} + DNN_BACKEND_INFERENCE_ENGINE : int
+          {static} + DNN_BACKEND_OPENCV : int
+          {static} + DNN_TARGET_CPU : int
+          {static} + DNN_TARGET_OPENCL : int
+          {static} + DNN_TARGET_OPENCL_FP16 : int
+          {static} + DNN_TARGET_MYRIAD : int
+          {static} + blobFromImage()
+          {static} + blobFromImage()
+          {static} + blobFromImage()
+          {static} + blobFromImage()
+          {static} + blobFromImage()
+          {static} + blobFromImage()
+          {static} + blobFromImage()
+          {static} + blobFromImages()
+          {static} + blobFromImages()
+          {static} + blobFromImages()
+          {static} + blobFromImages()
+          {static} + blobFromImages()
+          {static} + blobFromImages()
+          {static} + blobFromImages()
+          {static} + readTorchBlob()
+          {static} + readTorchBlob()
+          {static} + readNet()
+          {static} + readNet()
+          {static} + readNet()
+          {static} + readNet()
+          {static} + readNet()
+          {static} + readNetFromCaffe()
+          {static} + readNetFromCaffe()
+          {static} + readNetFromCaffe()
+          {static} + readNetFromCaffe()
+          {static} + readNetFromDarknet()
+          {static} + readNetFromDarknet()
+          {static} + readNetFromDarknet()
+          {static} + readNetFromDarknet()
+          {static} + readNetFromModelOptimizer()
+          {static} + readNetFromTensorflow()
+          {static} + readNetFromTensorflow()
+          {static} + readNetFromTensorflow()
+          {static} + readNetFromTensorflow()
+          {static} + readNetFromTorch()
+          {static} + readNetFromTorch()
+          {static} + NMSBoxes()
+          {static} + NMSBoxes()
+          {static} + NMSBoxes()
+          {static} + imagesFromBlob()
+          {static} + shrinkCaffeModel()
+          {static} + shrinkCaffeModel()
+          {static} - blobFromImage_0()
+          {static} - blobFromImage_1()
+          {static} - blobFromImage_2()
+          {static} - blobFromImage_3()
+          {static} - blobFromImage_4()
+          {static} - blobFromImage_5()
+          {static} - blobFromImage_6()
+          {static} - blobFromImages_0()
+          {static} - blobFromImages_1()
+          {static} - blobFromImages_2()
+          {static} - blobFromImages_3()
+          {static} - blobFromImages_4()
+          {static} - blobFromImages_5()
+          {static} - blobFromImages_6()
+          {static} - readTorchBlob_0()
+          {static} - readTorchBlob_1()
+          {static} - readNet_0()
+          {static} - readNet_1()
+          {static} - readNet_2()
+          {static} - readNet_3()
+          {static} - readNet_4()
+          {static} - readNetFromCaffe_0()
+          {static} - readNetFromCaffe_1()
+          {static} - readNetFromCaffe_2()
+          {static} - readNetFromCaffe_3()
+          {static} - readNetFromDarknet_0()
+          {static} - readNetFromDarknet_1()
+          {static} - readNetFromDarknet_2()
+          {static} - readNetFromDarknet_3()
+          {static} - readNetFromModelOptimizer_0()
+          {static} - readNetFromTensorflow_0()
+          {static} - readNetFromTensorflow_1()
+          {static} - readNetFromTensorflow_2()
+          {static} - readNetFromTensorflow_3()
+          {static} - readNetFromTorch_0()
+          {static} - readNetFromTorch_1()
+          {static} - NMSBoxes_0()
+          {static} - NMSBoxes_1()
+          {static} - NMSBoxes_2()
+          {static} - imagesFromBlob_0()
+          {static} - shrinkCaffeModel_0()
+          {static} - shrinkCaffeModel_1()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.dnn {
+      class Layer {
+          # Layer()
+          {static} + __fromPtr__()
+          + outputNameToIndex()
+          + finalize()
+          + finalize()
+          + run()
+          + get_blobs()
+          + set_blobs()
+          + get_name()
+          + get_type()
+          + get_preferableTarget()
+          # finalize()
+          {static} - outputNameToIndex_0()
+          {static} - finalize_0()
+          {static} - finalize_1()
+          {static} - run_0()
+          {static} - get_blobs_0()
+          {static} - set_blobs_0()
+          {static} - get_name_0()
+          {static} - get_type_0()
+          {static} - get_preferableTarget_0()
+          {static} - delete()
+      }
+    }
+  }
+  
+
+  package org.opencv {
+    package org.opencv.dnn {
+      class Net {
+          # nativeObj : long
+          # Net()
+          + getNativeObjAddr()
+          {static} + __fromPtr__()
+          + Net()
+          + forward()
+          + forward()
+          + getParam()
+          + getParam()
+          {static} + readFromModelOptimizer()
+          + getLayer()
+          + empty()
+          + getLayerId()
+          + getLayersCount()
+          + getFLOPS()
+          + getFLOPS()
+          + getFLOPS()
+          + getFLOPS()
+          + getPerfProfile()
+          + getLayerNames()
+          + getUnconnectedOutLayers()
+          + connect()
+          + deleteLayer()
+          + enableFusion()
+          + forward()
+          + forward()
+          + forward()
+          + getLayerTypes()
+          + getMemoryConsumption()
+          + getMemoryConsumption()
+          + getMemoryConsumption()
+          + setHalideScheduler()
+          + setInput()
+          + setInput()
+          + setInput()
+          + setInput()
+          + setInputsNames()
+          + setParam()
+          + setPreferableBackend()
+          + setPreferableTarget()
+          # finalize()
+          {static} - Net_0()
+          {static} - forward_0()
+          {static} - forward_1()
+          {static} - getParam_0()
+          {static} - getParam_1()
+          {static} - readFromModelOptimizer_0()
+          {static} - getLayer_0()
+          {static} - empty_0()
+          {static} - getLayerId_0()
+          {static} - getLayersCount_0()
+          {static} - getFLOPS_0()
+          {static} - getFLOPS_1()
+          {static} - getFLOPS_2()
+          {static} - getFLOPS_3()
+          {static} - getPerfProfile_0()
+          {static} - getLayerNames_0()
+          {static} - getUnconnectedOutLayers_0()
+          {static} - connect_0()
+          {static} - deleteLayer_0()
+          {static} - enableFusion_0()
+          {static} - forward_2()
+          {static} - forward_3()
+          {static} - forward_4()
+          {static} - getLayerTypes_0()
+          {static} - getMemoryConsumption_0()
+          {static} - getMemoryConsumption_1()
+          {static} - getMemoryConsumption_2()
+          {static} - setHalideScheduler_0()
+          {static} - setInput_0()
+          {static} - setInput_1()
+          {static} - setInput_2()
+          {static} - setInput_3()
+          {static} - setInputsNames_0()
+          {static} - setParam_0()
+          {static} - setPreferableBackend_0()
+          {static} - setPreferableTarget_0()
+          {static} - delete()
+      }
+    }
+  }
+  
+
+  Layer -up-|> Algorithm
+
+
+right footer
+
+
+PlantUML diagram generated by SketchIt! (https://bitbucket.org/pmesmeur/sketch.it)
+For more information about this tool, please contact philippe.mesmeur@gmail.com
+endfooter
+
+@enduml
