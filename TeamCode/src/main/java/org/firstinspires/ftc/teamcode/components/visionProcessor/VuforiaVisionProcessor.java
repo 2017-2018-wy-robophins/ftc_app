@@ -5,6 +5,7 @@ import com.vuforia.CameraDevice;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
@@ -44,11 +45,15 @@ public class VuforiaVisionProcessor implements VisionProcessor {
 
     public VuforiaVisionProcessor(HardwareMap hwmap) {
         this.hardwareMap = hwmap;
-
+        /*
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-        parameters.vuforiaLicenseKey = BuildConfig.VUFORIA_API_KEY;
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+        */
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+        parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
+
+        parameters.vuforiaLicenseKey = BuildConfig.VUFORIA_API_KEY;
         this.vuforia = ClassFactory.getInstance().createVuforia(parameters);
 
         VuforiaTrackables targetsRoverRuckus = this.vuforia.loadTrackablesFromAsset("RoverRuckus");

@@ -12,7 +12,6 @@ import com.vuforia.CameraDevice;
 import org.firstinspires.ftc.teamcode.common.SamplingConfiguration;
 import org.firstinspires.ftc.teamcode.components.visionProcessor.VuforiaVisionProcessor;
 
-@Disabled
 @TeleOp(name = "Vision Sample Tester", group = "Debug")
 public class VisionSampleTester extends LinearOpMode {
     @Override
@@ -24,7 +23,6 @@ public class VisionSampleTester extends LinearOpMode {
 
         VuforiaVisionProcessor vision = new VuforiaVisionProcessor(hardwareMap);
         vision.initTfod();
-        CameraDevice.getInstance().setFlashTorchMode(true);
 
         waitForStart();
         telemetry.addLine("start");

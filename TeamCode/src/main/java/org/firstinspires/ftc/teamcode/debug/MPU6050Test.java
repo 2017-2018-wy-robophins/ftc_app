@@ -6,6 +6,8 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
+import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
 import org.firstinspires.ftc.teamcode.components.MPU6050;
 
 @TeleOp(name = "MPU6050 Tester", group = "Debug")
@@ -21,8 +23,13 @@ public class MPU6050Test extends LinearOpMode {
         while (opModeIsActive()) {
             telemetry.addData("Device Name", mpu6050.getDeviceName());
             telemetry.addData("Raw HW ID", mpu6050.getHardwareIDRaw());
-            telemetry.addData("Angular Velocity", mpu6050.getAngularVelocity());
-            telemetry.addData("Acceleration", mpu6050.getAcceleration());
+            AngularVelocity angularVelocity = mpu6050.getAngularVelocity();
+            telemetry.addData("Angular Velocity x", angularVelocity.xRotationRate);
+            telemetry.addData("Angular Velocity y", angularVelocity.yRotationRate);
+            telemetry.addData("Angular Velocity z", angularVelocity.zRotationRate);
+            Acceleration acceleration = mpu6050.getAcceleration();
+            telemetry.addData("Acceleration", acceleration);
+            telemetry.addData("Acceleration magnitude", Math.sqrt(acceleration.xAccel * acceleration.xAccel + acceleration.yAccel * acceleration.yAccel + acceleration.zAccel * acceleration.zAccel));
             telemetry.update();
         }
     }

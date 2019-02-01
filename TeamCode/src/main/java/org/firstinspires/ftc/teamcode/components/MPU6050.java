@@ -32,9 +32,9 @@ public class MPU6050 extends I2cDeviceSynchDeviceWithParameters<I2cDeviceSynch, 
 
         // All settings available
         EXT_SYNC_SET ext_sync_set = EXT_SYNC_SET.DISABLED;
-        DLPF_CFG dlpf_cfg = DLPF_CFG.DLPF_CFG_1;
+        DLPF_CFG dlpf_cfg = DLPF_CFG.DLPF_CFG_0;
         FS_SEL fs_sel = FS_SEL.FS_SEL_250_DEG_S;
-        AFS_SEL afs_sel = AFS_SEL.AFS_SEL_4G;
+        AFS_SEL afs_sel = AFS_SEL.AFS_SEL_2G;
         TEMP_DIS temp_dis = TEMP_DIS.DISABLE;
         CLKSEL clksel = CLKSEL.PLL_X_AXIS_GYRO;
 
@@ -58,9 +58,13 @@ public class MPU6050 extends I2cDeviceSynchDeviceWithParameters<I2cDeviceSynch, 
         GYRO_SCALAR = params.fs_sel.toGyroScalar();
         ACCEL_SCALAR = params.afs_sel.toAccelScalar();
 
+        System.out.println("param clone ok");
         deviceClient.setI2cAddress(params.i2cAddr);
+        System.out.println("address set ok");
 
-        boolean resetOk = resetDevice();
+        //boolean resetOk = resetDevice();
+        //System.out.println("reset ok");
+        boolean resetOk = true;
 
         int configSettings = params.ext_sync_set.bVal | params.dlpf_cfg.bVal;
         writeByte(Register.CONFIG, (byte)configSettings);
@@ -114,7 +118,7 @@ public class MPU6050 extends I2cDeviceSynchDeviceWithParameters<I2cDeviceSynch, 
     }
 
     public enum Register {
-        FIRST(0),
+        FIRST(0x0D),
         CONFIG(0x1A),
         GYRO_CONFIG(0x1B),
         ACCEL_CONFIG(0x1C),
@@ -146,8 +150,8 @@ public class MPU6050 extends I2cDeviceSynchDeviceWithParameters<I2cDeviceSynch, 
         // Sensor registers are read repeatedly and stored in a register. This method specifies the
         // registers and repeat read mode
         I2cDeviceSynch.ReadWindow readWindow = new I2cDeviceSynch.ReadWindow(
-                Register.FIRST.bVal,
-                Register.LAST.bVal - Register.FIRST.bVal + 1,
+                Register.ACCEL_XOUT_H.bVal,
+                Register.GYRO_ZOUT_L.bVal - Register.ACCEL_XOUT_H.bVal + 1,
                 I2cDeviceSynch.ReadMode.REPEAT);
         this.deviceClient.setReadWindow(readWindow);
     }
