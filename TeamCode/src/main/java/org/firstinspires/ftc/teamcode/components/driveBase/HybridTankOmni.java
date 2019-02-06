@@ -31,7 +31,7 @@ public class HybridTankOmni extends DriveBase {
     private float TICKS_PER_DEGREE = 6;
 
 
-    float ANGLE_EPSILON = 3;
+    float ANGLE_EPSILON = 2;
     float ANGLE_DERIV_EPSILON = 0.002f;
     float ENCODER_DERIV_EPSILON = 0;
     public static double TURN_P_COEFF = 0.02;
