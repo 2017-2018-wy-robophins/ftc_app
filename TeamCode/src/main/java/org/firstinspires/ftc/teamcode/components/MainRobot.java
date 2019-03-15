@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.autonomous.NavigationalState;
 import org.firstinspires.ftc.teamcode.components.driveBase.DebugDriveBase;
 import org.firstinspires.ftc.teamcode.components.driveBase.DriveBase;
 import org.firstinspires.ftc.teamcode.components.driveBase.HybridTankOmni;
+import org.firstinspires.ftc.teamcode.components.grabber.SelfBalancingGrabber;
 import org.firstinspires.ftc.teamcode.components.grabber.TwoDOFGrabber;
 import org.firstinspires.ftc.teamcode.components.hook.DebugHook;
 import org.firstinspires.ftc.teamcode.components.hook.ElevatorHook;
@@ -25,7 +26,7 @@ import org.firstinspires.ftc.teamcode.components.visionProcessor.VuforiaVisionPr
 public class MainRobot {
     public HybridTankOmni driveBase;
     public ElevatorHook hook;
-    public TwoDOFGrabber grabber;
+    public SelfBalancingGrabber grabber;
     public Sampler sampler;
     public InertialSensor imu;
     public VisionProcessor visionProcessor;
@@ -38,7 +39,7 @@ public class MainRobot {
     public DcMotor rightRotate;
     public DcMotor leftRotate;
     public DcMotor armExtend;
-    public DcMotor intake;
+    public Servo intake;
     public Servo grabContainerServo;
 
     public Servo rightSampler;
@@ -64,9 +65,9 @@ public class MainRobot {
         leftRotate = hardwareMap.dcMotor.get("leftRotate");
         leftRotate.setDirection(DcMotorSimple.Direction.REVERSE);
         armExtend = hardwareMap.dcMotor.get("armExtend");
-        intake = hardwareMap.dcMotor.get("intake");
-        grabContainerServo = hardwareMap.servo.get("grabContainerServo");
-        grabber = new TwoDOFGrabber(rightRotate, leftRotate, armExtend, intake, grabContainerServo, telemetry);
+        intake = hardwareMap.servo.get("intake");
+        grabContainerServo = hardwareMap.servo.get("box");
+        grabber = new SelfBalancingGrabber(rightRotate, leftRotate, armExtend, intake, grabContainerServo, telemetry);
 
         // create the imu
         imu = new InertialSensorBNO055(hardwareMap);

@@ -18,7 +18,7 @@ public class MainOpMode extends LinearOpMode {
     // need double to be tuned with ftc dashboard
     public static double DRIVE_FORWARD_SCALE = 1;
     public static double DRIVE_ROTATION_SCALE = 0.8;
-    public static double ROTATE_POWER = 0.6;
+    public static double ROTATE_POWER = 1.0;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -105,19 +105,6 @@ public class MainOpMode extends LinearOpMode {
                         // mainRobot.hook.setPowerDirectControl(0);
                     }
 
-                    if (gamepad1.dpad_up) {
-                        // rotate up
-                        mainRobot.leftRotate.setPower(ROTATE_POWER);
-                        mainRobot.rightRotate.setPower(ROTATE_POWER);
-                    } else if (gamepad1.dpad_down) {
-                        // rotate down
-                        mainRobot.leftRotate.setPower(-ROTATE_POWER);
-                        mainRobot.rightRotate.setPower(-ROTATE_POWER);
-                    } else {
-                        mainRobot.leftRotate.setPower(0);
-                        mainRobot.rightRotate.setPower(0);
-                    }
-
                     // intake controls
                     if (gamepad1.dpad_up) {
                         // rotate up
@@ -128,6 +115,7 @@ public class MainOpMode extends LinearOpMode {
                     } else {
                         mainRobot.grabber.rotate(0);
                     }
+                    mainRobot.grabber.autoBalance();
 
                     if (gamepad1.right_bumper) {
                         // contract
@@ -140,9 +128,9 @@ public class MainOpMode extends LinearOpMode {
                     }
 
                     if (gamepad1.right_trigger > TRIGGER_THRESHOLD) {
-                        mainRobot.intake.setPower(Math.pow(gamepad1.right_trigger, 5));
+                        mainRobot.intake.setPosition(0.5f + 0.5*Math.pow(gamepad1.right_trigger, 5));
                     } else if (gamepad1.left_trigger > TRIGGER_THRESHOLD) {
-                        mainRobot.intake.setPower(-Math.pow(gamepad1.left_trigger, 5));
+                        mainRobot.intake.setPosition(0.5f + 0.5*-Math.pow(gamepad1.left_trigger, 5));
                     } else {
                         // TODO: not sure if this should be done
                         mainRobot.grabber.stop_intake();
@@ -156,7 +144,7 @@ public class MainOpMode extends LinearOpMode {
                     conditionalPower(mainRobot.leftRotate, gamepad1.dpad_up, gamepad1.dpad_down);
                     conditionalPower(mainRobot.rightRotate, gamepad1.dpad_up, gamepad1.dpad_down);
                     conditionalPower(mainRobot.armExtend, gamepad1.dpad_left, gamepad1.dpad_right);
-                    conditionalPower(mainRobot.intake, gamepad1.right_bumper, gamepad1.right_trigger > TRIGGER_THRESHOLD);
+                    // conditionalPower(mainRobot.intake, gamepad1.right_bumper, gamepad1.right_trigger > TRIGGER_THRESHOLD);
 
                     conditionalPower(mainRobot.leftElevator, gamepad1.y, gamepad1.x);
                     conditionalPower(mainRobot.rightElevator, gamepad1.b, gamepad1.a);
