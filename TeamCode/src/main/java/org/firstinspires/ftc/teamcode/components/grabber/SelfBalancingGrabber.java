@@ -13,6 +13,7 @@ public class SelfBalancingGrabber {
     Servo intake;
     Servo box;
     Telemetry telemetry;
+    boolean isOpen = false;
     public SelfBalancingGrabber(DcMotor rightRotate, DcMotor leftRotate, DcMotor extensionMotor, Servo intake, Servo box, Telemetry telemetry) {
         this.rightRotate = rightRotate;
         this.leftRotate = leftRotate;
@@ -38,16 +39,18 @@ public class SelfBalancingGrabber {
         extensionMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         intake.setDirection(Servo.Direction.FORWARD);
-        box.setDirection(Servo.Direction.FORWARD);
+        box.setDirection(Servo.Direction.REVERSE);
     }
 
     public static double CLOSE_POSITION = 0;
     public static double OPEN_POSITION = 1;
     public void openContainer() {
+        isOpen = true;
         box.setPosition(OPEN_POSITION);
     }
 
     public void closeContainer() {
+        isOpen = false;
         box.setPosition(CLOSE_POSITION);
     }
 
@@ -84,14 +87,18 @@ public class SelfBalancingGrabber {
         telemetry.addData("Extension Power", extensionMotor.getPower());
         telemetry.addData("Extension ticks", extensionMotor.getCurrentPosition());
         telemetry.addData("Intake Power", intake.getPosition());
+        telemetry.addData("Is Open", isOpen);
     }
 
     final int ENCODER_TICKS_BEGIN = 0;
-    final int ENCODER_TICKS_END = 1239;
+    final int ENCODER_TICKS_END = -500;
     final int ANGLE_BEGIN_DEGREES = 135;
-    final int ANGLE_END_DEGREES = 0;
+    final int ANGLE_END_DEGREES = 90;
     public void autoBalance() {
-        box.setPosition(getServoPosition());
+        if (!isOpen) {
+            telemetry.addLine("Autobalancing");
+            box.setPosition(getServoPosition());
+        }
     }
 
     // return 0 to 1

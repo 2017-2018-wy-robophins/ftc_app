@@ -16,7 +16,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 @Config
-@TeleOp(name = "IMU Motion Tester", group = "Debug")
+@TeleOp(name = "IMU Motion Tester (PID TEST)", group = "Debug")
 public class TurnTester extends LinearOpMode {
     public static double TURN_AMOUNT = 90;
     public static double FORWARD_AMOUNT = 1000;

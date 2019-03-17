@@ -18,7 +18,7 @@ public class MainOpMode extends LinearOpMode {
     // need double to be tuned with ftc dashboard
     public static double DRIVE_FORWARD_SCALE = 1;
     public static double DRIVE_ROTATION_SCALE = 0.8;
-    public static double ROTATE_POWER = 1.0;
+    public static double ROTATE_POWER = 0.8;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -32,6 +32,8 @@ public class MainOpMode extends LinearOpMode {
 
         MainRobot mainRobot = new MainRobot(hardwareMap, telemetry, ElevatorHook.State.FullyExtended);
 
+        mainRobot.grabber.openContainer();
+        mainRobot.grabber.closeContainer();
         waitForStart();
         telemetry.addLine("start");
         telemetry.update();
