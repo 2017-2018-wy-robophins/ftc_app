@@ -8,12 +8,12 @@ import org.firstinspires.ftc.teamcode.components.visionProcessor.VisionProcessor
 
 public class ClaimCommand extends Command {
     private int SERVO_TIME = 500;
+    private int ROTATE_ENCODER_TICKS = 0;
     void executeCommand(NavigationalState navigationalState, InertialSensor imu, VisionProcessor visionProcessor, MainRobot mainRobot, Telemetry telemetry) throws InterruptedException{
-        // mainRobot.grabber.openContainer();
+        mainRobot.grabber.rotateTicks(ROTATE_ENCODER_TICKS, 0.1f);
+        mainRobot.grabber.openContainer();
         Thread.sleep(SERVO_TIME);
-        //mainRobot.grabber.intakeMotor.setPower(1);
-        Thread.sleep(500);
-        // mainRobot.grabber.intakeMotor.setPower(0);
-        // mainRobot.grabber.closeContainer();
+        mainRobot.grabber.closeContainer();
+        mainRobot.grabber.rotateTicks(-ROTATE_ENCODER_TICKS, 0.1f);
     }
 }

@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.components.grabber;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.common.ExtendedMath;
+import org.firstinspires.ftc.teamcode.common.Globals;
 
 public class SelfBalancingGrabber {
     public DcMotor rightRotate;
@@ -30,8 +32,8 @@ public class SelfBalancingGrabber {
         rightRotate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         extensionMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        leftRotate.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightRotate.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftRotate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightRotate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         extensionMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         leftRotate.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -42,8 +44,8 @@ public class SelfBalancingGrabber {
         box.setDirection(Servo.Direction.REVERSE);
     }
 
-    public static double CLOSE_POSITION = 0;
-    public static double OPEN_POSITION = 1;
+    public static double CLOSE_POSITION = 1;
+    public static double OPEN_POSITION = 0;
     public void openContainer() {
         isOpen = true;
         box.setPosition(OPEN_POSITION);
@@ -75,8 +77,26 @@ public class SelfBalancingGrabber {
     }
 
     public void rotate(float rotatePower) {
+        leftRotate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightRotate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftRotate.setPower(rotatePower);
         rightRotate.setPower(rotatePower);
+    }
+
+    public void rotateTicks(int ticks, float rotatePower) {
+        leftRotate.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightRotate.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        int leftTarget = leftRotate.getCurrentPosition() + ticks;
+        int rightTarget = rightRotate.getCurrentPosition() + ticks;
+        leftRotate.setTargetPosition(leftTarget);
+        rightRotate.setTargetPosition(rightTarget);
+        leftRotate.setPower(rotatePower);
+        rightRotate.setPower(rotatePower);
+
+        while ((leftRotate.isBusy() && rightRotate.isBusy()) && Globals.OPMODE_ACTIVE.get()) {}
+
+        leftRotate.setPower(0);
+        rightRotate.setPower(0);
     }
 
     public void reportInfo(Telemetry telemetry) {
@@ -87,6 +107,7 @@ public class SelfBalancingGrabber {
         telemetry.addData("Extension Power", extensionMotor.getPower());
         telemetry.addData("Extension ticks", extensionMotor.getCurrentPosition());
         telemetry.addData("Intake Power", intake.getPosition());
+        telemetry.addData("Box position", box.getPosition());
         telemetry.addData("Is Open", isOpen);
     }
 

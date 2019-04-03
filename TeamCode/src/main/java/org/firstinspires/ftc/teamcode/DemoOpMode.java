@@ -10,15 +10,13 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.teamcode.components.MainRobot;
 import org.firstinspires.ftc.teamcode.components.hook.ElevatorHook;
 
-import java.util.ResourceBundle;
-
 @Config
-@TeleOp(name = "Main Op Mode", group = "main")
-public class MainOpMode extends LinearOpMode {
+@TeleOp(name = "Demo Op Mode", group = "main")
+public class DemoOpMode extends LinearOpMode {
     // need double to be tuned with ftc dashboard
     public static double DRIVE_FORWARD_SCALE = 1;
-    public static double DRIVE_ROTATION_SCALE = 1;
-    public static double ROTATE_POWER = 0.5;
+    public static double DRIVE_ROTATION_SCALE = 0.8;
+    public static double ROTATE_POWER = 0.8;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -37,7 +35,7 @@ public class MainOpMode extends LinearOpMode {
         telemetry.update();
 
         ControlMode controlMode = ControlMode.Improved;
-        boolean containerServoToggle = true;
+        boolean containerServoToggle = false;
         long previousServoCheck = System.currentTimeMillis();
 
         while (opModeIsActive()) {
@@ -90,9 +88,9 @@ public class MainOpMode extends LinearOpMode {
                             // toggle servo
                             if (System.currentTimeMillis() > previousServoCheck + 500) {
                                 if (containerServoToggle) {
-                                    mainRobot.grabber.openContainer();
+                                    mainRobot.sampler.extendAll();
                                 } else {
-                                    mainRobot.grabber.closeContainer();
+                                    mainRobot.sampler.contractAll();
                                 }
                                 containerServoToggle = !containerServoToggle;
                                 previousServoCheck = System.currentTimeMillis();
@@ -115,6 +113,7 @@ public class MainOpMode extends LinearOpMode {
                     } else {
                         mainRobot.grabber.rotate(0);
                     }
+                    mainRobot.grabber.autoBalance();
 
                     if (gamepad1.right_bumper) {
                         // contract
@@ -127,15 +126,12 @@ public class MainOpMode extends LinearOpMode {
                     }
 
                     if (gamepad1.right_trigger > TRIGGER_THRESHOLD) {
-                        mainRobot.intake.setPosition(1);
-                        // mainRobot.intake.setPosition(0.5f + 0.5*Math.pow(gamepad1.right_trigger, 5));
+                        mainRobot.intake.setPosition(0.5f + 0.5*Math.pow(gamepad1.right_trigger, 5));
                     } else if (gamepad1.left_trigger > TRIGGER_THRESHOLD) {
-                        // mainRobot.intake.setPosition(0);
-                        // mainRobot.intake.setPosition(0.5f + 0.5*-Math.pow(gamepad1.left_trigger, 5));
-
-                        mainRobot.grabber.stop_intake();
+                        mainRobot.intake.setPosition(0.5f + 0.5*-Math.pow(gamepad1.left_trigger, 5));
                     } else {
-                        // mainRobot.grabber.stop_intake();
+                        // TODO: not sure if this should be done
+                        mainRobot.grabber.stop_intake();
                     }
 
                     break;
@@ -155,7 +151,7 @@ public class MainOpMode extends LinearOpMode {
                     break;
             }
 
-            mainRobot.sampler.contractAll();
+            // mainRobot.sampler.contractAll();
             // mainRobot.hook.update();
             // send out info
             mainRobot.sampler.reportInfo(telemetry);

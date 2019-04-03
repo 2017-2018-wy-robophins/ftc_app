@@ -46,6 +46,7 @@ public class MainRobot {
     public Servo leftSampler;
     public Servo centerSampler;
 
+    public DigitalTouchSensor armMaxDownLimit;
 
     //runs on press of the "init" button. Maps engines from the robot to variables,
     public MainRobot(HardwareMap hardwareMap, Telemetry telemetry, ElevatorHook.State initialElevatorState) {
@@ -69,6 +70,9 @@ public class MainRobot {
         grabContainerServo = hardwareMap.servo.get("box");
         grabber = new SelfBalancingGrabber(rightRotate, leftRotate, armExtend, intake, grabContainerServo, telemetry);
 
+        grabber.closeContainer();
+        grabber.closeContainer();
+
         // create the imu
         imu = new InertialSensorBNO055(hardwareMap);
 
@@ -77,5 +81,7 @@ public class MainRobot {
         leftSampler = hardwareMap.servo.get("leftSampler");
         centerSampler = hardwareMap.servo.get("centerSampler");
         sampler = new Sampler(rightSampler, leftSampler, centerSampler);
+
+        armMaxDownLimit = new DigitalTouchSensor(hardwareMap, "armMaxDownLimit");
     }
 }
