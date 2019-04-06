@@ -106,7 +106,7 @@ public class AutonMain {
                         new MovementCommand(1524f, 1219.2f, 90, true),
                         new ClaimCommand(),
                         new MovementCommand(1524f, -609.6f, 90, false),
-                        new ArmDeployCommand(),
+                        // new ArmDeployCommand(),
                         new FinishCommand()
                 };
                 break;
@@ -122,7 +122,7 @@ public class AutonMain {
                         new MovementCommand(-1524f, -1219.2f, -90, true),
                         new ClaimCommand(),
                         new MovementCommand(-1524f, 609.6f, -90, false),
-                        new ArmDeployCommand(),
+                        // new ArmDeployCommand(),
                         new FinishCommand()
                 };
                 break;
@@ -136,7 +136,7 @@ public class AutonMain {
                         new MovementCommand(1219.2f, 1524, 0, true),
                         new ClaimCommand(),
                         new MovementCommand(-609.6f, 1524, 0, false),
-                        new ArmDeployCommand(),
+                        // new ArmDeployCommand(),
                         new FinishCommand()
                 };
                 break;
@@ -150,7 +150,7 @@ public class AutonMain {
                         new MovementCommand(-1219.2f, -1524, 180, true),
                         new ClaimCommand(),
                         new MovementCommand(609.6f, -1524, 180, false),
-                        new ArmDeployCommand(),
+                        // new ArmDeployCommand(),
                         new FinishCommand()
                 };
                 break;

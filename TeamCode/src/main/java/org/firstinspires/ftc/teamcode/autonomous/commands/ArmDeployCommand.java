@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.components.visionProcessor.VisionProcessor
 public class ArmDeployCommand extends Command {
     void executeCommand(NavigationalState navigationalState, InertialSensor imu, VisionProcessor visionProcessor, MainRobot mainRobot, Telemetry telemetry) throws InterruptedException{
         while (Globals.OPMODE_ACTIVE.get() && !mainRobot.armMaxDownLimit.isPressed()) {
-            mainRobot.grabber.rotate(0.1f);
+            mainRobot.grabber.rotate(-0.3f);
             Thread.sleep(10);
         }
 

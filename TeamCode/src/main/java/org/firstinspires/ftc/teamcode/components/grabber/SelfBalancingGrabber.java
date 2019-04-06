@@ -44,7 +44,7 @@ public class SelfBalancingGrabber {
         box.setDirection(Servo.Direction.REVERSE);
     }
 
-    public static double CLOSE_POSITION = 1;
+    public static double CLOSE_POSITION = 0.7;
     public static double OPEN_POSITION = 0;
     public void openContainer() {
         isOpen = true;
@@ -84,8 +84,8 @@ public class SelfBalancingGrabber {
     }
 
     public void rotateTicks(int ticks, float rotatePower) {
-        leftRotate.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightRotate.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         int leftTarget = leftRotate.getCurrentPosition() + ticks;
         int rightTarget = rightRotate.getCurrentPosition() + ticks;
         leftRotate.setTargetPosition(leftTarget);

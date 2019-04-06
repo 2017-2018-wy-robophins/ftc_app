@@ -131,9 +131,9 @@ public class MainOpMode extends LinearOpMode {
                         // mainRobot.intake.setPosition(0.5f + 0.5*Math.pow(gamepad1.right_trigger, 5));
                     } else if (gamepad1.left_trigger > TRIGGER_THRESHOLD) {
                         // mainRobot.intake.setPosition(0);
-                        // mainRobot.intake.setPosition(0.5f + 0.5*-Math.pow(gamepad1.left_trigger, 5));
+                        mainRobot.intake.setPosition(0.5f + 0.5*-Math.pow((gamepad1.left_trigger - TRIGGER_THRESHOLD) / (1 - TRIGGER_THRESHOLD), 5));
 
-                        mainRobot.grabber.stop_intake();
+                        // mainRobot.grabber.stop_intake();
                     } else {
                         // mainRobot.grabber.stop_intake();
                     }
@@ -163,6 +163,7 @@ public class MainOpMode extends LinearOpMode {
             telemetry.addData("heading", heading);
             telemetry.addData("Control Mode", controlMode);
             mainRobot.grabber.reportInfo(telemetry);
+            telemetry.addData("arm max down limit", mainRobot.armMaxDownLimit.isPressed());
             telemetry.update();
         }
     }
