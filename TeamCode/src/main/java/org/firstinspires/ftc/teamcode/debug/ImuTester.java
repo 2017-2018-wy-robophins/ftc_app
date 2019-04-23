@@ -21,7 +21,6 @@ public class ImuTester extends LinearOpMode {
     static float targetHeading = 90;
     @Override
     public void runOpMode() throws InterruptedException {
-        telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry(), telemetry);
         InertialSensor imu = new InertialSensorBNO055(hardwareMap);
         waitForStart();
         while (opModeIsActive()) {

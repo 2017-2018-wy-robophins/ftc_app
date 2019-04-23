@@ -16,12 +16,10 @@ public class DualDriverMainOpMode extends LinearOpMode {
     // need double to be tuned with ftc dashboard
     public static double DRIVE_FORWARD_SCALE = 1;
     public static double DRIVE_ROTATION_SCALE = 1;
-    public static double ROTATE_POWER = 0.5;
+    public static double ROTATE_POWER = 0.7;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        // telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-
         telemetry.addLine("Init");
         telemetry.update();
         final double ARM_JOYSTICK_MOVEMENT_THRESHOLD = 0.03;
@@ -30,6 +28,8 @@ public class DualDriverMainOpMode extends LinearOpMode {
 
         MainRobot mainRobot = new MainRobot(hardwareMap, telemetry, ElevatorHook.State.FullyExtended);
 
+        telemetry.addLine("initialized");
+        telemetry.update();
         waitForStart();
         telemetry.addLine("start");
         telemetry.update();
@@ -60,9 +60,18 @@ public class DualDriverMainOpMode extends LinearOpMode {
                 forward = righty1;
                 turn = rightx1;
             }
-            float correction = Math.signum(forward) == 0 ? 1: Math.signum(forward);
-            mainRobot.driveBase.direct_move_and_turn(forward * (float)DRIVE_FORWARD_SCALE, turn * (float)Math.pow(Math.abs(turn), 1.2f) * (float)DRIVE_ROTATION_SCALE);
 
+            float correction = Math.signum(forward) == 0 ? 1: Math.signum(forward);
+            // mainRobot.driveBase.direct_move_and_turn(forward * (float)DRIVE_FORWARD_SCALE, turn * (float)Math.pow(Math.abs(turn), 1.2f) * (float)DRIVE_ROTATION_SCALE);
+            // mainRobot.driveBase.direct_move_and_turn(forward * (float)DRIVE_FORWARD_SCALE, Math.signum(turn) * (float)Math.pow(Math.abs(turn), 3f) * (float)DRIVE_ROTATION_SCALE);
+            float rotate_speed = (float)DRIVE_ROTATION_SCALE;
+            if (gamepad1.right_trigger > TRIGGER_THRESHOLD || gamepad1.left_trigger > TRIGGER_THRESHOLD) {
+                rotate_speed = 0.8f;
+            }
+            mainRobot.driveBase.direct_move_and_turn_handbrake(forward * (float)DRIVE_FORWARD_SCALE,
+                    Math.signum(turn) * (float)Math.pow(Math.abs(turn), 3f) * rotate_speed,
+                    gamepad1.left_bumper,
+                    gamepad1.right_bumper);
             // elevator controls
             if (gamepad1.x) {
                //  mainRobot.hook.goToState(ElevatorHook.State.Contracted);
@@ -81,17 +90,13 @@ public class DualDriverMainOpMode extends LinearOpMode {
                 // mainRobot.hook.setPowerDirectControl(0);
             }
 
-            if (gamepad1.right_bumper) {
-            } else if (gamepad1.left_bumper) {
-            } else {
-            }
 
             float rightx2 = gamepad2.right_stick_x;
             float righty2 = -gamepad2.right_stick_y;
             float leftx2 = gamepad2.left_stick_x;
             float lefty2 = -gamepad2.left_stick_y;
 
-            mainRobot.grabber.rotate(lefty2);
+            mainRobot.grabber.rotate((float)ROTATE_POWER * Math.signum(lefty2) * (float)Math.pow(Math.abs(lefty2), 3f));
             mainRobot.grabber.extend(righty2);
 
             if (gamepad2.right_trigger > TRIGGER_THRESHOLD) {
@@ -104,7 +109,7 @@ public class DualDriverMainOpMode extends LinearOpMode {
 
             if (gamepad2.right_bumper) {
                 // toggle servo
-                if (System.currentTimeMillis() > previousServoCheck + 500) {
+                if (System.currentTimeMillis() > previousServoCheck + 300) {
                     if (containerServoToggle) {
                         mainRobot.grabber.openContainer();
                     } else {

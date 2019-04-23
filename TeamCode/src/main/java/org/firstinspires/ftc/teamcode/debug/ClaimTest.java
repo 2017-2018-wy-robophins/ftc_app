@@ -19,7 +19,6 @@ import org.firstinspires.ftc.teamcode.components.visionProcessor.VuforiaVisionPr
 public class ClaimTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry(), telemetry);
         MainRobot mainRobot = new MainRobot(hardwareMap, telemetry, ElevatorHook.State.Contracted);
         // create the vision processor
         VisionProcessor visionProcessor = new VuforiaVisionProcessor(hardwareMap);

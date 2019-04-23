@@ -13,7 +13,6 @@ import org.firstinspires.ftc.teamcode.components.hook.ElevatorHook;
 public class ElevatorAutonTester extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry(), telemetry);
         MainRobot mainRobot = new MainRobot(hardwareMap, telemetry, ElevatorHook.State.Contracted);
         telemetry.addLine("Init");
         telemetry.update();

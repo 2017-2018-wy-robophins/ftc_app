@@ -227,6 +227,16 @@ public class HybridTankOmni extends DriveBase {
         right.setPower(MAX_FORWARD_POWER_DIRECT * (x * throttle_contrib - r));
     }
 
+    public void direct_move_and_turn_handbrake(float x, float r, boolean left_handbrake, boolean right_handbrake) {
+        set_mode_motors(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        double turn_contrib = Math.abs(r);
+        double throttle_contrib = 1 - turn_contrib;
+        double left_power = left_handbrake ? 0 : MAX_FORWARD_POWER_DIRECT * (x * throttle_contrib + r);
+        double right_power = right_handbrake ? 0 : MAX_FORWARD_POWER_DIRECT * (x * throttle_contrib - r);
+        left.setPower(left_power);
+        right.setPower(right_power);
+    }
+
     // shared
     public void stop() {
         left.setPower(0);

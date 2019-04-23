@@ -15,7 +15,6 @@ import org.firstinspires.ftc.teamcode.components.MPU6050;
 public class MPU6050Test extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        telemetry = new MultipleTelemetry(FtcDashboard.getInstance().getTelemetry(), telemetry);
         MPU6050 mpu6050 = hardwareMap.get(MPU6050.class, "armGyro");
         mpu6050.initialize();
 

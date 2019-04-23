@@ -19,8 +19,6 @@ import org.firstinspires.ftc.teamcode.components.visionProcessor.VuforiaVisionPr
 public class VisionSampleTesterHW extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        FtcDashboard dashboard = FtcDashboard.getInstance();
-        telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
         telemetry.addLine("Init");
         telemetry.update();
 

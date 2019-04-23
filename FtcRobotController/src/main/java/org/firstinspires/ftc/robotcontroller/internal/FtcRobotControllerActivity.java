@@ -341,7 +341,7 @@ public class FtcRobotControllerActivity extends Activity
       initWifiMute(true);
     }
 
-    FtcDashboard.start();
+    // FtcDashboard.start();
   }
 
   protected UpdateUI createUpdateUI() {
@@ -422,7 +422,7 @@ public class FtcRobotControllerActivity extends Activity
     preferencesHelper.getSharedPreferences().unregisterOnSharedPreferenceChangeListener(sharedPreferencesListener);
     RobotLog.cancelWriteLogcatToDisk();
 
-    FtcDashboard.stop();
+    // FtcDashboard.stop();
   }
 
   protected void bindToService() {
@@ -624,7 +624,7 @@ public class FtcRobotControllerActivity extends Activity
       }
     });
 
-    FtcDashboard.attachWebServer(service.getWebServer());
+    // FtcDashboard.attachWebServer(service.getWebServer());
   }
 
   private void updateUIAndRequestRobotSetup() {
@@ -664,7 +664,7 @@ public class FtcRobotControllerActivity extends Activity
 
     passReceivedUsbAttachmentsToEventLoop();
 
-    FtcDashboard.attachEventLoop(eventLoop);
+    // FtcDashboard.attachEventLoop(eventLoop);
   }
 
   protected OpModeRegister createOpModeRegister() {
