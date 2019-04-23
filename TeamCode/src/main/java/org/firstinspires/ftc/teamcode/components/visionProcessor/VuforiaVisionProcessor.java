@@ -191,18 +191,18 @@ public class VuforiaVisionProcessor implements VisionProcessor {
                     int silverMineral1X = -1;
                     for (Recognition recognition : updatedRecognitions) {
                         if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
-                            goldMineralX = (int) recognition.getTop() + (int)recognition.getHeight()/2;
+                            goldMineralX = (int) recognition.getLeft() + (int)recognition.getWidth()/2;
                         } else if (silverMineral1X == -1) {
-                            silverMineral1X = (int) recognition.getTop() + (int)recognition.getHeight()/2;
+                            silverMineral1X = (int) recognition.getLeft() + (int)recognition.getWidth()/2;
                         }
                     }
 
                     if (goldMineralX != -1) {
                         // there was a gold
                         if (silverMineral1X > goldMineralX) {
-                            return SamplingConfiguration.CENTER;
-                        } else {
                             return SamplingConfiguration.LEFT;
+                        } else {
+                            return SamplingConfiguration.CENTER;
                         }
                     } else {
                         // no gold - must be to the very right
@@ -214,7 +214,7 @@ public class VuforiaVisionProcessor implements VisionProcessor {
                     for (Recognition recognition : updatedRecognitions) {
                         if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
                             imageHeight = recognition.getImageHeight();
-                            goldMineralX = (int) recognition.getTop() + (int)recognition.getHeight()/2;
+                            goldMineralX = (int) recognition.getLeft() + (int)recognition.getWidth()/2;
                         }
                     }
 

@@ -56,12 +56,15 @@ public class SelfBalancingGrabber {
         box.setPosition(CLOSE_POSITION);
     }
 
+    public static double INTAKE_SPEED = 0.89;
+    public static double OUTTAKE_SPEED = 0.11;
+
     public void activate_intake() {
-        setIntakePower(1);
+        setIntakePower((float)INTAKE_SPEED);
     }
 
     public void activate_outtake() {
-        setIntakePower(0);
+        setIntakePower((float)OUTTAKE_SPEED);
     }
 
     public void stop_intake() {

@@ -26,7 +26,7 @@ public class MainOpMode extends LinearOpMode {
 
         telemetry.addLine("Init");
         telemetry.update();
-        final double ARM_JOYSTICK_MOVEMENT_THRESHOLD = 0.05;
+        final double ARM_JOYSTICK_MOVEMENT_THRESHOLD = 0.02;
         gamepad1.setJoystickDeadzone((float)ARM_JOYSTICK_MOVEMENT_THRESHOLD);
         float TRIGGER_THRESHOLD = 0.3f;
 
@@ -72,8 +72,9 @@ public class MainOpMode extends LinearOpMode {
                         forward = righty;
                         turn = rightx;
                     }
-                    mainRobot.driveBase.direct_move_and_turn(forward * (float)DRIVE_FORWARD_SCALE, turn * (float)DRIVE_ROTATION_SCALE);
-
+                    //mainRobot.driveBase.direct_move_and_turn(forward * (float)DRIVE_FORWARD_SCALE, turn * (float)DRIVE_ROTATION_SCALE);
+                    float correction = Math.signum(forward) == 0 ? 1: Math.signum(forward);
+                    mainRobot.driveBase.direct_move_and_turn(forward * (float)DRIVE_FORWARD_SCALE, correction * Math.signum(turn) * (float)Math.abs(Math.pow(turn, 3f)) * (float)DRIVE_ROTATION_SCALE);
                     // elevator controls
                     if (!toggling) {
                         if (gamepad1.x) {
@@ -127,11 +128,13 @@ public class MainOpMode extends LinearOpMode {
                     }
 
                     if (gamepad1.right_trigger > TRIGGER_THRESHOLD) {
-                        mainRobot.intake.setPosition(1);
+                        mainRobot.grabber.activate_intake();
+                        // mainRobot.intake.setPosition(1);
                         // mainRobot.intake.setPosition(0.5f + 0.5*Math.pow(gamepad1.right_trigger, 5));
                     } else if (gamepad1.left_trigger > TRIGGER_THRESHOLD) {
+                        mainRobot.grabber.activate_outtake();
                         // mainRobot.intake.setPosition(0);
-                        mainRobot.intake.setPosition(0.5f + 0.5*-Math.pow((gamepad1.left_trigger - TRIGGER_THRESHOLD) / (1 - TRIGGER_THRESHOLD), 5));
+                        // mainRobot.intake.setPosition(0.5f + 0.5*-Math.pow((gamepad1.left_trigger - TRIGGER_THRESHOLD) / (1 - TRIGGER_THRESHOLD), 5));
 
                         // mainRobot.grabber.stop_intake();
                     } else {
